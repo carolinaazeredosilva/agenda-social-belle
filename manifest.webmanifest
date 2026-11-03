@@ -1,0 +1,20 @@
+{
+ "name": "Agenda Social Belle",
+ "short_name": "Agenda Social",
+ "start_url": "./",
+ "display": "standalone",
+ "background_color": "#F8F3FB",
+ "theme_color": "#A11176",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}

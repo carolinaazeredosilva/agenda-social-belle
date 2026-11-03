@@ -1,0 +1,70 @@
+{
+ "s_2026-11-03_0_1": {
+  "status": "Publicado"
+ },
+ "s_2026-11-04_0_1": {
+  "hora": "12:00",
+  "status": "Aprovado"
+ },
+ "s_2026-11-03_0_4": {
+  "status": "Publicado"
+ },
+ "f_2026-11-06_0": {
+  "checks": {
+   "Agendado no Meta Business Suite": true,
+   "Arte final conferida": true,
+   "Legenda colada": true
+  },
+  "hora": "10:00"
+ },
+ "s_2026-11-03_0_2": {
+  "status": "Publicado"
+ },
+ "s_2026-11-03_1_4": {
+  "status": "Publicado"
+ },
+ "s_2026-11-04_0_4": {
+  "hora": "19:30"
+ },
+ "s_2026-11-06_0_3": {
+  "hora": "18:00"
+ },
+ "s_2026-11-05_0_1": {
+  "status": "Aprovado"
+ },
+ "s_2026-11-03_0_3": {
+  "status": "Publicado"
+ },
+ "s_2026-11-05_0_3": {
+  "status": "Aprovado"
+ },
+ "s_2026-11-05_0_2": {
+  "status": "Aprovado"
+ },
+ "s_2026-11-04_0_3": {
+  "hora": "19:00",
+  "status": "Aprovado"
+ },
+ "s_2026-11-05_0_4": {
+  "status": "Aprovado"
+ },
+ "s_2026-11-06_0_1": {
+  "hora": "18:00"
+ },
+ "s_2026-11-04_0_2": {
+  "hora": "18:30",
+  "oculto": true
+ },
+ "s_2026-11-03_1_1": {
+  "status": "Publicado"
+ },
+ "s_2026-11-06_0_2": {
+  "hora": "18:00"
+ },
+ "s_2026-11-03_1_2": {
+  "status": "Publicado"
+ },
+ "s_2026-11-03_1_3": {
+  "status": "Publicado"
+ }
+}

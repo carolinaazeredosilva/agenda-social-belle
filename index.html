@@ -884,13 +884,13 @@ label.f:first-of-type{margin-top:0}
   async function doSched(it){
     const mm=M(it.id); if(!mm.hora){ toast('Informe o horário em que agendou'); const f=$('#f-hora'); if(f) f.focus(); renderSheet(); return false; }
     const ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=true; });
-    await saveItem(it.id,{status:'Agendado',antes:statusOf(it)==='Agendado'?(mm.antes||null):statusOf(it),checks:ck},true); renderAll(); renderSheet(); toast('Agendado no Meta às '+mm.hora); return true;
+    await saveItem(it.id,{status:'Agendado',manual:null,antes:statusOf(it)==='Agendado'?(mm.antes||null):statusOf(it),checks:ck},true); renderAll(); renderSheet(); toast('Agendado no Meta às '+mm.hora); return true;
   }
   async function doUnsched(it){
     const mm=M(it.id), ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=false; });
     let back=mm.antes&&mm.antes!=='Agendado'&&mm.antes!=='Publicado'?mm.antes:null;
     if(!back&&(it.sheetStatus==='Agendado'||it.sheetStatus==='Publicado')) back='Aprovado';
-    await saveItem(it.id,{status:back,antes:null,checks:ck},true); renderAll(); renderSheet(); toast('Status: '+statusOf(it));
+    await saveItem(it.id,{status:back,antes:null,manual:null,checks:ck},true); renderAll(); renderSheet(); toast('Status: '+statusOf(it));
   }
   function closeMenu(){ const sd=$('#side'); if(sd) sd.classList.remove('open'); const sc=$('#scrim'); if(sc) sc.hidden=true; }
   function renderAll(){
@@ -946,7 +946,7 @@ label.f:first-of-type{margin-top:0}
       +'<div class="row" style="margin-top:8px"><button class="btn" data-act="copylink">'+ic.copy+'Copiar link</button></div>'
       +'<label class="f" for="f-note">Observações<textarea class="in" id="f-note" rows="3" placeholder="Anotações só deste item">'+esc(m.nota||'')+'</textarea></label></div>';
     const sg=suggestHora(it);
-    const mv=st==='Agendado'?'ag':st==='Publicado'?'pub':'nao', mo=(v,l)=>'<option value="'+v+'"'+(mv===v?' selected':'')+'>'+l+'</option>';
+    const mv=st==='Agendado'?'ag':st==='Publicado'?(m.manual?'manual':'pub'):'nao', mo=(v,l)=>'<option value="'+v+'"'+(mv===v?' selected':'')+'>'+l+'</option>';
     let al;
     if(st==='Publicado') al='';
     else if(!m.hora) al='<div class="ur"><i class="dot"></i><span class="tx">Sem alarme<small>Defina o horário para criar o alarme.</small></span></div>';
@@ -955,7 +955,7 @@ label.f:first-of-type{margin-top:0}
     else al='<div class="ur"><i class="dot hot"></i><span class="tx">Alarme ainda não criado<small>Cria o evento no seu Google Agenda, com aviso 10 minutos antes.</small></span><button class="go fill" data-act="galarm">Criar alarme</button></div>';
     h+='<div class="blk"><h4>Horário e alarme</h4><div class="hgrid">'
       +'<label class="f" for="f-hora">Horário<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"></label>'
-      +'<label class="f" for="f-meta">No Meta<select class="in" id="f-meta">'+mo('nao','Ainda não agendado')+mo('ag','Agendado no Meta')+mo('pub','Já publicado')+'</select></label></div>'
+      +'<label class="f" for="f-meta">No Meta<select class="in" id="f-meta">'+mo('nao','Ainda não agendado')+mo('ag','Agendado no Meta')+mo('manual','Postado manual')+mo('pub','Já publicado')+'</select></label></div>'
       +(sg&&sg!==m.hora&&st!=='Publicado'?'<p class="hint">Sugestão para este tipo de post: <button class="linkbtn" data-act="sugg" data-h="'+sg+'">usar '+sg+'</button></p>':'')
       +'<div style="margin-top:12px">'+al+'</div>'
       +(m.hora&&st!=='Publicado'?'<p class="hint">Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">crie o alarme manualmente</a>.</p>':'')+'</div>';
@@ -1130,7 +1130,7 @@ label.f:first-of-type{margin-top:0}
     if(t.id==='f-meta'){ const it=itemById(openId); if(!it) return; const v=t.value;
       if(v==='ag') doSched(it);
       else if(v==='nao') doUnsched(it);
-      else { const mm=M(it.id); saveItem(it.id,{status:'Publicado',antes:statusOf(it)==='Publicado'?(mm.antes||null):statusOf(it)},true).then(()=>{ renderAll(); renderSheet(); toast('Marcado como publicado'); }); }
+      else { const mm=M(it.id), man=v==='manual'; saveItem(it.id,{status:'Publicado',manual:man,antes:statusOf(it)==='Publicado'?(mm.antes||null):statusOf(it)},true).then(()=>{ renderAll(); renderSheet(); toast(man?'Marcado como postado manualmente':'Marcado como publicado'); }); }
       return; }
     if(t.id==='f-hora'){ saveItem(openId,{hora:t.value},true).then(()=>{ renderAll(); const it=itemById(openId); const a=$('#gcal'); if(a&&it){ if(t.value){ a.href=gcalUrl(it,t.value); a.removeAttribute('aria-disabled'); } else { a.removeAttribute('href'); a.setAttribute('aria-disabled','true'); } } }); }
   });

@@ -340,6 +340,17 @@ label.f:first-of-type{margin-top:0}
 .ordb button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;width:30px;height:28px;display:grid;place-items:center;padding:0}
 .ordb button:hover{border-color:var(--accent);color:var(--accent)}
 .ordb svg{width:16px;height:16px}
+.qv{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;width:100%;text-align:left;border-radius:18px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--line);background:var(--panel)}
+.qv.ok{background:color-mix(in srgb,var(--s-green) 13%,var(--panel));border-color:color-mix(in srgb,var(--s-green) 45%,var(--line))}
+.qv.warm{background:color-mix(in srgb,var(--s-prod) 13%,var(--panel));border-color:color-mix(in srgb,var(--s-prod) 45%,var(--line))}
+.qv.hot{background:color-mix(in srgb,var(--danger) 10%,var(--panel));border-color:color-mix(in srgb,var(--danger) 40%,var(--line))}
+.qv .qm{display:flex;align-items:center;gap:10px;font-size:16px;color:var(--ink)}
+.qv .qm b{font-family:var(--font-display);font-weight:800}
+.qv .dot{width:11px;height:11px;border-radius:50%;flex:none}
+.qv .dot.ok{background:var(--s-green)}.qv .dot.warm{background:var(--s-prod)}.qv .dot.hot{background:var(--danger)}
+.qv .qs{display:flex;flex-wrap:wrap;gap:6px}
+.qv .qs span{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--ink);background:color-mix(in srgb,var(--panel) 75%,transparent);border-radius:999px;padding:4px 10px}
+.qv .qs svg{width:14px;height:14px}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -935,6 +946,12 @@ label.f:first-of-type{margin-top:0}
     const sb=sibsOf(it), si=sb.findIndex(x=>x.id===it.id);
     let h='<div class="ph-head"><button class="iconbtn" data-act="close" aria-label="Fechar">'+ic.x+'</button><h2>'+esc(itemLabel(it))+' · '+shortDay(it.date)+(sb.length>1?' <span style="color:var(--muted);font-weight:600;font-size:13px">('+(si+1)+' de '+sb.length+')</span>':'')+'</h2>'
       +(sb.length>1?'<button class="iconbtn" data-act="inav" data-n="-1" aria-label="Item anterior"'+(si<=0?' disabled style="opacity:.35"':'')+'>'+ic.left+'</button><button class="iconbtn" data-act="inav" data-n="1" aria-label="Próximo item"'+(si>=sb.length-1?' disabled style="opacity:.35"':'')+'>'+ic.right+'</button>':'')+'</div>';
+    { const na=arts.length, pub=st==='Publicado', ag=st==='Agendado', al=alarmOk(it);
+      const lv=pub?'ok':(ag&&(al||!m.hora)?'ok':ag||m.hora?'warm':'hot');
+      const meta=pub?(m.manual?'Postado manual':'Publicado'):ag?'Agendado no Meta'+(m.hora?' às '+esc(m.hora):''):'Ainda não agendado';
+      const alT=pub?'':(!m.hora?'Sem horário':al?'Alarme às '+esc(m.hora)+' ✓':'Sem alarme');
+      h+='<button class="qv '+lv+'" data-act="tohora" aria-label="Ir para horário e alarme"><span class="qm"><i class="dot '+lv+'"></i><b>'+meta+'</b></span>'
+        +'<span class="qs">'+(alT?'<span>'+ic.clock+alT+'</span>':'')+'<span>'+ic.img+(na?na+(na===1?' arte':' artes'):'sem arte')+'</span><span>'+esc(st)+'</span></span></button>'; }
     h+='<div class="blk"><h4>Situação</h4><div class="seg">'+STATUSES.map(s=>'<button data-act="status" data-s="'+esc(s)+'" aria-pressed="'+(st===s)+'">'+esc(s)+'</button>').join('')+'</div>'
       +'<p class="hint">Vem da planilha. Se você mudar aqui, vale só neste app até a planilha mudar também.</p></div>';
     // artes
@@ -970,7 +987,7 @@ label.f:first-of-type{margin-top:0}
     else if(alarmOk(it)) al='<div class="ur"><i class="dot ok"></i><span class="tx">Alarme criado às '+esc(m.hora)+'<small>Aviso 10 minutos antes no Google Agenda.</small></span><button class="go" data-act="unalarm">Desmarcar</button></div>';
     else if(m.alarme&&m.gHora&&m.gHora!==m.hora) al='<div class="ur"><i class="dot warm"></i><span class="tx">O horário mudou<small>O alarme está às '+esc(m.gHora)+'. Atualize para '+esc(m.hora)+'.</small></span><button class="go fill" data-act="galarm">Atualizar alarme</button></div>';
     else al='<div class="ur"><i class="dot hot"></i><span class="tx">Alarme ainda não criado<small>Cria o evento no seu Google Agenda, com aviso 10 minutos antes.</small></span><button class="go fill" data-act="galarm">Criar alarme</button></div>';
-    h+='<div class="blk"><h4>Horário e alarme</h4><div class="hgrid">'
+    h+='<div class="blk" id="blk-hora"><h4>Horário e alarme</h4><div class="hgrid">'
       +'<label class="f" for="f-hora">Horário<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"></label>'
       +'<label class="f" for="f-meta">No Meta<select class="in" id="f-meta">'+mo('nao','Ainda não agendado')+mo('ag','Agendado no Meta')+mo('manual','Postado manual')+mo('pub','Já publicado')+'</select></label></div>'
       +(sg&&sg!==m.hora&&st!=='Publicado'?'<p class="hint">Sugestão para este tipo de post: <button class="linkbtn" data-act="sugg" data-h="'+sg+'">usar '+sg+'</button></p>':'')
@@ -1059,6 +1076,7 @@ label.f:first-of-type{margin-top:0}
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='menu'){ $('#side').classList.add('open'); $('#scrim').hidden=false; return; }
     if(act==='menuclose'){ closeMenu(); return; }
+    if(act==='tohora'){ const b=$('#blk-hora'); if(b) b.scrollIntoView({behavior:'smooth',block:'start'}); return; }
     if(act==='smove'){ e.stopPropagation(); const it0=itemById(el.dataset.id); if(!it0) return;
       const sib=sortItems(storiesOn(it0.date).filter(x=>x.kind==='story')), k=sib.findIndex(x=>x.id===it0.id), j=k+Number(el.dataset.n);
       if(k<0||j<0||j>=sib.length) return; const tmp=sib[k]; sib[k]=sib[j]; sib[j]=tmp;

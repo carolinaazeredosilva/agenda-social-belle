@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261104143936">
+<meta name="belle-ver" content="20261104144407">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -458,6 +458,13 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .ro .st-sel,.ro .tchip,.ro .tin,.ro #panel input,.ro #panel textarea,.ro #panel select,.ro #dpanel input,.ro [data-act="status"],.ro [data-act="chk"]{pointer-events:none}
 .ro #panel input,.ro #panel textarea,.ro #panel select{opacity:.75}
 .ro .crumb{color:var(--accent)}
+.swt{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);cursor:pointer;margin-bottom:8px}
+.swt input{position:absolute;opacity:0;width:1px;height:1px}
+.swt .sl{width:42px;height:24px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .15s}
+.swt .sl::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .15s}
+.swt input:checked+.sl{background:var(--accent)}.swt input:checked+.sl::after{transform:translateX(18px)}
+.swt input:focus-visible+.sl{outline:2px solid var(--violet);outline-offset:2px}
+.swt .st b{display:block;color:var(--ink);font-size:14px}.swt .st small{color:var(--muted);font-size:12px}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -718,6 +725,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
       start:{dateTime:it.date+'T'+pad(p[0])+':'+pad(p[1])+':00',timeZone:'America/Sao_Paulo'},
       end:{dateTime:iso(e0)+'T'+pad(e0.getHours())+':'+pad(e0.getMinutes())+':00',timeZone:'America/Sao_Paulo'} };
   }
+  const needAlarm=x=>{ const m=M(x.id); return m.querAlarme===true||(m.querAlarme!==false&&!!(m.gEvent||m.alarme)); };
   const oldAviso=x=>{ const m=M(x.id); return !!(m.gEvent&&m.alarme&&m.gAviso!==5); };
   const alarmOk=x=>{ const m=M(x.id); return !!(m.alarme&&m.hora&&(!m.gHora||m.gHora===m.hora)); };
   function makeAlarms(items){
@@ -727,7 +735,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     toast('Criando '+(list.length===1?'o alarme':list.length+' alarmes')+' no Google Agenda…');
     window.belleCal.upsert(list.map(x=>({key:x.id,eventId:M(x.id).gEvent||'',ev:evOf(x,M(x.id).hora)}))).then(async res=>{
       let ok=0, fail=0;
-      for(const x of list){ const r=res[x.id]; if(r&&r.id){ ok++; await saveItem(x.id,{alarme:true,gEvent:r.id,gHora:M(x.id).hora,gAviso:5},true); } else fail++; }
+      for(const x of list){ const r=res[x.id]; if(r&&r.id){ ok++; await saveItem(x.id,{alarme:true,querAlarme:true,gEvent:r.id,gHora:M(x.id).hora,gAviso:5},true); } else fail++; }
       renderAll(); if(openId) renderSheet();
       toast(ok?(ok===1?'Alarme criado':ok+' alarmes criados')+' no Google Agenda'+(fail?' · '+fail+' falharam':''):'Não consegui criar no Google Agenda');
     }).catch(e=>{ toast(e&&e.code==='popup_closed'?'Login do Google cancelado':'Não consegui falar com o Google Agenda'); });
@@ -835,7 +843,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(noArt.length) U.push(['hot',noArt.length===1?'Story '+noArt[0].n+' de hoje está sem arte':noArt.length+' stories de hoje sem arte',noArt.length===1?(noArt[0].copy||'').replace(/\s+/g,' ').slice(0,70):'Stories '+noArt.map(x=>x.n).join(', '),btn(t)]);
     const noH=open.filter(x=>!M(x.id).hora);
     if(noH.length) U.push(['warm',noH.length===1?'1 item de hoje sem horário':noH.length+' itens de hoje sem horário','Defina o horário para criar o alarme',btn(t)]);
-    const pendA=open.filter(x=>M(x.id).hora&&(!alarmOk(x)||oldAviso(x)));
+    const pendA=open.filter(x=>needAlarm(x)&&M(x.id).hora&&(!alarmOk(x)||oldAviso(x)));
     if(pendA.length) U.push(['hot',pendA.length===1?'1 alarme de hoje ainda não foi criado':pendA.length+' alarmes de hoje ainda não foram criados','Horários: '+pendA.map(x=>M(x.id).hora).sort().join(', '),'<button class="go fill" data-act="gtoday">Criar alarmes</button>']);
     feedOn(tm).filter(x=>statusOf(x)!=='Publicado'&&!hasArt(x)).forEach(x=>U.push(['warm','Amanhã: post sem arte',(x.tema||'')+(x.formato?' · '+x.formato:''),btn(tm)]));
     const sTm=storiesOn(tm).filter(x=>x.kind==='story'&&!hasArt(x)); if(sTm.length) U.push(['warm','Amanhã: '+(sTm.length===1?'1 story sem arte':sTm.length+' stories sem arte'),'',btn(tm)]);
@@ -865,7 +873,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(st==='Publicado') return ['ok',m.manual?'postado manual':'publicado'];
     if(!hasArt(x)&&x.kind!=='destaque') return ['hot','sem arte'];
     if(!m.hora) return ['warm','sem horário'];
-    if(!alarmOk(x)) return ['warm','sem alarme'];
+    if(needAlarm(x)&&!alarmOk(x)) return ['warm','sem alarme'];
     if(st==='Agendado') return ['ok','agendado'];
     return ['ok','pronto']; }
   function weekCard(){
@@ -977,7 +985,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   function dayState(k){
     if(k<todayIso()) return '';
     const its=feedOn(k).concat(storiesOn(k).filter(x=>x.kind==='story')); if(!its.length) return '';
-    const ok=its.every(x=>{ const st=statusOf(x), m=M(x.id); return st==='Publicado'||(st==='Agendado'&&alarmOk(x)); });
+    const ok=its.every(x=>{ const st=statusOf(x), m=M(x.id); return st==='Publicado'||(st==='Agendado'&&(!needAlarm(x)||alarmOk(x))); });
     return ok?'dz-ok':'dz-todo';
   }
   function renderCal(){
@@ -1160,9 +1168,9 @@ body.mini .grp,body.mini .tab .ct{display:none}
     let h='<div class="ph-head"><button class="iconbtn" data-act="close" aria-label="Fechar">'+ic.x+'</button><h2>'+esc(itemLabel(it))+' · '+shortDay(it.date)+(sb.length>1?' <span style="color:var(--muted);font-weight:600;font-size:13px">('+(si+1)+' de '+sb.length+')</span>':'')+'</h2>'
       +(sb.length>1?'<button class="iconbtn" data-act="inav" data-n="-1" aria-label="Item anterior"'+(si<=0?' disabled style="opacity:.35"':'')+'>'+ic.left+'</button><button class="iconbtn" data-act="inav" data-n="1" aria-label="Próximo item"'+(si>=sb.length-1?' disabled style="opacity:.35"':'')+'>'+ic.right+'</button>':'')+'</div>';
     { const na=arts.length, pub=st==='Publicado', ag=st==='Agendado', al=alarmOk(it);
-      const lv=pub?'ok':(ag&&(al||!m.hora)?'ok':ag||m.hora?'warm':'hot');
+      const na2=needAlarm(it), lv=pub?'ok':(ag&&(!na2||al||!m.hora)?'ok':ag||m.hora?'warm':'hot');
       const meta=pub?(m.manual?'Postado manual':'Publicado'):ag?'Agendado no Meta'+(m.hora?' às '+esc(m.hora):''):'Ainda não agendado';
-      const alT=pub?'':(!m.hora?'Sem horário':al?'Alarme às '+esc(m.hora)+' ✓':'Sem alarme');
+      const alT=pub?'':(!m.hora?'Sem horário':!na2?'':al?'Alarme às '+esc(m.hora)+' ✓':'Alarme pendente');
       h+='<button class="qv '+lv+'" data-act="tohora" aria-label="Ir para horário e alarme"><span class="qm"><i class="dot '+lv+'"></i><b>'+meta+'</b></span>'
         +'<span class="qs">'+(alT?'<span>'+ic.clock+alT+'</span>':'')+(pinOf(it)?'<span>'+ic.pin+'Fixado '+pinOf(it)+'º</span>':'')+'<span>'+ic.img+(na?na+(na===1?' arte':' artes'):'sem arte')+'</span><span>'+esc(st)+'</span></span></button>'; }
     h+='<div class="blk"><h4>Situação</h4><div class="seg">'+STATUSES.map(s=>'<button data-act="status" data-s="'+esc(s)+'" aria-pressed="'+(st===s)+'">'+esc(s)+'</button>').join('')+'</div>'
@@ -1198,19 +1206,23 @@ body.mini .grp,body.mini .tab .ct{display:none}
       +'<label class="f" for="f-note">Observações<textarea class="in" id="f-note" rows="3" placeholder="Anotações só deste item">'+esc(m.nota||'')+'</textarea></label></div>';
     const sg=suggestHora(it);
     const mv=st==='Agendado'?'ag':st==='Publicado'?(m.manual?'manual':'pub'):'nao', mo=(v,l)=>'<option value="'+v+'"'+(mv===v?' selected':'')+'>'+l+'</option>';
-    let al;
-    if(st==='Publicado') al='';
-    else if(!m.hora) al='<div class="ur"><i class="dot"></i><span class="tx">Sem alarme<small>Defina o horário para criar o alarme.</small></span></div>';
-    else if(alarmOk(it)&&oldAviso(it)) al='<div class="ur"><i class="dot warm"></i><span class="tx">Alarme às '+esc(m.hora)+' com aviso de 10 min<small>Atualize para o aviso de 5 minutos.</small></span><button class="go fill" data-act="galarm">Atualizar alarme</button></div>';
-    else if(alarmOk(it)) al='<div class="ur"><i class="dot ok"></i><span class="tx">Alarme criado às '+esc(m.hora)+'<small>Aviso 5 minutos antes no Google Agenda.</small></span><button class="go" data-act="unalarm">Desmarcar</button></div>';
-    else if(m.alarme&&m.gHora&&m.gHora!==m.hora) al='<div class="ur"><i class="dot warm"></i><span class="tx">O horário mudou<small>O alarme está às '+esc(m.gHora)+'. Atualize para '+esc(m.hora)+'.</small></span><button class="go fill" data-act="galarm">Atualizar alarme</button></div>';
-    else al='<div class="ur"><i class="dot hot"></i><span class="tx">Alarme ainda não criado<small>Cria o evento no seu Google Agenda, com aviso 5 minutos antes.</small></span><button class="go fill" data-act="galarm">Criar alarme</button></div>';
+    let al='';
+    if(st!=='Publicado'){ const on=needAlarm(it);
+      al='<label class="swt"><input type="checkbox" id="f-alarm"'+(on?' checked':'')+'><span class="sl"></span><span class="st"><b>Criar alarme no Google Agenda</b><small>Opcional. Aviso 5 minutos antes do horário.</small></span></label>';
+      if(on){
+        if(!m.hora) al+='<div class="ur"><i class="dot"></i><span class="tx">Falta o horário<small>Defina o horário acima para criar o alarme.</small></span></div>';
+        else if(alarmOk(it)&&oldAviso(it)) al+='<div class="ur"><i class="dot warm"></i><span class="tx">Alarme às '+esc(m.hora)+' com aviso de 10 min<small>Atualize para o aviso de 5 minutos.</small></span><button class="go fill" data-act="galarm">Atualizar alarme</button></div>';
+        else if(alarmOk(it)) al+='<div class="ur"><i class="dot ok"></i><span class="tx">Alarme criado às '+esc(m.hora)+'<small>Para tirar da agenda, desligue a chave.</small></span></div>';
+        else if(m.alarme&&m.gHora&&m.gHora!==m.hora) al+='<div class="ur"><i class="dot warm"></i><span class="tx">O horário mudou<small>O alarme está às '+esc(m.gHora)+'. Atualize para '+esc(m.hora)+'.</small></span><button class="go fill" data-act="galarm">Atualizar alarme</button></div>';
+        else al+='<div class="ur"><i class="dot hot"></i><span class="tx">Alarme ainda não criado<small>Toque para criar no seu Google Agenda.</small></span><button class="go fill" data-act="galarm">Criar alarme</button></div>';
+      }
+    }
     h+='<div class="blk" id="blk-hora"><h4>Horário e alarme</h4><div class="hgrid">'
       +'<label class="f" for="f-hora">Horário<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"></label>'
       +'<label class="f" for="f-meta">No Meta<select class="in" id="f-meta">'+mo('nao','Ainda não agendado')+mo('ag','Agendado no Meta')+mo('manual','Postado manual')+mo('pub','Já publicado')+'</select></label></div>'
       +(sg&&sg!==m.hora&&st!=='Publicado'?'<p class="hint">Sugestão para este tipo de post: <button class="linkbtn" data-act="sugg" data-h="'+sg+'">usar '+sg+'</button></p>':'')
       +'<div style="margin-top:12px">'+al+'</div>'
-      +(m.hora&&st!=='Publicado'?'<p class="hint">Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">crie o alarme manualmente</a>.</p>':'')+'</div>';
+      +(m.hora&&st!=='Publicado'&&needAlarm(it)?'<p class="hint">Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">crie o alarme manualmente</a>.</p>':'')+'</div>';
     // checklist
     const cl=checklistFor(it), ck=m.checks||{};
     h+='<div class="blk"><h4>Checklist</h4><div class="cl">'+cl.map((l,i)=>'<button data-act="chk" data-i="'+i+'" aria-pressed="'+(!!ck[l])+'"><span class="bx">'+ic.check+'</span><span class="l">'+esc(l)+'</span></button>').join('')+'</div></div>';
@@ -1234,8 +1246,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
     h+='<div class="seg" role="group" aria-label="Forma de ver o dia"><button data-act="dview" data-v="lista" aria-pressed="'+(dview==='lista')+'">Lista</button><button data-act="dview" data-v="horas" aria-pressed="'+(dview==='horas')+'">Por horário</button></div>';
     const simples=ss.filter(x=>!stickersOf(x.sticker).length);
     if(simples.length) h+='<div class="blk"><h4>Agendar os stories do dia</h4><div class="row"><input class="in" id="d-hora" type="time" style="width:auto" value="'+esc(dHora)+'" aria-label="Horário dos stories"><button class="btn primary" data-act="dsched">'+ic.check+'Agendei '+simples.length+(simples.length===1?' story simples':' stories simples')+'</button></div><p class="hint">Aplica o horário e marca como Agendado. Stories com figurinha ou link ficam de fora, porque você posta no celular.</p></div>';
-    { const its=fs.concat(ss).filter(x=>statusOf(x)!=='Publicado'), pend=its.filter(x=>!alarmOk(x)||oldAviso(x)), comH=pend.filter(x=>M(x.id).hora), semH=pend.length-comH.length;
-      if(its.length) h+='<div class="blk"><h4>Alarmes do dia</h4>'+(pend.length?'<div class="row"><button class="btn primary" data-act="gday"'+(comH.length?'':' disabled')+'>'+ic.clock+'Criar '+comH.length+(comH.length===1?' alarme':' alarmes')+' no Google Agenda</button></div><p class="hint">Um evento por item, com aviso 5 minutos antes.'+(semH?' '+semH+(semH===1?' item está':' itens estão')+' sem horário e fica'+(semH===1?'':'m')+' de fora.':'')+'</p>':'<p class="txt sm"><b>Todos os alarmes do dia estão criados.</b></p>')+'</div>'; }
+    { const its=fs.concat(ss).filter(x=>statusOf(x)!=='Publicado'), pend=its.filter(x=>needAlarm(x)&&(!alarmOk(x)||oldAviso(x))), comH=pend.filter(x=>M(x.id).hora), semH=pend.length-comH.length;
+      if(its.length) h+='<div class="blk"><h4>Alarmes do dia</h4>'+(pend.length?'<div class="row"><button class="btn primary" data-act="gday"'+(comH.length?'':' disabled')+'>'+ic.clock+'Criar '+comH.length+(comH.length===1?' alarme':' alarmes')+' no Google Agenda</button></div><p class="hint">Um evento por item, com aviso 5 minutos antes.'+(semH?' '+semH+(semH===1?' item está':' itens estão')+' sem horário e fica'+(semH===1?'':'m')+' de fora.':'')+'</p>':(its.some(needAlarm)?'<p class="txt sm"><b>Todos os alarmes ligados estão criados.</b></p>':'<p class="txt sm">Nenhum item com alarme ligado. Ligue a chave "Criar alarme" no item que precisar.</p>'))+'</div>'; }
     if(!all.length){ h+='<p class="empty" style="margin-top:16px">Nada planejado na planilha para este dia.</p>'; }
     else if(dview==='lista'){
       h+='<section class="sec"><h3><span>Feed</span></h3>'+(fs.length?fs.map(cardHTML).join(''):'<p class="empty">Sem post de feed.</p>')+'</section>';
@@ -1292,7 +1304,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     const el=e.target.closest('[data-act]'); if(!el) return; const act=el.dataset.act;
     if(act==='alarm'){ const it=itemById(openId); if(it&&M(it.id).hora&&!alarmOk(it)){ saveItem(it.id,{alarme:true,gHora:M(it.id).hora},true).then(()=>{ renderAll(); renderSheet(); }); } return; }
     if(act==='galarm'){ const it=itemById(openId); if(it) makeAlarms([it]); return; }
-    if(act==='gday'){ makeAlarms(sortItems(feedOn(dayOpen)).concat(sortItems(storiesOn(dayOpen).filter(x=>x.kind==='story'))).filter(x=>(!alarmOk(x)||oldAviso(x))&&statusOf(x)!=='Publicado')); return; }
+    if(act==='gday'){ makeAlarms(sortItems(feedOn(dayOpen)).concat(sortItems(storiesOn(dayOpen).filter(x=>x.kind==='story'))).filter(x=>needAlarm(x)&&(!alarmOk(x)||oldAviso(x))&&statusOf(x)!=='Publicado')); return; }
     if(act==='unalarm'){ const it=itemById(openId); if(!it) return; const ev=M(it.id).gEvent;
       if(ev&&window.belleCal&&window.belleCal.remove){
         toast('Removendo o alarme do Google Agenda…');
@@ -1315,7 +1327,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
       renderAll(); return; }
     if(act==='sreset'){ const list=storiesOn(el.dataset.d).filter(x=>x.kind==='story'&&typeof M(x.id).ordem==='number'); for(const x of list){ await saveItem(x.id,{ordem:null},true); } renderAll(); toast('Stories na ordem dos horários'); return; }
     if(act==='sidemini'){ const on=!document.body.classList.contains('mini'); document.body.classList.toggle('mini',on); try{ localStorage.setItem('belle_mini',on?'1':''); }catch(_){} const b=$('.side-tg'); if(b){ b.setAttribute('aria-label',on?'Abrir menu':'Recolher menu'); b.title=on?'Abrir menu':'Recolher menu'; } return; }
-    if(act==='gtoday'){ const t=todayIso(); makeAlarms(sortItems(feedOn(t).concat(storiesOn(t).filter(x=>x.kind==='story'))).filter(x=>statusOf(x)!=='Publicado'&&(!alarmOk(x)||oldAviso(x)))); return; }
+    if(act==='gtoday'){ const t=todayIso(); makeAlarms(sortItems(feedOn(t).concat(storiesOn(t).filter(x=>x.kind==='story'))).filter(x=>statusOf(x)!=='Publicado'&&needAlarm(x)&&(!alarmOk(x)||oldAviso(x)))); return; }
     if(act==='fideas'){ showIdeas=!showIdeas; renderAll(); return; }
     if(act==='exportleg'){ exportLegendas(); return; }
     if(act==='org'){ fFilter='Todos'; org={dates:{},stage:'edit'}; renderAll(); return; }
@@ -1403,6 +1415,11 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(t.id==='f-pin'){ const it=itemById(openId); if(!it) return; const n=+t.value;
       (async()=>{ if(n){ const other=feed.find(x=>x.id!==it.id&&pinOf(x)===n); if(other) await saveItem(other.id,{fixado:pinOf(it)||null},true); }
         await saveItem(it.id,{fixado:n||null},true); renderAll(); renderSheet(); toast(n?'Fixado em '+n+'º no perfil':'Desafixado'); })(); return; }
+    if(t.id==='f-alarm'){ const it=itemById(openId); if(!it) return;
+      if(t.checked){ saveItem(it.id,{querAlarme:true},true).then(()=>{ renderAll(); renderSheet(); }); if(M(it.id).hora&&!alarmOk(it)) makeAlarms([it]); else if(!M(it.id).hora) toast('Defina o horário para criar o alarme'); }
+      else { const ev=M(it.id).gEvent; const done=()=>saveItem(it.id,{querAlarme:false,alarme:false,gEvent:null,gHora:null},true).then(()=>{ renderAll(); renderSheet(); toast(ev?'Alarme removido da agenda':'Sem alarme para este item'); });
+        if(ev&&window.belleCal&&window.belleCal.remove){ window.belleCal.remove(ev).then(done).catch(()=>{ t.checked=true; toast('Não consegui remover do Google Agenda. Tente de novo.'); }); } else done(); }
+      return; }
     if(t.id==='f-meta'){ const it=itemById(openId); if(!it) return; const v=t.value;
       if(v==='ag') doSched(it);
       else if(v==='nao') doUnsched(it);

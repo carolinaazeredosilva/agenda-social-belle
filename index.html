@@ -99,7 +99,7 @@ svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke
 .st-sel{appearance:none;-webkit-appearance:none;font:700 11px/1.4 var(--font-body);border-radius:999px;padding:3px 24px 3px 10px;color:var(--pc);border:1px solid var(--pc);background:transparent;min-height:26px;cursor:pointer}
 .ck{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:transparent;display:grid;place-items:center;flex:none;color:transparent;margin-top:1px}
 .ck svg{width:16px;height:16px}
-.ck[aria-pressed="true"]{background:var(--s-ok);border-color:var(--s-ok);color:#fff}
+.ck[aria-pressed="true"]{background:var(--s-green);border-color:var(--s-green);color:#fff}
 .thumb{width:56px;aspect-ratio:4/5;border-radius:10px;background:var(--tile);overflow:hidden;flex:none;display:grid;place-items:center;color:var(--muted)}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .note{font-size:13px;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:10px 12px;overflow-wrap:anywhere}
@@ -675,7 +675,7 @@ label.f:first-of-type{margin-top:0}
     chips.push('<label class="chip time tin'+(m.hora?'':' add')+'" title="Alterar horário">'+ic.clock+'<input type="time" class="tchip" data-id="'+esc(it.id)+'" value="'+esc(m.hora||'')+'" aria-label="Horário de '+esc(it.kind==='feed'?'post':'story '+it.n)+'"></label>');
     if(artIds(it).length) chips.push('<span class="chip">'+ic.img+artIds(it).length+'</span>');
     return '<div class="card'+(it.kind==='story'?' st':'')+'" style="cursor:pointer" role="button" tabindex="0" data-act="open" data-id="'+esc(it.id)+'">'
-      +'<button class="ck" data-act="done" data-id="'+esc(it.id)+'" aria-pressed="'+done+'" aria-label="Marcar como publicado">'+ic.check+'</button>'
+      +'<button class="ck" data-act="done" data-id="'+esc(it.id)+'" aria-pressed="'+(!!m.feito)+'" aria-label="'+(m.feito?'Desmarcar como pronto':'Marcar como pronto')+'" title="'+(m.feito?'Pronto ✓ (toque para desmarcar)':'Marcar como pronto')+'">'+ic.check+'</button>'
       +'<div class="main"><div class="t">'+head+' '+selHTML(it,st)+'</div><div class="x">'+esc(main)+'</div><div class="chips">'+chips.join('')+'</div></div>'
       +(it.kind==='story'?'<span class="grip" data-act="grip" title="Segure e arraste para mudar a ordem" aria-label="Arrastar para mudar a ordem"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></span>':'')
       +thumbHTML(it)+'</div>';
@@ -1141,7 +1141,7 @@ label.f:first-of-type{margin-top:0}
           .catch(e=>{ toast(e&&e.code==='popup_closed'?'Login do Google cancelado':'Não consegui remover do Google Agenda. Tente de novo.'); });
       } else { await saveItem(it.id,{alarme:false,gHora:null},true); renderAll(); renderSheet(); toast(ev?'Alarme desmarcado':'Alarme desmarcado (era manual: apague no Google Agenda)'); }
       return; }
-    if(act==='done'){ e.stopPropagation(); const it=itemById(el.dataset.id); if(!it) return; const now=statusOf(it)==='Publicado'; const back=it.sheetStatus==='Publicado'?'Aprovado':it.sheetStatus; await saveItem(it.id,{status:now?back:'Publicado'},true); renderAll(); return; }
+    if(act==='done'){ e.stopPropagation(); const it=itemById(el.dataset.id); if(!it) return; const on=!M(it.id).feito; await saveItem(it.id,{feito:on},true); renderAll(); toast(on?'Marcado como pronto':'Desmarcado'); return; }
     if(act==='open'){ if(org) return; openItem(el.dataset.id); return; }
     if(act==='close'){ closeItem(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }

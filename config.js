@@ -3,7 +3,5 @@ window.BELLE_CONFIG={
   SUPABASE_URL:'https://bthjozkfxppgvkzwfabh.supabase.co',
   SUPABASE_KEY:'sb_publishable_Q5Uk0cz8oL-nmiKybi5gVQ_fBKu9PBe',
   EMAIL:'carolinaazeredosilva@gmail.com',
-  /* Links "Publicar na web" (CSV) das abas Calendário e Stories da planilha Estratégia Social. */
-  CSV_CALENDARIO:'',
-  CSV_STORIES:''
+  PLANILHA:'1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4'
 };

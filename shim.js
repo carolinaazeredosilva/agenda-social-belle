@@ -39,7 +39,7 @@
     return loginPromise;
   }
 
-  /* ---------- planilha (abas publicadas em CSV) ---------- */
+  /* ---------- planilha (leitura direta das abas Calendário e Stories) ---------- */
   function parseCSV(t){
     var rows=[], row=[], f='', q=false;
     for(var i=0;i<t.length;i++){ var c=t[i];
@@ -53,11 +53,11 @@
     callTool:async function(server,tool,input){
       if(tool!=='get_values') throw err('tool_error');
       await ensureSession();
-      var m=/^([^!]+)!A(\d+):/.exec(input.range)||[], aba=m[1], ini=(+m[2]||1)-1;
-      var url=aba==='Calendário'?CFG.CSV_CALENDARIO:aba==='Stories'?CFG.CSV_STORIES:'';
-      if(!url) throw err('tool_error');
-      var r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw err('tool_error','CSV '+r.status);
-      var rows=parseCSV(await r.text()).slice(ini);
+      var aba=/^([^!]+)!/.exec(input.range); aba=aba&&aba[1];
+      if(aba!=='Calendário'&&aba!=='Stories') throw err('tool_error');
+      var url='https://docs.google.com/spreadsheets/d/'+input.spreadsheetId+'/gviz/tq?tqx=out:csv&headers=0&sheet='+encodeURIComponent(aba);
+      var r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw err('tool_error','Planilha '+r.status);
+      var rows=parseCSV(await r.text());
       while(rows.length&&rows[rows.length-1].every(function(x){ return x===''; })) rows.pop();
       return {payload:{values:rows}};
     },

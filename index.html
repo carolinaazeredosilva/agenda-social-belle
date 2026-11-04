@@ -351,6 +351,17 @@ label.f:first-of-type{margin-top:0}
 .qv .qs{display:flex;flex-wrap:wrap;gap:6px}
 .qv .qs span{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--ink);background:color-mix(in srgb,var(--panel) 75%,transparent);border-radius:999px;padding:4px 10px}
 .qv .qs svg{width:14px;height:14px}
+.grip{flex:none;align-self:center;width:34px;height:44px;border-radius:10px;display:grid;place-items:center;color:var(--muted);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.grip:hover{background:var(--tile);color:var(--accent)}
+.grip svg{width:20px;height:20px;fill:currentColor;stroke:none}
+.card.st{transition:transform .15s ease}
+.card.dragging{transition:none;position:relative;z-index:5;box-shadow:0 12px 30px var(--shade);border-color:var(--accent);cursor:grabbing}
+.tl .grip{display:none}
+.tin{cursor:pointer;padding-right:4px}
+.tin input::-webkit-calendar-picker-indicator{display:none}
+.tin input{border:0;background:transparent;color:inherit;font:inherit;font-weight:700;padding:0;width:auto;min-width:56px;outline:none}
+.tin.add input{color:var(--muted)}
+.tin:focus-within{border-color:var(--accent)}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -654,12 +665,12 @@ label.f:first-of-type{margin-top:0}
     const head=it.kind==='feed'?esc(it.formato||'Feed')+' · '+esc(it.tema||''):it.kind==='destaque'?'Destaque'+(it.destaque?' · '+esc(it.destaque):''):'Story '+it.n;
     const chips=[];
     stk.forEach(s=>chips.push('<span class="chip manual">'+esc(s)+'</span>'));
-    chips.push(m.hora?'<span class="chip time">'+ic.clock+esc(m.hora)+'</span>':'<span class="chip add">'+ic.clock+'horário</span>');
+    chips.push('<label class="chip time tin'+(m.hora?'':' add')+'" title="Alterar horário">'+ic.clock+'<input type="time" class="tchip" data-id="'+esc(it.id)+'" value="'+esc(m.hora||'')+'" aria-label="Horário de '+esc(it.kind==='feed'?'post':'story '+it.n)+'"></label>');
     if(artIds(it).length) chips.push('<span class="chip">'+ic.img+artIds(it).length+'</span>');
-    return '<div class="card" style="cursor:pointer" role="button" tabindex="0" data-act="open" data-id="'+esc(it.id)+'">'
+    return '<div class="card'+(it.kind==='story'?' st':'')+'" style="cursor:pointer" role="button" tabindex="0" data-act="open" data-id="'+esc(it.id)+'">'
       +'<button class="ck" data-act="done" data-id="'+esc(it.id)+'" aria-pressed="'+done+'" aria-label="Marcar como publicado">'+ic.check+'</button>'
       +'<div class="main"><div class="t">'+head+' '+selHTML(it,st)+'</div><div class="x">'+esc(main)+'</div><div class="chips">'+chips.join('')+'</div></div>'
-      +(it.kind==='story'?'<div class="ordb"><button data-act="smove" data-id="'+esc(it.id)+'" data-n="-1" aria-label="Subir story">'+ic.up+'</button><button data-act="smove" data-id="'+esc(it.id)+'" data-n="1" aria-label="Descer story">'+ic.down+'</button></div>':'')
+      +(it.kind==='story'?'<span class="grip" data-act="grip" title="Segure e arraste para mudar a ordem" aria-label="Arrastar para mudar a ordem"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></span>':'')
       +thumbHTML(it)+'</div>';
   }
   function renderHoje(){
@@ -920,6 +931,35 @@ label.f:first-of-type{margin-top:0}
     if(!back&&(it.sheetStatus==='Agendado'||it.sheetStatus==='Publicado')) back='Aprovado';
     await saveItem(it.id,{status:back,antes:null,manual:null,checks:ck},true); renderAll(); renderSheet(); toast('Status: '+statusOf(it));
   }
+  let drag=null, dragJustEnded=false;
+  document.addEventListener('pointerdown',e=>{
+    const g=e.target.closest&&e.target.closest('.grip'); if(!g) return;
+    const card=g.closest('.card.st'); if(!card||!card.parentElement) return;
+    const cards=[...card.parentElement.querySelectorAll(':scope > .card.st')]; if(cards.length<2) return;
+    e.preventDefault();
+    const rects=cards.map(c=>c.getBoundingClientRect()), idx=cards.indexOf(card);
+    const gap=Math.max(0,rects[1].top-rects[0].bottom), step=rects[idx].height+gap;
+    drag={card,cards,rects,idx,to:idx,y0:e.clientY,step,moved:false}; card.classList.add('dragging'); try{ g.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  document.addEventListener('pointermove',e=>{
+    if(!drag) return; e.preventDefault();
+    const dy=e.clientY-drag.y0; if(Math.abs(dy)>4) drag.moved=true;
+    drag.card.style.transform='translateY('+dy+'px)';
+    const r=drag.rects[drag.idx], mid=r.top+r.height/2+dy; let to=0;
+    drag.rects.forEach((q,i)=>{ if(i!==drag.idx&&q.top+q.height/2<mid) to++; });
+    drag.to=to;
+    drag.cards.forEach((c,i)=>{ if(i===drag.idx) return; let sh=0; if(drag.idx<to&&i>drag.idx&&i<=to) sh=-drag.step; if(to<drag.idx&&i>=to&&i<drag.idx) sh=drag.step; c.style.transform=sh?'translateY('+sh+'px)':''; });
+  },{passive:false});
+  async function endDrag(){
+    if(!drag) return; const d=drag; drag=null;
+    d.cards.forEach(c=>{ c.style.transform=''; c.classList.remove('dragging'); });
+    if(d.moved) dragJustEnded=true;
+    if(d.to===d.idx) return;
+    const ids=d.cards.map(c=>c.dataset.id); const [m0]=ids.splice(d.idx,1); ids.splice(d.to,0,m0);
+    for(let i=0;i<ids.length;i++){ if(M(ids[i]).ordem!==i) await saveItem(ids[i],{ordem:i},true); }
+    renderAll(); toast('Ordem atualizada. Ajuste os horários se precisar.');
+  }
+  document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
   function closeMenu(){ const sd=$('#side'); if(sd) sd.classList.remove('open'); const sc=$('#scrim'); if(sc) sc.hidden=true; }
   function renderAll(){
     const sy=$('#sync');
@@ -1065,6 +1105,8 @@ label.f:first-of-type{margin-top:0}
   /* ---------- eventos ---------- */
   document.addEventListener('click',async e=>{
     if(e.target.closest&&e.target.closest('select.st-sel')) return;
+    { const ti=e.target.closest&&e.target.closest('.tin'); if(ti){ const inp=ti.querySelector('input'); if(inp&&e.target!==inp){ try{ inp.showPicker(); }catch(_){ inp.focus(); } } return; } }
+    if(dragJustEnded){ dragJustEnded=false; return; }
     const el=e.target.closest('[data-act]'); if(!el) return; const act=el.dataset.act;
     if(act==='alarm'){ const it=itemById(openId); if(it&&M(it.id).hora&&!alarmOk(it)){ saveItem(it.id,{alarme:true,gHora:M(it.id).hora},true).then(()=>{ renderAll(); renderSheet(); }); } return; }
     if(act==='galarm'){ const it=itemById(openId); if(it) makeAlarms([it]); return; }
@@ -1075,6 +1117,7 @@ label.f:first-of-type{margin-top:0}
     if(act==='close'){ closeItem(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='menu'){ $('#side').classList.add('open'); $('#scrim').hidden=false; return; }
+    if(act==='grip'){ return; }
     if(act==='menuclose'){ closeMenu(); return; }
     if(act==='tohora'){ const b=$('#blk-hora'); if(b) b.scrollIntoView({behavior:'smooth',block:'start'}); return; }
     if(act==='smove'){ e.stopPropagation(); const it0=itemById(el.dataset.id); if(!it0) return;
@@ -1166,6 +1209,7 @@ label.f:first-of-type{margin-top:0}
   });
   document.addEventListener('change',e=>{
     const t=e.target;
+    if(t.classList&&t.classList.contains('tchip')){ const id=t.dataset.id, v=t.value; saveItem(id,{hora:v},true).then(()=>{ renderAll(); toast(v?'Horário: '+v:'Horário removido'); }); return; }
     if(t.classList&&t.classList.contains('st-sel')){ saveItem(t.dataset.id,{status:t.value},true).then(()=>{ renderAll(); toast('Status: '+t.value); }); return; }
     if(!openId) return;
     if(t.id==='f-meta'){ const it=itemById(openId); if(!it) return; const v=t.value;

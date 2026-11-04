@@ -331,6 +331,11 @@ label.f:first-of-type{margin-top:0}
   body.mini .tab,body.mini .links a{justify-content:center;padding:0}
   body.mini .side-foot{justify-content:center}
 }
+.hgrid{display:grid;gap:10px}
+@media (min-width:480px){.hgrid{grid-template-columns:1fr 1fr}}
+.hgrid label.f{margin-top:0}
+.hgrid select.in{appearance:auto;min-height:42px}
+.hint .linkbtn{font-size:inherit;border:0;background:none;padding:0;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -876,6 +881,17 @@ label.f:first-of-type{margin-top:0}
     }catch(e){ org.busy=false; renderAll(); toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
   }
   try{ if(localStorage.getItem('belle_mini')==='1') document.body.classList.add('mini'); }catch(_){}
+  async function doSched(it){
+    const mm=M(it.id); if(!mm.hora){ toast('Informe o horário em que agendou'); const f=$('#f-hora'); if(f) f.focus(); renderSheet(); return false; }
+    const ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=true; });
+    await saveItem(it.id,{status:'Agendado',antes:statusOf(it)==='Agendado'?(mm.antes||null):statusOf(it),checks:ck},true); renderAll(); renderSheet(); toast('Agendado no Meta às '+mm.hora); return true;
+  }
+  async function doUnsched(it){
+    const mm=M(it.id), ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=false; });
+    let back=mm.antes&&mm.antes!=='Agendado'&&mm.antes!=='Publicado'?mm.antes:null;
+    if(!back&&(it.sheetStatus==='Agendado'||it.sheetStatus==='Publicado')) back='Aprovado';
+    await saveItem(it.id,{status:back,antes:null,checks:ck},true); renderAll(); renderSheet(); toast('Status: '+statusOf(it));
+  }
   function closeMenu(){ const sd=$('#side'); if(sd) sd.classList.remove('open'); const sc=$('#scrim'); if(sc) sc.hidden=true; }
   function renderAll(){
     const sy=$('#sync');
@@ -930,16 +946,19 @@ label.f:first-of-type{margin-top:0}
       +'<div class="row" style="margin-top:8px"><button class="btn" data-act="copylink">'+ic.copy+'Copiar link</button></div>'
       +'<label class="f" for="f-note">Observações<textarea class="in" id="f-note" rows="3" placeholder="Anotações só deste item">'+esc(m.nota||'')+'</textarea></label></div>';
     const sg=suggestHora(it);
-    h+='<div class="blk"><h4>Horário e alarme</h4>'
-      +(st==='Agendado'&&m.hora?'<p class="txt sm" style="margin-bottom:10px"><b>Agendado para '+esc(m.hora)+'</b> no Meta.</p>':'')
-      +'<label class="f" for="f-hora">Horário (em que agendou ou vai postar)<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"></label>'
-      +'<div class="row" style="margin-top:10px">'+(sg&&sg!==m.hora?'<button class="btn" data-act="sugg" data-h="'+sg+'">'+ic.clock+'Usar sugerido '+sg+'</button>':'')
-      +(st==='Agendado'?'<button class="btn" data-act="unsched" title="Desfaz a marcação de agendado">'+ic.x+'Desmarcar agendado no Meta</button>':'<button class="btn primary" data-act="sched">'+ic.check+'Agendei no Meta'+(m.hora?' às '+esc(m.hora):'')+'</button>')+'</div>'
-      +'<p class="hint">Sugestão pelo tipo de post e pelo estudo global de horários (feed por volta do almoço, Reels à noite, stories entre 11h e 14h). É um ponto de partida: ajuste com os seus Insights.</p>'
-      +'<div class="row" style="margin-top:10px"><button class="btn primary" data-act="galarm"'+(m.hora?'':' disabled')+'>'+ic.clock+(m.gEvent?'Atualizar alarme no Google Agenda':'Criar alarme no Google Agenda')+'</button></div>'
-      +(alarmOk(it)?'<p class="txt sm" style="margin-top:10px"><b>Alarme criado às '+esc(m.hora)+'</b>, com aviso 10 min antes. <button class="btn" data-act="unalarm">Desmarcar</button></p>'
-        :(m.alarme&&m.gHora&&m.gHora!==m.hora?'<p class="txt sm" style="margin-top:10px;color:var(--danger)"><b>O horário mudou.</b> Toque em Atualizar alarme para mover o evento para '+esc(m.hora||'')+'.</p>':''))
-      +'<p class="hint">Cria o evento direto no seu Google Agenda, com aviso 10 minutos antes. '+(m.hora?'Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">abra manualmente</a>.':'')+'</p></div>';
+    const mv=st==='Agendado'?'ag':st==='Publicado'?'pub':'nao', mo=(v,l)=>'<option value="'+v+'"'+(mv===v?' selected':'')+'>'+l+'</option>';
+    let al;
+    if(st==='Publicado') al='';
+    else if(!m.hora) al='<div class="ur"><i class="dot"></i><span class="tx">Sem alarme<small>Defina o horário para criar o alarme.</small></span></div>';
+    else if(alarmOk(it)) al='<div class="ur"><i class="dot ok"></i><span class="tx">Alarme criado às '+esc(m.hora)+'<small>Aviso 10 minutos antes no Google Agenda.</small></span><button class="go" data-act="unalarm">Desmarcar</button></div>';
+    else if(m.alarme&&m.gHora&&m.gHora!==m.hora) al='<div class="ur"><i class="dot warm"></i><span class="tx">O horário mudou<small>O alarme está às '+esc(m.gHora)+'. Atualize para '+esc(m.hora)+'.</small></span><button class="go fill" data-act="galarm">Atualizar alarme</button></div>';
+    else al='<div class="ur"><i class="dot hot"></i><span class="tx">Alarme ainda não criado<small>Cria o evento no seu Google Agenda, com aviso 10 minutos antes.</small></span><button class="go fill" data-act="galarm">Criar alarme</button></div>';
+    h+='<div class="blk"><h4>Horário e alarme</h4><div class="hgrid">'
+      +'<label class="f" for="f-hora">Horário<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"></label>'
+      +'<label class="f" for="f-meta">No Meta<select class="in" id="f-meta">'+mo('nao','Ainda não agendado')+mo('ag','Agendado no Meta')+mo('pub','Já publicado')+'</select></label></div>'
+      +(sg&&sg!==m.hora&&st!=='Publicado'?'<p class="hint">Sugestão para este tipo de post: <button class="linkbtn" data-act="sugg" data-h="'+sg+'">usar '+sg+'</button></p>':'')
+      +'<div style="margin-top:12px">'+al+'</div>'
+      +(m.hora&&st!=='Publicado'?'<p class="hint">Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">crie o alarme manualmente</a>.</p>':'')+'</div>';
     // checklist
     const cl=checklistFor(it), ck=m.checks||{};
     h+='<div class="blk"><h4>Checklist</h4><div class="cl">'+cl.map((l,i)=>'<button data-act="chk" data-i="'+i+'" aria-pressed="'+(!!ck[l])+'"><span class="bx">'+ic.check+'</span><span class="l">'+esc(l)+'</span></button>').join('')+'</div></div>';
@@ -1059,12 +1078,14 @@ label.f:first-of-type{margin-top:0}
     if(act==='status'){ await saveItem(it.id,{status:el.dataset.s},true); renderAll(); renderSheet(); return; }
     if(act==='inav'){ const sb=sibsOf(it), j=sb.findIndex(x=>x.id===it.id)+Number(el.dataset.n); if(j>=0&&j<sb.length){ openId=sb[j].id; renderSheet(); $('#panel').scrollTop=0; } return; }
     if(act==='sugg'){ await saveItem(it.id,{hora:el.dataset.h},true); renderAll(); renderSheet(); return; }
-    if(act==='sched'){
+    if(act==='sched'){ await doSched(it); return; }
+    if(act==='unsched'){ await doUnsched(it); return; }
+    if(act==='sched_old'){
       const mm=M(it.id); if(!mm.hora){ toast('Informe o horário em que agendou'); const f=$('#f-hora'); if(f) f.focus(); return; }
       const ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=true; });
       await saveItem(it.id,{status:'Agendado',antes:statusOf(it),checks:ck},true); renderAll(); renderSheet(); toast('Marcado como agendado às '+mm.hora); return;
     }
-    if(act==='unsched'){
+    if(act==='unsched_old'){
       const mm=M(it.id), ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=false; });
       let back=mm.antes&&mm.antes!=='Agendado'?mm.antes:null;
       if(!back&&it.sheetStatus==='Agendado') back='Aprovado';
@@ -1106,6 +1127,11 @@ label.f:first-of-type{margin-top:0}
     const t=e.target;
     if(t.classList&&t.classList.contains('st-sel')){ saveItem(t.dataset.id,{status:t.value},true).then(()=>{ renderAll(); toast('Status: '+t.value); }); return; }
     if(!openId) return;
+    if(t.id==='f-meta'){ const it=itemById(openId); if(!it) return; const v=t.value;
+      if(v==='ag') doSched(it);
+      else if(v==='nao') doUnsched(it);
+      else { const mm=M(it.id); saveItem(it.id,{status:'Publicado',antes:statusOf(it)==='Publicado'?(mm.antes||null):statusOf(it)},true).then(()=>{ renderAll(); renderSheet(); toast('Marcado como publicado'); }); }
+      return; }
     if(t.id==='f-hora'){ saveItem(openId,{hora:t.value},true).then(()=>{ renderAll(); const it=itemById(openId); const a=$('#gcal'); if(a&&it){ if(t.value){ a.href=gcalUrl(it,t.value); a.removeAttribute('aria-disabled'); } else { a.removeAttribute('href'); a.setAttribute('aria-disabled','true'); } } }); }
   });
   $('#file-in').addEventListener('change',e=>{ const f=[...e.target.files]; e.target.value=''; addArts(f); });

@@ -276,13 +276,15 @@ label.f:first-of-type{margin-top:0}
 .ur .tx small{display:block;font-weight:400;color:var(--muted);font-size:12px}
 .go{border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));border-radius:999px;background:transparent;color:var(--accent);font-weight:700;font-size:12px;padding:7px 14px;white-space:nowrap;margin-left:auto}
 .go.fill{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.hday{background:color-mix(in srgb,var(--panel) 80%,transparent);border-radius:20px;padding:14px 16px;align-self:start}
+.hday{background:color-mix(in srgb,var(--panel) 80%,transparent);border-radius:20px;padding:16px 18px;align-self:stretch;display:flex;flex-direction:column}
 .hday h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
-.htl{display:grid;grid-template-columns:50px minmax(0,1fr);gap:6px 10px;font-size:13px;align-items:center}
-.htl b{font:700 13px var(--font-display);color:var(--ink);font-variant-numeric:tabular-nums}
-.htl button{border:0;background:none;padding:0;text-align:left;color:var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.htl{display:flex;flex-direction:column;gap:6px;flex:1}
+.htl .hi{display:grid;grid-template-columns:54px minmax(0,1fr);gap:10px;align-items:center;padding:9px 10px;border-radius:12px;background:var(--bg);font-size:14px}
+.htl .hi.done{opacity:.55}
+.htl b{font:800 15px var(--font-display);color:var(--ink);font-variant-numeric:tabular-nums}
+.htl button{border:0;background:none;padding:0;text-align:left;color:var(--ink);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .htl button:hover{color:var(--accent)}
-@media (min-width:900px){.hero{grid-template-columns:minmax(0,1fr) 280px;gap:22px;padding:22px 24px}}
+@media (min-width:900px){.hero{grid-template-columns:minmax(0,1fr) 320px;gap:22px;padding:22px 24px}}
 /* cartões do painel */
 @media (min-width:760px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}}
 .pgrid{display:grid;gap:16px;margin-top:16px}
@@ -312,10 +314,27 @@ label.f:first-of-type{margin-top:0}
 .art .mvb{position:absolute;top:4px;right:4px;display:flex;gap:4px}
 .art .mvb button{border:0;border-radius:999px;width:28px;height:28px;background:rgba(20,8,28,.7);color:#fff;display:grid;place-items:center}
 .art .mvb button:disabled{opacity:.3}
+
+/* menu retrátil */
+.brand-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.brand-row .brand{flex:1;min-width:0}
+.side-tg{display:none;width:34px;height:34px}
+.side-tg svg{transition:transform .2s ease}
+@media (min-width:960px){
+  .side-tg{display:grid}
+  .side,body{transition:width .2s ease,padding-left .2s ease}
+  body.mini{padding-left:calc(76px + 40px)}
+  body.mini .side{width:76px;padding-left:10px;padding-right:10px}
+  body.mini .brand,body.mini .lb,body.mini .links h4,body.mini .links .ext{display:none}
+  body.mini .brand-row{justify-content:center}
+  body.mini .side-tg svg{transform:rotate(180deg)}
+  body.mini .tab,body.mini .links a{justify-content:center;padding:0}
+  body.mini .side-foot{justify-content:center}
+}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
-  <div class="brand"><b>Agenda Social</b><span>Belle Software</span></div>
+  <div class="brand-row"><div class="brand"><b>Agenda Social</b><span>Belle Software</span></div><button class="iconbtn side-tg" data-act="sidemini" aria-label="Recolher menu" title="Recolher menu"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button></div>
   <div class="in-tabs" role="tablist">
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>
     <button class="tab" role="tab" data-act="tab" data-v="hoje" id="tab-hoje"></button>
@@ -324,11 +343,11 @@ label.f:first-of-type{margin-top:0}
   </div>
   <div class="links">
     <h4>Atalhos</h4>
-    <a class="meta" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg>Meta Business<svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-    <a href="https://docs.google.com/spreadsheets/d/1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4/edit" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>Planilha<svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-    <a href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Google Agenda<svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a class="meta" title="Meta Business" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg><span class="lb">Meta Business</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a title="Planilha" href="https://docs.google.com/spreadsheets/d/1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4/edit" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg><span class="lb">Planilha</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a title="Google Agenda" href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="lb">Google Agenda</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
   </div>
-  <div class="side-foot"><span id="sync">Lendo a planilha…</span><button class="iconbtn" id="btn-refresh" data-act="refresh" aria-label="Atualizar da planilha"></button></div>
+  <div class="side-foot"><span id="sync" class="lb">Lendo a planilha…</span><button class="iconbtn" id="btn-refresh" data-act="refresh" aria-label="Atualizar da planilha"></button></div>
 </nav>
 <div class="scrim" id="scrim" data-act="menuclose" hidden></div>
 
@@ -670,7 +689,7 @@ label.f:first-of-type{margin-top:0}
     let h='<section class="hero"><div><h2>O que é mais urgente hoje</h2><p class="hsum">Hoje tem '+fT.length+(fT.length===1?' post de feed':' posts de feed')+' e '+sT.length+(sT.length===1?' story':' stories')+'.'+(pend?' '+(pend===1?'Falta 1 coisa.':'Faltam '+pend+' coisas.'):'')+'</p>';
     h+=(pend?U.slice(0,6).map(u=>'<div class="ur"><i class="dot '+u[0]+'"></i><span class="tx">'+esc(u[1])+(u[2]?'<small>'+esc(u[2])+'</small>':'')+'</span>'+u[3]+'</div>').join(''):'<div class="ur"><i class="dot ok"></i><span class="tx">Tudo certo por hoje<small>Nada urgente na agenda.</small></span></div>');
     const ag=sortItems(fT.concat(sT));
-    h+='</div><div class="hday"><h3>Agenda de hoje</h3>'+(ag.length?'<div class="htl">'+ag.map(x=>'<b>'+esc(M(x.id).hora||'–')+'</b><button data-act="open" data-id="'+esc(x.id)+'">'+esc(itemShort(x))+'</button>').join('')+'</div>':'<p class="hint" style="margin:0">Nada planejado para hoje.</p>')+'</div></section>';
+    h+='</div><div class="hday"><h3>Agenda de hoje</h3>'+(ag.length?'<div class="htl">'+ag.map(x=>'<div class="hi'+(statusOf(x)==='Publicado'?' done':'')+'"><b>'+esc(M(x.id).hora||'–')+'</b><button data-act="open" data-id="'+esc(x.id)+'">'+esc(itemShort(x))+'</button></div>').join('')+'</div>':'<p class="hint" style="margin:0">Nada planejado para hoje.</p>')+'</div></section>';
     return h;
   }
   function conferencia(){
@@ -856,6 +875,7 @@ label.f:first-of-type{margin-top:0}
       renderAll(); setTimeout(load,2500);
     }catch(e){ org.busy=false; renderAll(); toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
   }
+  try{ if(localStorage.getItem('belle_mini')==='1') document.body.classList.add('mini'); }catch(_){}
   function closeMenu(){ const sd=$('#side'); if(sd) sd.classList.remove('open'); const sc=$('#scrim'); if(sc) sc.hidden=true; }
   function renderAll(){
     const sy=$('#sync');
@@ -864,7 +884,7 @@ label.f:first-of-type{margin-top:0}
     $('#banner').innerHTML=loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina'); $('#today-txt').textContent=longDay(todayIso()); }
-    [['painel','Painel',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Feed',ic.grid]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span>'+t[1]+'</span>'; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Painel',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Feed',ic.grid]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'; b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); v.dataset.v=view;
     if(!loaded&&!feed.length){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():renderFeed();
@@ -1003,6 +1023,7 @@ label.f:first-of-type{margin-top:0}
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='menu'){ $('#side').classList.add('open'); $('#scrim').hidden=false; return; }
     if(act==='menuclose'){ closeMenu(); return; }
+    if(act==='sidemini'){ const on=!document.body.classList.contains('mini'); document.body.classList.toggle('mini',on); try{ localStorage.setItem('belle_mini',on?'1':''); }catch(_){} const b=$('.side-tg'); if(b){ b.setAttribute('aria-label',on?'Abrir menu':'Recolher menu'); b.title=on?'Abrir menu':'Recolher menu'; } return; }
     if(act==='gtoday'){ const t=todayIso(); makeAlarms(sortItems(feedOn(t).concat(storiesOn(t).filter(x=>x.kind==='story'))).filter(x=>statusOf(x)!=='Publicado'&&!alarmOk(x))); return; }
     if(act==='fideas'){ showIdeas=!showIdeas; renderAll(); return; }
     if(act==='exportleg'){ exportLegendas(); return; }

@@ -59,6 +59,12 @@
       var r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw err('tool_error','Planilha '+r.status);
       var rows=parseCSV(await r.text());
       while(rows.length&&rows[rows.length-1].every(function(x){ return x===''; })) rows.pop();
+      /* A leitura direta apaga o título de colunas de data; recoloca "Data" na coluna que tem datas. */
+      if(rows.length>1&&rows[0].map(function(h){ return h.trim().toLowerCase(); }).indexOf('data')<0){
+        for(var c=0;c<rows[0].length;c++){ if(rows[0][c].trim()) continue; var n=0,t=0;
+          for(var k=1;k<rows.length;k++){ var v=(rows[k][c]||'').trim(); if(!v) continue; t++; if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(v)) n++; }
+          if(t&&n/t>=0.5){ rows[0][c]='Data'; break; } }
+      }
       return {payload:{values:rows}};
     },
     invalidate:async function(){}
@@ -144,6 +150,40 @@
       }
       var a=document.createElement('a'); a.href=URL.createObjectURL(o.data); a.download=o.filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); },4000);
       return {status:'saved'};
+    }
+  };
+
+
+  /* ---------- Google Agenda: cria os alarmes direto na agenda ---------- */
+  var gTok=null, gExp=0, gClient=null;
+  function gToken(){
+    if(gTok&&gExp>Date.now()+60000) return Promise.resolve(gTok);
+    return new Promise(function(res,rej){
+      if(!(window.google&&google.accounts&&google.accounts.oauth2)) return rej(err('gis'));
+      gClient=gClient||google.accounts.oauth2.initTokenClient({client_id:CFG.GOOGLE_CLIENT_ID,scope:'https://www.googleapis.com/auth/calendar.events',callback:function(){}});
+      gClient.callback=function(r){ if(r.error) return rej(err(r.error)); gTok=r.access_token; gExp=Date.now()+(r.expires_in-60)*1000; res(gTok); };
+      gClient.error_callback=function(e){ rej(err(e&&e.type||'popup')); };
+      gClient.requestAccessToken({prompt:'',login_hint:CFG.EMAIL});
+    });
+  }
+  async function gcal(method,path,body){
+    var t=await gToken();
+    var r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events'+path,{method:method,headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+    if(r.status===401){ gTok=null; }
+    return r;
+  }
+  window.belleCal={
+    upsert:async function(list){
+      var out={}; await gToken();
+      for(var i=0;i<list.length;i++){ var x=list[i];
+        var body=Object.assign({},x.ev,{reminders:{useDefault:false,overrides:[{method:'popup',minutes:10}]}});
+        try{
+          var r=null;
+          if(x.eventId){ r=await gcal('PATCH','/'+encodeURIComponent(x.eventId),body); if(r.status===404||r.status===410) r=null; else if(r.ok){ var j0=await r.json(); if(j0.status==='cancelled') r=null; else { out[x.key]={id:j0.id}; continue; } } }
+          r=await gcal('POST','',body); if(r.ok){ var j=await r.json(); out[x.key]={id:j.id}; } else out[x.key]={error:r.status};
+        }catch(e){ out[x.key]={error:String(e&&e.message||e)}; }
+      }
+      return out;
     }
   };
 

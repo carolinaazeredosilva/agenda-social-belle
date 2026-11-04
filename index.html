@@ -13,6 +13,7 @@
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="shim.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600&display=swap">
 <style>
 /* Layout: uma coluna mobile-first. Cabeçalho, conteúdo da aba (Hoje, Calendário, Feed) e barra de abas fixa embaixo. Detalhe do item abre como folha de tela cheia. */
@@ -473,6 +474,27 @@ label.f:first-of-type{margin-top:0}
     if(it.kind==='destaque') return '';
     const t=12*60+((it.n||1)-1)*30; return pad(Math.floor(t/60))+':'+pad(t%60);
   }
+  function evOf(it,hora){
+    const p=hora.split(':').map(Number); const e0=fromIso(it.date); e0.setHours(p[0],p[1]+15,0,0);
+    const st=stickersOf(it.sticker);
+    return { summary:'Postar '+itemLabel(it)+(st.length?' ('+st.join(', ')+')':'')+' · Belle Software',
+      description:((it.kind==='feed'?(it.gancho||it.tema):it.copy)||'').slice(0,1500),
+      start:{dateTime:it.date+'T'+pad(p[0])+':'+pad(p[1])+':00',timeZone:'America/Sao_Paulo'},
+      end:{dateTime:iso(e0)+'T'+pad(e0.getHours())+':'+pad(e0.getMinutes())+':00',timeZone:'America/Sao_Paulo'} };
+  }
+  const alarmOk=x=>{ const m=M(x.id); return !!(m.alarme&&m.hora&&(!m.gHora||m.gHora===m.hora)); };
+  function makeAlarms(items){
+    const list=items.filter(x=>M(x.id).hora);
+    if(!list.length){ toast('Informe o horário antes de criar o alarme'); return; }
+    if(!window.belleCal){ toast('Alarme automático indisponível. Use o link manual.'); return; }
+    toast('Criando '+(list.length===1?'o alarme':list.length+' alarmes')+' no Google Agenda…');
+    window.belleCal.upsert(list.map(x=>({key:x.id,eventId:M(x.id).gEvent||'',ev:evOf(x,M(x.id).hora)}))).then(async res=>{
+      let ok=0, fail=0;
+      for(const x of list){ const r=res[x.id]; if(r&&r.id){ ok++; await saveItem(x.id,{alarme:true,gEvent:r.id,gHora:M(x.id).hora},true); } else fail++; }
+      renderAll(); if(openId) renderSheet();
+      toast(ok?(ok===1?'Alarme criado':ok+' alarmes criados')+' no Google Agenda'+(fail?' · '+fail+' falharam':''):'Não consegui criar no Google Agenda');
+    }).catch(e=>{ toast(e&&e.code==='popup_closed'?'Login do Google cancelado':'Não consegui falar com o Google Agenda'); });
+  }
   function gcalUrl(it,hora){
     const p=hora.split(':').map(Number); const d=it.date.replace(/-/g,'');
     const s=d+'T'+pad(p[0])+pad(p[1])+'00'; const e0=fromIso(it.date); e0.setHours(p[0],p[1]+15,0,0);
@@ -610,7 +632,7 @@ label.f:first-of-type{margin-top:0}
   function dayState(k){
     if(k<todayIso()) return '';
     const its=feedOn(k).concat(storiesOn(k).filter(x=>x.kind==='story')); if(!its.length) return '';
-    const ok=its.every(x=>{ const st=statusOf(x), m=M(x.id); return st==='Publicado'||(st==='Agendado'&&m.hora&&m.alarme); });
+    const ok=its.every(x=>{ const st=statusOf(x), m=M(x.id); return st==='Publicado'||(st==='Agendado'&&alarmOk(x)); });
     return ok?'dz-ok':'dz-todo';
   }
   function renderCal(){
@@ -701,9 +723,10 @@ label.f:first-of-type{margin-top:0}
       +'<div class="row" style="margin-top:10px">'+(sg&&sg!==m.hora?'<button class="btn" data-act="sugg" data-h="'+sg+'">'+ic.clock+'Usar sugerido '+sg+'</button>':'')
       +'<button class="btn primary" data-act="sched">'+ic.check+'Agendei no Meta'+(m.hora?' às '+esc(m.hora):'')+'</button></div>'
       +'<p class="hint">Sugestão pelo tipo de post e pelo estudo global de horários (feed por volta do almoço, Reels à noite, stories entre 11h e 14h). É um ponto de partida: ajuste com os seus Insights.</p>'
-      +'<div class="row" style="margin-top:10px"><a class="btn primary" id="gcal" data-act="alarm" target="_blank" rel="noopener" '+(m.hora?'href="'+esc(gcalUrl(it,m.hora))+'"':'aria-disabled="true"')+'>'+ic.clock+'Criar alarme no Google Agenda</a></div>'
-      +(m.alarme?'<p class="txt sm" style="margin-top:10px"><b>Alarme criado</b> neste item. <button class="btn" data-act="unalarm">Desmarcar</button></p>':'')
-      +'<p class="hint">Abre o Google Agenda com o evento pronto e marca o alarme como criado. O aviso 10 minutos antes vem da configuração da sua agenda.</p></div>';
+      +'<div class="row" style="margin-top:10px"><button class="btn primary" data-act="galarm"'+(m.hora?'':' disabled')+'>'+ic.clock+(m.gEvent?'Atualizar alarme no Google Agenda':'Criar alarme no Google Agenda')+'</button></div>'
+      +(alarmOk(it)?'<p class="txt sm" style="margin-top:10px"><b>Alarme criado às '+esc(m.hora)+'</b>, com aviso 10 min antes. <button class="btn" data-act="unalarm">Desmarcar</button></p>'
+        :(m.alarme&&m.gHora&&m.gHora!==m.hora?'<p class="txt sm" style="margin-top:10px;color:var(--danger)"><b>O horário mudou.</b> Toque em Atualizar alarme para mover o evento para '+esc(m.hora||'')+'.</p>':''))
+      +'<p class="hint">Cria o evento direto no seu Google Agenda, com aviso 10 minutos antes. '+(m.hora?'Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">abra manualmente</a>.':'')+'</p></div>';
     // checklist
     const cl=checklistFor(it), ck=m.checks||{};
     h+='<div class="blk"><h4>Checklist</h4><div class="cl">'+cl.map((l,i)=>'<button data-act="chk" data-i="'+i+'" aria-pressed="'+(!!ck[l])+'"><span class="bx">'+ic.check+'</span><span class="l">'+esc(l)+'</span></button>').join('')+'</div></div>';
@@ -727,6 +750,8 @@ label.f:first-of-type{margin-top:0}
     h+='<div class="seg" role="group" aria-label="Forma de ver o dia"><button data-act="dview" data-v="lista" aria-pressed="'+(dview==='lista')+'">Lista</button><button data-act="dview" data-v="horas" aria-pressed="'+(dview==='horas')+'">Por horário</button></div>';
     const simples=ss.filter(x=>!stickersOf(x.sticker).length);
     if(simples.length) h+='<div class="blk"><h4>Agendar os stories do dia</h4><div class="row"><input class="in" id="d-hora" type="time" style="width:auto" value="'+esc(dHora)+'" aria-label="Horário dos stories"><button class="btn primary" data-act="dsched">'+ic.check+'Agendei '+simples.length+(simples.length===1?' story simples':' stories simples')+'</button></div><p class="hint">Aplica o horário e marca como Agendado. Stories com figurinha ou link ficam de fora, porque você posta no celular.</p></div>';
+    { const its=fs.concat(ss).filter(x=>statusOf(x)!=='Publicado'), pend=its.filter(x=>!alarmOk(x)), comH=pend.filter(x=>M(x.id).hora), semH=pend.length-comH.length;
+      if(its.length) h+='<div class="blk"><h4>Alarmes do dia</h4>'+(pend.length?'<div class="row"><button class="btn primary" data-act="gday"'+(comH.length?'':' disabled')+'>'+ic.clock+'Criar '+comH.length+(comH.length===1?' alarme':' alarmes')+' no Google Agenda</button></div><p class="hint">Um evento por item, com aviso 10 minutos antes.'+(semH?' '+semH+(semH===1?' item está':' itens estão')+' sem horário e fica'+(semH===1?'':'m')+' de fora.':'')+'</p>':'<p class="txt sm"><b>Todos os alarmes do dia estão criados.</b></p>')+'</div>'; }
     if(!all.length){ h+='<p class="empty" style="margin-top:16px">Nada planejado na planilha para este dia.</p>'; }
     else if(dview==='lista'){
       h+='<section class="sec"><h3><span>Feed</span></h3>'+(fs.length?fs.map(cardHTML).join(''):'<p class="empty">Sem post de feed.</p>')+'</section>';
@@ -775,7 +800,9 @@ label.f:first-of-type{margin-top:0}
   document.addEventListener('click',async e=>{
     if(e.target.closest&&e.target.closest('select.st-sel')) return;
     const el=e.target.closest('[data-act]'); if(!el) return; const act=el.dataset.act;
-    if(act==='alarm'){ const it=itemById(openId); if(it&&M(it.id).hora&&!M(it.id).alarme){ saveItem(it.id,{alarme:true},true).then(()=>{ renderAll(); renderSheet(); }); } return; }
+    if(act==='alarm'){ const it=itemById(openId); if(it&&M(it.id).hora&&!alarmOk(it)){ saveItem(it.id,{alarme:true,gHora:M(it.id).hora},true).then(()=>{ renderAll(); renderSheet(); }); } return; }
+    if(act==='galarm'){ const it=itemById(openId); if(it) makeAlarms([it]); return; }
+    if(act==='gday'){ makeAlarms(sortItems(feedOn(dayOpen)).concat(sortItems(storiesOn(dayOpen).filter(x=>x.kind==='story'))).filter(x=>!alarmOk(x)&&statusOf(x)!=='Publicado')); return; }
     if(act==='unalarm'){ const it=itemById(openId); if(it){ await saveItem(it.id,{alarme:false},true); renderAll(); renderSheet(); } return; }
     if(act==='done'){ e.stopPropagation(); const it=itemById(el.dataset.id); if(!it) return; const now=statusOf(it)==='Publicado'; const back=it.sheetStatus==='Publicado'?'Aprovado':it.sheetStatus; await saveItem(it.id,{status:now?back:'Publicado'},true); renderAll(); return; }
     if(act==='open'){ openItem(el.dataset.id); return; }

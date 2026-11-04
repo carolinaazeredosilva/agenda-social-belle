@@ -336,6 +336,10 @@ label.f:first-of-type{margin-top:0}
 .hgrid label.f{margin-top:0}
 .hgrid select.in{appearance:auto;min-height:42px}
 .hint .linkbtn{font-size:inherit;border:0;background:none;padding:0;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer}
+.ordb{display:flex;flex-direction:column;gap:4px;flex:none;align-self:center}
+.ordb button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;width:30px;height:28px;display:grid;place-items:center;padding:0}
+.ordb button:hover{border-color:var(--accent);color:var(--accent)}
+.ordb svg{width:16px;height:16px}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -402,6 +406,8 @@ label.f:first-of-type{margin-top:0}
     grid:'<svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
     month:'<svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>',
     swap:'<svg class="i" viewBox="0 0 24 24"><path d="M17 3l4 4-4 4M21 7H8a4 4 0 0 0-4 4M7 21l-4-4 4-4M3 17h13a4 4 0 0 0 4-4"/></svg>',
+    up:'<svg class="i" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>',
+    down:'<svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
     dash:'<svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     trash:'<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>'
   };
@@ -614,7 +620,17 @@ label.f:first-of-type{margin-top:0}
   const storiesOn=d=>stories.filter(x=>x.date===d&&!M(x.id).oculto);
   const hiddenOn=d=>stories.filter(x=>x.date===d&&M(x.id).oculto);
   const timeKey=it=>M(it.id).hora||'99:99';
-  function sortItems(a){ return a.slice().sort((x,y)=>timeKey(x).localeCompare(timeKey(y))||(x.rowIdx||0)-(y.rowIdx||0)||x.n-y.n); }
+  function sortItems(a){
+    const r=a.slice().sort((x,y)=>timeKey(x).localeCompare(timeKey(y))||(x.rowIdx||0)-(y.rowIdx||0)||x.n-y.n);
+    /* ordem manual dos stories de um dia: ocupa as mesmas posições, na ordem escolhida */
+    const dates=[...new Set(r.filter(x=>x.kind==='story').map(x=>x.date))];
+    dates.forEach(d=>{ const idx=[], its=[]; r.forEach((x,i)=>{ if(x.kind==='story'&&x.date===d){ idx.push(i); its.push(x); } });
+      if(!its.some(x=>typeof M(x.id).ordem==='number')) return;
+      const ok=its.slice().sort((x,y)=>{ const ox=M(x.id).ordem, oy=M(y.id).ordem; return (typeof ox==='number'?ox:999)-(typeof oy==='number'?oy:999); });
+      idx.forEach((pos,k)=>{ r[pos]=ok[k]; }); });
+    return r;
+  }
+  const hasOrdem=d=>storiesOn(d).some(x=>x.kind==='story'&&typeof M(x.id).ordem==='number');
 
   function selHTML(it,st){
     return '<span class="sel" data-s="'+esc(st)+'"><select class="st-sel" data-id="'+esc(it.id)+'" aria-label="Status: '+esc(st)+'">'
@@ -632,6 +648,7 @@ label.f:first-of-type{margin-top:0}
     return '<div class="card" style="cursor:pointer" role="button" tabindex="0" data-act="open" data-id="'+esc(it.id)+'">'
       +'<button class="ck" data-act="done" data-id="'+esc(it.id)+'" aria-pressed="'+done+'" aria-label="Marcar como publicado">'+ic.check+'</button>'
       +'<div class="main"><div class="t">'+head+' '+selHTML(it,st)+'</div><div class="x">'+esc(main)+'</div><div class="chips">'+chips.join('')+'</div></div>'
+      +(it.kind==='story'?'<div class="ordb"><button data-act="smove" data-id="'+esc(it.id)+'" data-n="-1" aria-label="Subir story">'+ic.up+'</button><button data-act="smove" data-id="'+esc(it.id)+'" data-n="1" aria-label="Descer story">'+ic.down+'</button></div>':'')
       +thumbHTML(it)+'</div>';
   }
   function renderHoje(){
@@ -649,7 +666,7 @@ label.f:first-of-type{margin-top:0}
     let h='<div class="weekbar"><button class="iconbtn" data-act="wk" data-n="-1" aria-label="Semana anterior">'+ic.left+'</button><div class="week">'+wk+'</div><button class="iconbtn" data-act="wk" data-n="1" aria-label="Próxima semana">'+ic.right+'</button></div>';
     h+='<div class="daytitle"><h2>'+(sel===todayIso()?'Hoje, ':'')+esc(longDay(sel))+'</h2>'+(sel!==todayIso()?'<button class="linkbtn" data-act="today">Ir para hoje</button>':'')+'</div>';
     h+='<section class="sec"><h3><span>Feed</span></h3>'+(fs.length?fs.map(cardHTML).join(''):'<p class="empty">Nenhum post de feed planejado para este dia.</p>')+'</section>';
-    h+='<section class="sec"><h3><span>Stories</span><span>'+(ss.length?done+' de '+ss.length+' publicados':'')+'</span></h3>';
+    h+='<section class="sec"><h3><span>Stories</span><span>'+(hasOrdem(sel)?'<button class="linkbtn" data-act="sreset" data-d="'+sel+'" style="padding:0;font-size:12px;text-transform:none;letter-spacing:0">ordenar por horário</button> · ':'')+(ss.length?done+' de '+ss.length+' publicados':'')+'</span></h3>';
     if(ss.length){ h+='<div class="meter"><i style="width:'+Math.round(done/ss.length*100)+'%"></i></div>'+ss.map(cardHTML).join(''); }
     else h+='<p class="empty">Nenhum story planejado para este dia.</p>';
     if(notes.length) h+='<div class="note"><b>Interações previstas na planilha:</b> '+notes.map(esc).join(' · ')+'</div>';
@@ -987,7 +1004,7 @@ label.f:first-of-type{margin-top:0}
     if(!all.length){ h+='<p class="empty" style="margin-top:16px">Nada planejado na planilha para este dia.</p>'; }
     else if(dview==='lista'){
       h+='<section class="sec"><h3><span>Feed</span></h3>'+(fs.length?fs.map(cardHTML).join(''):'<p class="empty">Sem post de feed.</p>')+'</section>';
-      h+='<section class="sec"><h3><span>Stories</span></h3>'+(ss.length?ss.map(cardHTML).join(''):'<p class="empty">Sem stories.</p>')+'</section>';
+      h+='<section class="sec"><h3><span>Stories</span>'+(hasOrdem(d)?'<button class="linkbtn" data-act="sreset" data-d="'+d+'" style="padding:0;font-size:12px;text-transform:none;letter-spacing:0">ordenar por horário</button>':'')+'</h3>'+(ss.length?ss.map(cardHTML).join(''):'<p class="empty">Sem stories.</p>')+'</section>';
       if(ds.length) h+='<section class="sec"><h3><span>Destaques</span></h3>'+ds.map(cardHTML).join('')+'</section>';
     }else{
       const g={}; all.forEach(it=>{ const k=M(it.id).hora||''; (g[k]=g[k]||[]).push(it); });
@@ -1042,6 +1059,12 @@ label.f:first-of-type{margin-top:0}
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='menu'){ $('#side').classList.add('open'); $('#scrim').hidden=false; return; }
     if(act==='menuclose'){ closeMenu(); return; }
+    if(act==='smove'){ e.stopPropagation(); const it0=itemById(el.dataset.id); if(!it0) return;
+      const sib=sortItems(storiesOn(it0.date).filter(x=>x.kind==='story')), k=sib.findIndex(x=>x.id===it0.id), j=k+Number(el.dataset.n);
+      if(k<0||j<0||j>=sib.length) return; const tmp=sib[k]; sib[k]=sib[j]; sib[j]=tmp;
+      for(let i=0;i<sib.length;i++){ if(M(sib[i].id).ordem!==i) await saveItem(sib[i].id,{ordem:i},true); }
+      renderAll(); return; }
+    if(act==='sreset'){ const list=storiesOn(el.dataset.d).filter(x=>x.kind==='story'&&typeof M(x.id).ordem==='number'); for(const x of list){ await saveItem(x.id,{ordem:null},true); } renderAll(); toast('Stories na ordem dos horários'); return; }
     if(act==='sidemini'){ const on=!document.body.classList.contains('mini'); document.body.classList.toggle('mini',on); try{ localStorage.setItem('belle_mini',on?'1':''); }catch(_){} const b=$('.side-tg'); if(b){ b.setAttribute('aria-label',on?'Abrir menu':'Recolher menu'); b.title=on?'Abrir menu':'Recolher menu'; } return; }
     if(act==='gtoday'){ const t=todayIso(); makeAlarms(sortItems(feedOn(t).concat(storiesOn(t).filter(x=>x.kind==='story'))).filter(x=>statusOf(x)!=='Publicado'&&!alarmOk(x))); return; }
     if(act==='fideas'){ showIdeas=!showIdeas; renderAll(); return; }

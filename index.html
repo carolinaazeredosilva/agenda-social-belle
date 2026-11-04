@@ -1132,7 +1132,13 @@ label.f:first-of-type{margin-top:0}
     if(act==='alarm'){ const it=itemById(openId); if(it&&M(it.id).hora&&!alarmOk(it)){ saveItem(it.id,{alarme:true,gHora:M(it.id).hora},true).then(()=>{ renderAll(); renderSheet(); }); } return; }
     if(act==='galarm'){ const it=itemById(openId); if(it) makeAlarms([it]); return; }
     if(act==='gday'){ makeAlarms(sortItems(feedOn(dayOpen)).concat(sortItems(storiesOn(dayOpen).filter(x=>x.kind==='story'))).filter(x=>!alarmOk(x)&&statusOf(x)!=='Publicado')); return; }
-    if(act==='unalarm'){ const it=itemById(openId); if(it){ await saveItem(it.id,{alarme:false},true); renderAll(); renderSheet(); } return; }
+    if(act==='unalarm'){ const it=itemById(openId); if(!it) return; const ev=M(it.id).gEvent;
+      if(ev&&window.belleCal&&window.belleCal.remove){
+        toast('Removendo o alarme do Google Agenda…');
+        window.belleCal.remove(ev).then(async()=>{ await saveItem(it.id,{alarme:false,gEvent:null,gHora:null},true); renderAll(); renderSheet(); toast('Alarme removido da agenda'); })
+          .catch(e=>{ toast(e&&e.code==='popup_closed'?'Login do Google cancelado':'Não consegui remover do Google Agenda. Tente de novo.'); });
+      } else { await saveItem(it.id,{alarme:false,gHora:null},true); renderAll(); renderSheet(); toast(ev?'Alarme desmarcado':'Alarme desmarcado (era manual: apague no Google Agenda)'); }
+      return; }
     if(act==='done'){ e.stopPropagation(); const it=itemById(el.dataset.id); if(!it) return; const now=statusOf(it)==='Publicado'; const back=it.sheetStatus==='Publicado'?'Aprovado':it.sheetStatus; await saveItem(it.id,{status:now?back:'Publicado'},true); renderAll(); return; }
     if(act==='open'){ if(org) return; openItem(el.dataset.id); return; }
     if(act==='close'){ closeItem(); return; }

@@ -173,6 +173,11 @@
     return r;
   }
   window.belleCal={
+    remove:async function(eventId){
+      var r=await gcal('DELETE','/'+encodeURIComponent(eventId));
+      if(r.ok||r.status===404||r.status===410) return true;
+      throw err('gcal','O Google Agenda recusou a remoção ('+r.status+').');
+    },
     upsert:async function(list){
       var out={}; await gToken();
       for(var i=0;i<list.length;i++){ var x=list[i];

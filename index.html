@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261104145035">
+<meta name="belle-ver" content="20261104145620">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -778,7 +778,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     const chips=[];
     stk.forEach(s=>chips.push('<span class="chip manual">'+esc(s)+'</span>'));
     chips.push('<label class="chip time tin'+(m.hora?'':' add')+'" title="Alterar horário">'+ic.clock+'<input type="time" class="tchip" data-id="'+esc(it.id)+'" value="'+esc(m.hora||'')+'" aria-label="Horário de '+esc(it.kind==='feed'?'post':'story '+it.n)+'"></label>');
-    if(artIds(it).length) chips.push('<span class="chip">'+ic.img+artIds(it).length+'</span>');
+    if(artIds(it).length) chips.push('<span class="chip">'+ic.img+artIds(it).length+'</span>'); else if(m.semArte) chips.push('<span class="chip">'+ic.swap+'repost</span>');
     return '<div class="card'+(it.kind==='story'?' st':'')+'" style="cursor:pointer" role="button" tabindex="0" data-act="open" data-id="'+esc(it.id)+'">'
       +'<button class="ck" data-act="done" data-id="'+esc(it.id)+'" aria-pressed="'+(!!m.feito)+'" aria-label="'+(m.feito?'Desmarcar como pronto':'Marcar como pronto')+'" title="'+(m.feito?'Pronto ✓ (toque para desmarcar)':'Marcar como pronto')+'">'+ic.check+'</button>'
       +'<div class="main"><div class="t">'+head+' '+selHTML(it,st)+'</div><div class="x">'+esc(main)+'</div><div class="chips">'+chips.join('')+'</div></div>'
@@ -816,7 +816,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   }
   /* ---------- painel gerencial (cadência: feed seg/qua/sex, até 4 por semana; stories todo dia) ---------- */
   const FEED_DOW=[1,3,5], FEED_MAX=4;
-  const hasArt=it=>artIds(it).length>0;
+  const hasArt=it=>artIds(it).length>0||!!M(it.id).semArte;
   const byDate=(a,b)=>a.date<b.date?-1:a.date>b.date?1:(a.rowIdx||0)-(b.rowIdx||0);
   const dleft=d=>Math.round((fromIso(d)-fromIso(todayIso()))/864e5);
   const dueTxt=n=>n<0?'atrasado '+(-n)+(n===-1?' dia':' dias'):n===0?'hoje':n===1?'amanhã':'em '+n+' dias';
@@ -1167,12 +1167,12 @@ body.mini .grp,body.mini .tab .ct{display:none}
     const sb=sibsOf(it), si=sb.findIndex(x=>x.id===it.id);
     let h='<div class="ph-head"><button class="iconbtn" data-act="close" aria-label="Fechar">'+ic.x+'</button><h2>'+esc(itemLabel(it))+' · '+shortDay(it.date)+(sb.length>1?' <span style="color:var(--muted);font-weight:600;font-size:13px">('+(si+1)+' de '+sb.length+')</span>':'')+'</h2>'
       +(sb.length>1?'<button class="iconbtn" data-act="inav" data-n="-1" aria-label="Item anterior"'+(si<=0?' disabled style="opacity:.35"':'')+'>'+ic.left+'</button><button class="iconbtn" data-act="inav" data-n="1" aria-label="Próximo item"'+(si>=sb.length-1?' disabled style="opacity:.35"':'')+'>'+ic.right+'</button>':'')+'</div>';
-    { const na=arts.length, pub=st==='Publicado', ag=st==='Agendado', al=alarmOk(it);
+    { const na=arts.length, rp=!!m.semArte&&!arts.length, pub=st==='Publicado', ag=st==='Agendado', al=alarmOk(it);
       const na2=needAlarm(it), lv=pub?'ok':(ag&&(!na2||al||!m.hora)?'ok':ag||m.hora?'warm':'hot');
       const meta=pub?(m.manual?'Postado manual':'Publicado'):ag?'Agendado no Meta'+(m.hora?' às '+esc(m.hora):''):'Ainda não agendado';
       const alT=pub?'':(!m.hora?'Sem horário':!na2?'':al?'Alarme às '+esc(m.hora)+' ✓':'Alarme pendente');
       h+='<button class="qv '+lv+'" data-act="tohora" aria-label="Ir para horário e alarme"><span class="qm"><i class="dot '+lv+'"></i><b>'+meta+'</b></span>'
-        +'<span class="qs">'+(alT?'<span>'+ic.clock+alT+'</span>':'')+(pinOf(it)?'<span>'+ic.pin+'Fixado '+pinOf(it)+'º</span>':'')+'<span>'+ic.img+(na?na+(na===1?' arte':' artes'):'sem arte')+'</span><span>'+esc(st)+'</span></span></button>'; }
+        +'<span class="qs">'+(alT?'<span>'+ic.clock+alT+'</span>':'')+(pinOf(it)?'<span>'+ic.pin+'Fixado '+pinOf(it)+'º</span>':'')+'<span>'+ic.img+(na?na+(na===1?' arte':' artes'):rp?'repost (sem arte)':'sem arte')+'</span><span>'+esc(st)+'</span></span></button>'; }
     h+='<div class="blk"><h4>Situação</h4><div class="seg">'+STATUSES.map(s=>'<button data-act="status" data-s="'+esc(s)+'" aria-pressed="'+(st===s)+'">'+esc(s)+'</button>').join('')+'</div>'
       +'<p class="hint">Vem da planilha. Se você mudar aqui, vale só neste app até a planilha mudar também.</p></div>';
     if(it.kind==='feed'){ const pv=pinOf(it), used={}; feed.forEach(x=>{ if(x.id!==it.id&&pinOf(x)) used[pinOf(x)]=x; });
@@ -1183,7 +1183,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
     h+='<div class="blk"><h4>Artes</h4>';
     if(arts.length){ h+='<div class="arts">'+arts.map((a,i)=>'<div class="art"><img src="'+PX+'" data-blob="'+esc(a)+'" alt="Arte '+(i+1)+'">'
       +'<span class="no">'+(i+1)+'</span>'+(arts.length>1?'<span class="mvb"><button data-act="amove" data-i="'+i+'" data-n="-1" aria-label="Mover arte '+(i+1)+' para antes"'+(i===0?' disabled':'')+'>'+ic.left+'</button><button data-act="amove" data-i="'+i+'" data-n="1" aria-label="Mover arte '+(i+1)+' para depois"'+(i===arts.length-1?' disabled':'')+'>'+ic.right+'</button></span>':'')+'<div class="acts"><button data-act="dl" data-i="'+i+'" aria-label="Baixar arte '+(i+1)+'">'+ic.dl+'</button>'+(assets?'<button data-act="arep" data-i="'+i+'" aria-label="Substituir arte '+(i+1)+'">'+ic.swap+'</button>':'')+'<button data-act="adel" data-i="'+i+'" aria-label="Remover arte '+(i+1)+'">'+ic.trash+'</button></div></div>').join('')+'</div>'; }
-    else h+='<p class="txt sm" style="margin-bottom:10px">Nenhuma arte enviada ainda.</p>';
+    else h+=m.semArte?'<div class="ur"><i class="dot ok"></i><span class="tx">Sem arte: repost<small>Este item não precisa de arte (por exemplo, repostar o post do feed nos stories).</small></span><button class="go" data-act="noart">Desfazer</button></div>'
+      :'<p class="txt sm" style="margin-bottom:10px">Nenhuma arte enviada ainda.</p><button class="swt" data-act="noart" style="width:100%;text-align:left;margin-bottom:10px"><span class="sl"></span><span class="st"><b>Sem arte (repost)</b><small>Marque quando for só repostar o que já está no feed. Deixa de contar como pendência.</small></span></button>';
     h+='<div class="row">'+(assets?'<button class="btn primary" data-act="aadd">'+ic.plus+'Adicionar artes</button>':'<span class="hint">Só quem edita a página envia artes.</span>')
       +(arts.length>1?'<button class="btn" data-act="dlall">'+ic.dl+'Baixar todas</button>':'')
       +(it.kind!=='feed'?'<button class="btn danger" data-act="shide">'+ic.trash+'Excluir '+(it.kind==='destaque'?'destaque':'story')+'</button>':'')+'</div>'
@@ -1293,7 +1294,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   async function downloadAll(it){ const n=artIds(it).length; for(let i=0;i<n;i++){ const ok=await downloadArt(it,i); if(ok===false) break; } }
 
   /* ---------- eventos ---------- */
-  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset']);
+  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart']);
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
@@ -1379,6 +1380,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(act==='copylink'){ const l=M(it.id).link||''; if(l) copyText(l); else toast('Cole um link primeiro'); return; }
     if(act==='chk'){ const l=checklistFor(it)[+el.dataset.i]; const ck=Object.assign({},M(it.id).checks||{}); ck[l]=!ck[l]; await saveItem(it.id,{checks:ck},true); renderSheet(); return; }
     if(act==='aadd'){ replaceIdx=null; uploadFor=it.id; $('#file-in').click(); return; }
+    if(act==='noart'){ const on=!M(it.id).semArte; await saveItem(it.id,{semArte:on},true); renderAll(); renderSheet(); toast(on?'Marcado como sem arte (repost)':'Volta a precisar de arte'); return; }
     if(act==='amove'){ const a=artIds(it).slice(), i=+el.dataset.i, k=i+Number(el.dataset.n); if(k<0||k>=a.length) return; const tmp=a[i]; a[i]=a[k]; a[k]=tmp; await saveItem(it.id,{art:a},true); renderAll(); renderSheet(); return; }
     if(act==='arep'){ replaceIdx=+el.dataset.i; uploadFor=it.id; $('#file-in').click(); return; }
     if(act==='shide'){

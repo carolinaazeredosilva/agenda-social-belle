@@ -21,24 +21,24 @@
   --bg:#F8F3FB; --panel:#FFFFFF; --ink:#381B49; --body:#5A4869; --muted:#7D6F8B;
   --line:#E6DCEE; --accent:#A11176; --accent-ink:#FFFFFF; --violet:#6C4BE0; --cyan-soft:#DCF1FA; --tile:#EFE6F5;
   --s-ideia:#7D6F8B; --s-prod:#B7791F; --s-ok:#C29A00; --s-agend:#5A4FCF; --s-pub:#A11176;
-  --danger:#B42318; --s-green:#1F8A5B; --shade:rgba(56,27,73,.10);
+  --meta:#1D4ED8; --danger:#B42318; --s-green:#1F8A5B; --shade:rgba(56,27,73,.10);
   --font-display:'Montserrat',system-ui,sans-serif; --font-body:'Open Sans',system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#150C1D; --panel:#22132E; --ink:#F4ECFA; --body:#CDBFD9; --muted:#A596B5;
   --line:#3A2749; --accent:#F58BD8; --accent-ink:#2A0B22; --violet:#A58BFF; --cyan-soft:#1D3340; --tile:#2D1B3B;
   --s-ideia:#A596B5; --s-prod:#E9B44C; --s-ok:#FFD84D; --s-agend:#A9A0F5; --s-pub:#F58BD8;
-  --danger:#FF8A80; --s-green:#4CC38A; --shade:rgba(0,0,0,.4); color-scheme:dark}}
+  --meta:#9DB8FF; --danger:#FF8A80; --s-green:#4CC38A; --shade:rgba(0,0,0,.4); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#150C1D; --panel:#22132E; --ink:#F4ECFA; --body:#CDBFD9; --muted:#A596B5;
   --line:#3A2749; --accent:#F58BD8; --accent-ink:#2A0B22; --violet:#A58BFF; --cyan-soft:#1D3340; --tile:#2D1B3B;
   --s-ideia:#A596B5; --s-prod:#E9B44C; --s-ok:#FFD84D; --s-agend:#A9A0F5; --s-pub:#F58BD8;
-  --danger:#FF8A80; --s-green:#4CC38A; --shade:rgba(0,0,0,.4); color-scheme:dark}
+  --meta:#9DB8FF; --danger:#FF8A80; --s-green:#4CC38A; --shade:rgba(0,0,0,.4); color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--body);font-family:var(--font-body);font-size:15px;line-height:1.55;
-  padding-block:18px 110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:720px;margin:0 auto}
+  padding-block:18px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1160px;margin:0 auto}
 h1,h2,h3{font-family:var(--font-display);color:var(--ink);margin:0;line-height:1.2;text-wrap:balance}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -47,7 +47,7 @@ button{cursor:pointer}
 svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:14px;position:relative}
-.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:3px;background:linear-gradient(135deg,#A11176,#8461F4,#81D8E5)}
+.top::after{content:none}
 .top h1{font-size:24px;font-weight:800;letter-spacing:-.01em}
 .top .sub{font-size:12px;color:var(--muted);margin-top:2px;min-height:18px}
 .iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;width:42px;height:42px;display:grid;place-items:center;flex:none}
@@ -188,13 +188,17 @@ label.f:first-of-type{margin-top:0}
 .tl .tm{font:700 14px/1.2 var(--font-display);color:var(--ink);padding-top:14px;font-variant-numeric:tabular-nums}
 .tl .tm.none{font-size:12px;color:var(--muted);font-weight:600}
 .tl .tc{min-width:0}
-/* abas */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--panel);border-top:1px solid var(--line);
-  padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.tabs .in-tabs{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-.tab{border:0;background:transparent;border-radius:14px;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font:600 12px/1.2 var(--font-body);color:var(--muted);min-height:50px}
-.tab svg{width:22px;height:22px}
-.tab[aria-selected="true"]{color:var(--accent)}
+/* menu lateral */
+.side{position:fixed;top:0;bottom:0;left:0;z-index:50;width:244px;background:var(--panel);border-right:1px solid var(--line);padding:24px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:22px;overflow-y:auto;transform:translateX(-105%);transition:transform .22s ease}
+.side.open{transform:none;box-shadow:0 0 48px var(--shade)}
+.brand b{display:block;font:800 20px/1.1 var(--font-display);color:var(--ink)}
+.brand span{font-size:12px;color:var(--muted)}
+.brand::after{content:"";display:block;height:3px;border-radius:3px;margin-top:14px;background:linear-gradient(135deg,#A11176,#8461F4,#81D8E5)}
+.side .in-tabs{display:flex;flex-direction:column;gap:4px}
+.tab{display:flex;align-items:center;gap:12px;border:0;background:transparent;border-radius:14px;min-height:46px;padding:0 14px;font:600 15px/1.2 var(--font-body);color:var(--body);text-align:left;width:100%}
+.tab svg{width:20px;height:20px}
+.tab:hover{background:var(--tile)}
+.tab[aria-selected="true"]{background:color-mix(in srgb,var(--accent) 12%,var(--panel));color:var(--accent)}
 /* painel gerencial */
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -235,30 +239,107 @@ label.f:first-of-type{margin-top:0}
 .fn{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--pc);border-radius:12px;padding:8px 2px;text-align:center;min-width:0}
 .fn b{display:block;font:800 20px/1.1 var(--font-display);color:var(--ink)}
 .fn span{font-size:10px;color:var(--muted);font-weight:600;overflow-wrap:anywhere}
-.toast{position:fixed;left:50%;translate:-50% 0;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--bg);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;max-width:calc(100% - 32px);text-align:center}
+.toast{position:fixed;left:50%;translate:-50% 0;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--bg);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;max-width:calc(100% - 32px);text-align:center}
 .toast[hidden]{display:none}
+
+/* menu lateral: atalhos e rodapé */
+.links{display:flex;flex-direction:column;gap:6px}
+.links h4{margin:0 0 2px 14px;font:700 11px var(--font-display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.links a{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:14px;text-decoration:none;font-weight:600;font-size:14px;color:var(--body);border:1px solid var(--line);white-space:nowrap}
+.links a:hover{border-color:var(--accent);color:var(--accent)}
+.links a .ext{margin-left:auto;width:15px;height:15px;opacity:.6}
+.links a.meta{background:color-mix(in srgb,#3B82F6 9%,var(--panel));border-color:color-mix(in srgb,#3B82F6 30%,var(--line));color:var(--meta)}
+.side-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);line-height:1.4}
+.scrim{position:fixed;inset:0;z-index:45;background:rgba(20,8,30,.38)}
+.scrim[hidden]{display:none}
+.menu-btn{border-radius:14px}
+@media (min-width:960px){
+  .side{transform:none;box-shadow:none}
+  .menu-btn,.scrim{display:none!important}
+  body{padding-left:calc(244px + 40px);padding-right:40px;padding-top:30px}
+}
+/* saudação */
+.top{align-items:center;justify-content:flex-start;padding-bottom:4px}
+.hello h1{font-size:clamp(23px,4vw,30px);font-weight:800;letter-spacing:-.01em}
+.hello .sub{font-size:13px;min-height:0}
+.hello .sub::first-letter{text-transform:uppercase}
+#view[data-v="hoje"],#view[data-v="feed"]{max-width:760px}
+#view[data-v="cal"]{max-width:920px}
+/* resumo do dia */
+.hero{margin-top:16px;border-radius:26px;padding:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%,var(--panel)) 0%,color-mix(in srgb,var(--violet) 9%,var(--panel)) 60%,color-mix(in srgb,#81D8E5 16%,var(--panel)) 100%);border:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.hero h2{font-size:17px}
+.hero .hsum{font-size:13px;color:var(--muted);margin:2px 0 12px}
+.ur{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;background:color-mix(in srgb,var(--panel) 80%,transparent);border:1px solid var(--line);border-radius:16px;padding:10px 12px 10px 14px;margin-bottom:8px;width:100%;text-align:left}
+.ur .dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--muted)}
+.ur .dot.hot{background:var(--danger)}.ur .dot.warm{background:var(--s-prod)}.ur .dot.ok{background:var(--s-green)}
+.ur .tx{flex:1 1 180px;min-width:0;color:var(--ink);font-weight:600;font-size:14px;line-height:1.35}
+.ur .tx small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.go{border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));border-radius:999px;background:transparent;color:var(--accent);font-weight:700;font-size:12px;padding:7px 14px;white-space:nowrap;margin-left:auto}
+.go.fill{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.hday{background:color-mix(in srgb,var(--panel) 80%,transparent);border-radius:20px;padding:14px 16px;align-self:start}
+.hday h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.htl{display:grid;grid-template-columns:50px minmax(0,1fr);gap:6px 10px;font-size:13px;align-items:center}
+.htl b{font:700 13px var(--font-display);color:var(--ink);font-variant-numeric:tabular-nums}
+.htl button{border:0;background:none;padding:0;text-align:left;color:var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.htl button:hover{color:var(--accent)}
+@media (min-width:900px){.hero{grid-template-columns:minmax(0,1fr) 280px;gap:22px;padding:22px 24px}}
+/* cartões do painel */
+@media (min-width:760px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}}
+.pgrid{display:grid;gap:16px;margin-top:16px}
+@media (min-width:1100px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.pgrid .wide{grid-column:1/-1}}
+.pgrid .sec{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:22px;overflow:hidden;min-width:0}
+.pgrid .sec>h3{margin:0;padding:12px 16px;background:var(--hc,var(--tile));color:var(--ink);font-size:12px;align-items:baseline}
+.pgrid .sec>h3 span+span{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:600;text-align:right}
+.pgrid .sb{padding:12px}
+.pgrid .rw{border-color:transparent;background:var(--bg)}
+.pgrid .rw:hover{border-color:var(--accent)}
+.pgrid .wk{background:transparent;border:0;padding:0}
+.pgrid .ur{background:var(--bg)}
+.h-pink{--hc:color-mix(in srgb,var(--accent) 11%,var(--panel))}.h-violet{--hc:color-mix(in srgb,var(--violet) 12%,var(--panel))}.h-cyan{--hc:color-mix(in srgb,#81D8E5 24%,var(--panel))}.h-sand{--hc:color-mix(in srgb,var(--s-prod) 14%,var(--panel))}.h-green{--hc:color-mix(in srgb,var(--s-green) 14%,var(--panel))}
+/* organizar grade */
+.orgbar{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;margin:12px 0}
+.orgbar p{margin:0 0 10px;font-size:13px}
+.grid.org .ly{display:none}
+.tile.mv{outline:3px solid var(--violet);outline-offset:-3px}
+.tile .om{position:absolute;top:5px;left:5px;right:5px;display:flex;justify-content:space-between;z-index:2}
+.tile .om span{width:30px;height:30px;border-radius:999px;background:rgba(20,8,28,.72);color:#fff;display:grid;place-items:center}
+.tile .om span[aria-disabled="true"]{opacity:.25}
+.tile .nd{position:absolute;left:5px;right:5px;bottom:30px;text-align:center;font-size:11px;font-weight:700;color:#fff;background:var(--violet);border-radius:999px;padding:1px 6px}
+.chg{list-style:none;margin:0 0 12px;padding:0;font-size:13px}
+.chg li{padding:6px 0;border-bottom:1px solid var(--line)}
+.chg li b{color:var(--ink)}
+/* carrossel */
+.art .mvb{position:absolute;top:4px;right:4px;display:flex;gap:4px}
+.art .mvb button{border:0;border-radius:999px;width:28px;height:28px;background:rgba(20,8,28,.7);color:#fff;display:grid;place-items:center}
+.art .mvb button:disabled{opacity:.3}
 </style>
 
-<div class="wrap">
-  <header class="top">
-    <div>
-      <h1>Agenda Social</h1>
-      <div class="sub" id="sync">Lendo a planilha…</div>
-    </div>
-    <button class="iconbtn" id="btn-refresh" data-act="refresh" aria-label="Atualizar da planilha"></button>
-  </header>
-  <div id="banner"></div>
-  <main id="view" aria-live="polite"></main>
-</div>
-
-<nav class="tabs" aria-label="Seções">
+<nav class="side" id="side" aria-label="Seções">
+  <div class="brand"><b>Agenda Social</b><span>Belle Software</span></div>
   <div class="in-tabs" role="tablist">
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>
     <button class="tab" role="tab" data-act="tab" data-v="hoje" id="tab-hoje"></button>
     <button class="tab" role="tab" data-act="tab" data-v="cal" id="tab-cal"></button>
     <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
   </div>
+  <div class="links">
+    <h4>Atalhos</h4>
+    <a class="meta" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg>Meta Business<svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a href="https://docs.google.com/spreadsheets/d/1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4/edit" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>Planilha<svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Google Agenda<svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+  </div>
+  <div class="side-foot"><span id="sync">Lendo a planilha…</span><button class="iconbtn" id="btn-refresh" data-act="refresh" aria-label="Atualizar da planilha"></button></div>
 </nav>
+<div class="scrim" id="scrim" data-act="menuclose" hidden></div>
+
+<div class="wrap">
+  <header class="top">
+    <button class="iconbtn menu-btn" data-act="menu" aria-label="Abrir menu"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="hello"><h1 id="hello">Olá, Carolina</h1><div class="sub" id="today-txt"></div></div>
+  </header>
+  <div id="banner"></div>
+  <main id="view" aria-live="polite"></main>
+</div>
 
 <div class="sheet" id="dsheet" hidden role="dialog" aria-modal="true" aria-label="Dia no calendário"><div class="panel" id="dpanel"></div></div>
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Detalhes do item"><div class="panel" id="panel"></div></div>
@@ -305,7 +386,7 @@ label.f:first-of-type{margin-top:0}
   let feed=[], stories=[], loaded=false, loadErr=null, lastRead=0;
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
-  let hz=14, dHora='', replaceIdx=null;
+  let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null;
   let view='painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='lista';
   const queues=new Map(), timers=new Map();
@@ -565,6 +646,52 @@ label.f:first-of-type{margin-top:0}
     return '<button class="rw" data-act="open" data-id="'+esc(it.id)+'"><span class="rd"><b>'+shortDay(it.date)+'</b><span>'+WD[fromIso(it.date).getDay()]+'</span></span>'
       +'<span class="rm"><span class="rt">'+esc(it.tema||it.formato||'Post')+'</span><span class="rs">'+esc(it.formato||'')+' '+pill(statusOf(it))+(M(it.id).hora?'<span class="chip time">'+ic.clock+esc(M(it.id).hora)+'</span>':'')+'</span></span>'+right+'</button>';
   }
+  function itemShort(x){ return x.kind==='feed'?'Feed · '+(x.tema||x.formato||'post'):(x.kind==='destaque'?'Destaque':'Story '+x.n)+(x.copy?' · '+x.copy.replace(/\s+/g,' ').slice(0,34):''); }
+  function heroHTML(){
+    const t=todayIso(), tm=addDays(t,1);
+    const fT=feedOn(t), sT=storiesOn(t).filter(x=>x.kind==='story');
+    const open=fT.concat(sT).filter(x=>statusOf(x)!=='Publicado');
+    const U=[], btn=(d,lab)=>'<button class="go" data-act="goto" data-d="'+d+'">'+(lab||'Abrir')+'</button>';
+    const late=feed.filter(x=>x.date<t&&statusOf(x)!=='Publicado').sort(byDate);
+    if(late.length) U.push(['hot',late.length===1?'1 post atrasado':late.length+' posts atrasados',late.slice(0,2).map(x=>shortDay(x.date)+' '+(x.tema||'')).join(' · '),btn(late[0].date)]);
+    fT.filter(x=>statusOf(x)!=='Publicado').forEach(x=>{
+      if(!hasArt(x)) U.push(['hot','Post de hoje sem arte',x.tema||x.formato||'',btn(t)]);
+      else if(statusOf(x)!=='Agendado') U.push(['warm','Post de hoje ainda não está agendado',x.tema||'',btn(t)]);
+    });
+    const noArt=sT.filter(x=>!hasArt(x)&&statusOf(x)!=='Publicado');
+    if(noArt.length) U.push(['hot',noArt.length===1?'Story '+noArt[0].n+' de hoje está sem arte':noArt.length+' stories de hoje sem arte',noArt.length===1?(noArt[0].copy||'').replace(/\s+/g,' ').slice(0,70):'Stories '+noArt.map(x=>x.n).join(', '),btn(t)]);
+    const noH=open.filter(x=>!M(x.id).hora);
+    if(noH.length) U.push(['warm',noH.length===1?'1 item de hoje sem horário':noH.length+' itens de hoje sem horário','Defina o horário para criar o alarme',btn(t)]);
+    const pendA=open.filter(x=>M(x.id).hora&&!alarmOk(x));
+    if(pendA.length) U.push(['hot',pendA.length===1?'1 alarme de hoje ainda não foi criado':pendA.length+' alarmes de hoje ainda não foram criados','Horários: '+pendA.map(x=>M(x.id).hora).sort().join(', '),'<button class="go fill" data-act="gtoday">Criar alarmes</button>']);
+    feedOn(tm).filter(x=>statusOf(x)!=='Publicado'&&!hasArt(x)).forEach(x=>U.push(['warm','Amanhã: post sem arte',(x.tema||'')+(x.formato?' · '+x.formato:''),btn(tm)]));
+    const sTm=storiesOn(tm).filter(x=>x.kind==='story'&&!hasArt(x)); if(sTm.length) U.push(['warm','Amanhã: '+(sTm.length===1?'1 story sem arte':sTm.length+' stories sem arte'),'',btn(tm)]);
+    const pend=U.length;
+    let h='<section class="hero"><div><h2>O que é mais urgente hoje</h2><p class="hsum">Hoje tem '+fT.length+(fT.length===1?' post de feed':' posts de feed')+' e '+sT.length+(sT.length===1?' story':' stories')+'.'+(pend?' '+(pend===1?'Falta 1 coisa.':'Faltam '+pend+' coisas.'):'')+'</p>';
+    h+=(pend?U.slice(0,6).map(u=>'<div class="ur"><i class="dot '+u[0]+'"></i><span class="tx">'+esc(u[1])+(u[2]?'<small>'+esc(u[2])+'</small>':'')+'</span>'+u[3]+'</div>').join(''):'<div class="ur"><i class="dot ok"></i><span class="tx">Tudo certo por hoje<small>Nada urgente na agenda.</small></span></div>');
+    const ag=sortItems(fT.concat(sT));
+    h+='</div><div class="hday"><h3>Agenda de hoje</h3>'+(ag.length?'<div class="htl">'+ag.map(x=>'<b>'+esc(M(x.id).hora||'–')+'</b><button data-act="open" data-id="'+esc(x.id)+'">'+esc(itemShort(x))+'</button>').join('')+'</div>':'<p class="hint" style="margin:0">Nada planejado para hoje.</p>')+'</div></section>';
+    return h;
+  }
+  function conferencia(){
+    const L=[], all=feed.concat(stories);
+    const known=new Set(all.map(x=>x.id));
+    const desc=id=>{ const m=id.match(/^([fs])_(\d{4}-\d{2}-\d{2})_(\d+)(?:_(\w+))?$/); if(!m) return id; return (m[1]==='f'?'Feed':m[4]==='d'?'Destaque':'Story '+m[4])+' de '+shortDay(m[2]); };
+    const orf=[]; meta.forEach((v,id)=>{ if(v&&v.art&&v.art.length&&!known.has(id)) orf.push([id,v.art.length]); });
+    orf.sort((a,b)=>a[0]<b[0]?-1:1);
+    if(orf.length) L.push(['hot',orf.length===1?'Arte sem item na planilha: '+desc(orf[0][0]):orf.length+' itens com arte que não existem mais na planilha','Provável mudança de data ou de linha na planilha. '+orf.slice(0,6).map(o=>desc(o[0])+' ('+o[1]+')').join(' · ')+(orf.length>6?' · e mais '+(orf.length-6):''),'']);
+    const t=todayIso();
+    feed.filter(x=>x.date>=t&&statusOf(x)==='Agendado'&&!hasArt(x)).forEach(x=>L.push(['hot','Agendado sem arte: '+(x.tema||'post'),shortDay(x.date)+' · '+(x.formato||''),'<button class="go" data-act="open" data-id="'+esc(x.id)+'">Abrir</button>']));
+    feed.filter(x=>x.date>=t&&statusOf(x)==='Agendado'&&!M(x.id).hora).forEach(x=>L.push(['warm','Agendado sem horário: '+(x.tema||'post'),shortDay(x.date),'<button class="go" data-act="open" data-id="'+esc(x.id)+'">Abrir</button>']));
+    const dif=all.filter(x=>M(x.id).status&&M(x.id).status!==x.sheetStatus&&x.date>=addDays(t,-7));
+    if(dif.length) L.push(['warm',dif.length+(dif.length===1?' item com status diferente da planilha':' itens com status diferente da planilha'),dif.slice(0,3).map(x=>shortDay(x.date)+' '+itemShort(x).slice(0,24)+' ('+M(x.id).status+' no app, '+x.sheetStatus+' na planilha)').join(' · '),'']);
+    const byD={}; feed.forEach(x=>{ byD[x.date]=(byD[x.date]||0)+1; });
+    Object.keys(byD).filter(d=>byD[d]>1).forEach(d=>L.push(['warm','Dois posts de feed no mesmo dia',shortDay(d),'<button class="go" data-act="goto" data-d="'+d+'">Ver</button>']));
+    let h='<section class="sec h-sand"><h3><span>Conferência</span><span>'+(L.length?L.length+(L.length===1?' ponto':' pontos'):'tudo confere')+'</span></h3><div class="sb">';
+    h+=L.length?L.map(u=>'<div class="ur"><i class="dot '+u[0]+'"></i><span class="tx">'+esc(u[1])+(u[2]?'<small>'+esc(u[2])+'</small>':'')+'</span>'+u[3]+'</div>').join(''):'<div class="ur"><i class="dot ok"></i><span class="tx">Tudo confere<small>Cada arte está ligada a um post ou story que existe na planilha.</small></span></div>';
+    h+='<div class="row" style="margin-top:6px"><button class="btn" data-act="exportleg">'+ic.dl+'Exportar legendas (.txt)</button></div></div></section>';
+    return h;
+  }
   function renderPainel(){
     const t=todayIso(), days=[]; for(let i=0;i<hz;i++) days.push(addDays(t,i)); const end=days[days.length-1];
     const fH=feed.filter(x=>x.date>=t&&x.date<=end).sort(byDate);
@@ -576,21 +703,16 @@ label.f:first-of-type{margin-top:0}
     const gaps=days.filter(d=>FEED_DOW.indexOf(fromIso(d).getDay())>=0&&!feedOn(d).length);
     const sched=fH.filter(x=>statusOf(x)==='Agendado').length;
     const kp=(n,l,sub,cls)=>'<div class="kpi'+(cls?' '+cls:'')+'"><b>'+n+'</b><span>'+l+'</span>'+(sub?'<em>'+sub+'</em>':'')+'</div>';
-    let h='<div class="daytitle"><h2>Painel</h2><span class="hint" style="margin:0">'+shortDay(t)+' a '+shortDay(end)+'</span></div>';
+    let h=heroHTML();
+    h+='<div class="daytitle"><h2>Visão geral</h2><span class="hint" style="margin:0">'+shortDay(t)+' a '+shortDay(end)+'</span></div>';
     h+='<div class="fchips" style="margin-top:4px">'+[7,14,30].map(n=>'<button class="chip" data-act="hz" data-n="'+n+'" aria-pressed="'+(hz===n)+'">'+n+' dias</button>').join('')+'</div>';
     h+='<div class="kpis">'+kp(need.length,'posts de feed sem arte','de '+fH.length+' no período',need.length?'warm':'ok')
       +kp(stGap.length,'dias de stories incompletos','de '+stD.length+' com stories',stGap.length?'warm':'ok')
       +kp(sched+'/'+fH.length,'posts agendados no Meta','no período','')
       +kp(gaps.length,'buracos na cadência','seg, qua e sex sem post',gaps.length?'hot':'ok')+'</div>';
-    // atenção
-    h+='<section class="sec"><h3><span>Precisa de atenção</span></h3>';
-    late.forEach(x=>{ h+=rowHTML(x,'<span class="due hot">'+dueTxt(dleft(x.date))+'</span>'); });
-    need.forEach(x=>{ const n=dleft(x.date); h+=rowHTML(x,'<span class="due '+urgCls(n)+'">sem arte · '+dueTxt(n)+'</span>'); });
-    gaps.forEach(d=>{ h+='<button class="rw" data-act="goto" data-d="'+d+'"><span class="rd"><b>'+shortDay(d)+'</b><span>'+WD[fromIso(d).getDay()]+'</span></span><span class="rm"><span class="rt">Sem post de feed planejado</span><span class="rs">Dia de cadência (seg, qua ou sex)</span></span><span class="due hot">'+dueTxt(dleft(d))+'</span></button>'; });
-    if(!late.length&&!need.length&&!gaps.length) h+='<p class="empty">Tudo em dia neste período.</p>';
-    h+='</section>';
+    h+='<div class="pgrid">';
     // semanas
-    h+='<section class="sec"><h3><span>Cadência por semana</span><span>feed: seg, qua, sex</span></h3>';
+    h+='<section class="sec wide h-violet"><h3><span>Cadência por semana</span><span>feed seg, qua e sex · vermelho falta organizar · verde tudo pronto</span></h3><div class="sb">';
     let mon=(function(){ const d=fromIso(t); d.setDate(d.getDate()-((d.getDay()+6)%7)); return iso(d); })();
     while(mon<=end){
       const wd=[0,1,2,3,4,5,6].map(i=>addDays(mon,i));
@@ -606,9 +728,16 @@ label.f:first-of-type{margin-top:0}
       });
       h+='</div></div>'; mon=addDays(mon,7);
     }
-    h+='<div class="legend"><span><i style="background:var(--ink)"></i>feed com arte</span><span><i style="border:2px solid var(--ink);background:transparent;box-sizing:border-box"></i>feed sem arte</span><span><i style="border:2px dashed var(--danger);background:transparent;box-sizing:border-box"></i>buraco</span><span style="color:var(--s-ok)">st verde = stories com arte</span></div></section>';
+    h+='<div class="legend"><span><i style="background:var(--ink)"></i>feed com arte</span><span><i style="border:2px solid var(--ink);background:transparent;box-sizing:border-box"></i>feed sem arte</span><span><i style="border:2px dashed var(--danger);background:transparent;box-sizing:border-box"></i>buraco</span><span style="color:var(--s-ok)">st = stories (verde: todos com arte)</span></div></div></section>';
+    // atenção
+    h+='<section class="sec h-pink"><h3><span>Precisa de atenção</span><span>'+(late.length+need.length+gaps.length)+' itens</span></h3><div class="sb">';
+    late.forEach(x=>{ h+=rowHTML(x,'<span class="due hot">'+dueTxt(dleft(x.date))+'</span>'); });
+    need.forEach(x=>{ const n=dleft(x.date); h+=rowHTML(x,'<span class="due '+urgCls(n)+'">sem arte · '+dueTxt(n)+'</span>'); });
+    gaps.forEach(d=>{ h+='<button class="rw" data-act="goto" data-d="'+d+'"><span class="rd"><b>'+shortDay(d)+'</b><span>'+WD[fromIso(d).getDay()]+'</span></span><span class="rm"><span class="rt">Sem post de feed planejado</span><span class="rs">Dia de cadência (seg, qua ou sex)</span></span><span class="due hot">'+dueTxt(dleft(d))+'</span></button>'; });
+    if(!late.length&&!need.length&&!gaps.length) h+='<p class="empty">Tudo em dia neste período.</p>';
+    h+='</div></section>';
     // stories
-    h+='<section class="sec"><h3><span>Stories e destaques por dia</span></h3>';
+    h+='<section class="sec h-cyan"><h3><span>Stories e destaques por dia</span><span>arte pronta</span></h3><div class="sb">';
     if(!stD.length) h+='<p class="empty">Nenhum story planejado neste período.</p>';
     stD.forEach(x=>{
       const tot=x.s+x.g, done=x.sa+x.ga, pct=tot?Math.round(done/tot*100):0, n=dleft(x.d), ok=done===tot;
@@ -616,17 +745,20 @@ label.f:first-of-type{margin-top:0}
         +(x.s?x.s+(x.s===1?' story':' stories'):'')+(x.s&&x.g?' + ':'')+(x.g?x.g+(x.g===1?' destaque':' destaques'):'')
         +'</span><span class="meter"><i style="width:'+pct+'%"></i></span><span class="rs">'+done+' de '+tot+' com arte</span></span><span class="due '+(ok?'ok':urgCls(n))+'">'+(ok?'pronto':dueTxt(n))+'</span></button>';
     });
-    h+='</section>';
+    h+='</div></section>';
+    // conferência
+    h+=conferencia();
     // checklists
     const open=fH.filter(x=>statusOf(x)!=='Publicado');
-    h+='<section class="sec"><h3><span>Checklists do feed</span></h3>';
+    h+='<section class="sec h-green"><h3><span>Checklists do feed</span><span>'+open.length+' pendentes</span></h3><div class="sb">';
     if(!open.length) h+='<p class="empty">Nenhum post pendente neste período.</p>';
     open.forEach(x=>{ const p=ckProg(x); h+=rowHTML(x,'<span class="due '+(p[0]===p[1]?'ok':p[0]?'warm':'')+'">'+p[0]+'/'+p[1]+'</span>'); });
-    h+='</section>';
+    h+='</div></section>';
     // funil
     const cnt={}; STATUSES.forEach(s=>{cnt[s]=0;}); feed.forEach(x=>{ const s=statusOf(x); cnt[s]=(cnt[s]||0)+1; });
-    h+='<section class="sec"><h3><span>Funil do feed</span><span>'+feed.length+' posts na planilha</span></h3><div class="funnel">'
-      +STATUSES.map(s=>'<div class="fn" style="--pc:'+stCol(s)+'"><b>'+cnt[s]+'</b><span>'+esc(s)+'</span></div>').join('')+'</div></section>';
+    h+='<section class="sec wide h-violet"><h3><span>Funil do feed</span><span>'+feed.length+' posts na planilha</span></h3><div class="sb"><div class="funnel">'
+      +STATUSES.map(s=>'<div class="fn" style="--pc:'+stCol(s)+'"><b>'+cnt[s]+'</b><span>'+esc(s)+'</span></div>').join('')+'</div></div></section>';
+    h+='</div>';
     return h;
   }
   function dayState(k){
@@ -650,29 +782,90 @@ label.f:first-of-type{margin-top:0}
       +'<div class="mgrid">'+['seg','ter','qua','qui','sex','sáb','dom'].map(w=>'<div class="wd">'+w+'</div>').join('')+cells+'</div>'
       +'<div class="legend"><span><i style="background:var(--s-ideia)"></i>Ideia</span><span><i style="background:var(--s-prod)"></i>Em produção</span><span><i style="background:var(--s-ok)"></i>Aprovado</span><span><i style="background:var(--s-agend)"></i>Agendado</span><span><i style="background:var(--s-pub)"></i>Publicado</span><span style="color:var(--violet)">st = stories do dia</span><span><i class="dz" style="background:var(--danger)"></i>Dia por organizar</span><span><i class="dz" style="background:var(--s-green)"></i>Tudo agendado, com horário e alarme</span></div></div>';
   }
+  const descDate=(a,b)=>a.date<b.date?1:a.date>b.date?-1:0;
+  function tileHTML(it,extra,cls){
+    const a=artIds(it)[0], col='var(--s-'+({'Ideia':'ideia','Em produção':'prod','Aprovado':'ok','Agendado':'agend','Publicado':'pub'}[statusOf(it)]||'ideia')+')';
+    return '<button class="tile'+(cls?' '+cls:'')+'" data-act="open" data-id="'+esc(it.id)+'" aria-label="'+esc((it.tema||'Post')+', '+statusOf(it)+', '+shortDay(it.date))+'">'
+      +(a?'<img src="'+PX+'" data-blob="'+esc(a)+'" alt="" loading="lazy">':'<span class="ph"><b>'+esc(it.tema||'Sem tema')+'</b><span>'+esc(it.formato||'')+'</span></span>')
+      +(artIds(it).length>1?'<span class="ly">'+ic.layers+'</span>':'')+(extra||'')
+      +'<span class="bd" style="--pc:'+col+'"><i></i>'+shortDay(it.date)+'</span></button>';
+  }
   function renderFeed(){
-    const list=feed.slice().sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0);
-    const shown=fFilter==='Todos'?list:list.filter(x=>statusOf(x)===fFilter);
-    let h='<div class="fchips">'+['Todos'].concat(STATUSES).map(s=>'<button class="chip" data-act="ff" data-s="'+esc(s)+'" aria-pressed="'+(fFilter===s)+'">'+esc(s)+' <span style="opacity:.7">'+(s==='Todos'?list.length:list.filter(x=>statusOf(x)===s).length)+'</span></button>').join('')+'</div>';
-    h+='<div class="fhint"><span>'+shown.length+' '+(shown.length===1?'post':'posts')+'</span><span>Mais recente no canto superior esquerdo</span></div>';
+    if(org) return renderOrg();
+    const list=feed.slice().sort(descDate);
+    const nIdeia=list.filter(x=>statusOf(x)==='Ideia').length;
+    const shown=fFilter==='Todos'?(showIdeas?list:list.filter(x=>statusOf(x)!=='Ideia')):list.filter(x=>statusOf(x)===fFilter);
+    let h='<div class="fchips">'+['Todos'].concat(STATUSES).map(s=>'<button class="chip" data-act="ff" data-s="'+esc(s)+'" aria-pressed="'+(fFilter===s)+'">'+esc(s==='Todos'?'Grade':s)+' <span style="opacity:.7">'+(s==='Todos'?list.length-(showIdeas?0:nIdeia):list.filter(x=>statusOf(x)===s).length)+'</span></button>').join('')+'</div>';
+    h+='<div class="row" style="margin:0 0 10px">'+(fFilter==='Todos'&&nIdeia?'<button class="btn" data-act="fideas">'+(showIdeas?'Esconder ideias':'Mostrar ideias ('+nIdeia+')')+'</button>':'')
+      +'<button class="btn" data-act="org">'+ic.swap+'Organizar grade</button><button class="btn" data-act="exportleg">'+ic.dl+'Exportar legendas</button></div>';
+    h+='<div class="fhint"><span>'+shown.length+' '+(shown.length===1?'post':'posts')+(fFilter==='Todos'&&!showIdeas&&nIdeia?' · ideias escondidas':'')+'</span><span>Mais recente no canto superior esquerdo</span></div>';
     if(!shown.length) return h+'<p class="empty">Nada neste filtro.</p>';
-    h+='<div class="grid">'+shown.map(it=>{
-      const a=artIds(it)[0], col='var(--s-'+({'Ideia':'ideia','Em produção':'prod','Aprovado':'ok','Agendado':'agend','Publicado':'pub'}[statusOf(it)]||'ideia')+')';
-      return '<button class="tile" data-act="open" data-id="'+esc(it.id)+'" aria-label="'+esc((it.tema||'Post')+', '+statusOf(it)+', '+shortDay(it.date))+'">'
-        +(a?'<img src="'+PX+'" data-blob="'+esc(a)+'" alt="" loading="lazy">':'<span class="ph"><b>'+esc(it.tema||'Sem tema')+'</b><span>'+esc(it.formato||'')+'</span></span>')
-        +(artIds(it).length>1?'<span class="ly">'+ic.layers+'</span>':'')
-        +'<span class="bd" style="--pc:'+col+'"><i></i>'+shortDay(it.date)+'</span></button>';
+    return h+'<div class="grid">'+shown.map(it=>tileHTML(it)).join('')+'</div>';
+  }
+  function orgList(){ return feed.filter(x=>showIdeas||statusOf(x)!=='Ideia').map(x=>Object.assign({},x,{nd:org.dates[x.id]||x.date})).sort((a,b)=>a.nd<b.nd?1:a.nd>b.nd?-1:0); }
+  const orgMovable=x=>x.date>=todayIso()&&statusOf(x)!=='Publicado';
+  function orgChanges(){ return feed.filter(x=>org.dates[x.id]&&org.dates[x.id]!==x.date).map(x=>({it:x,to:org.dates[x.id]})); }
+  function renderOrg(){
+    const L=orgList(), mv=L.filter(orgMovable), ch=orgChanges();
+    let h='<div class="orgbar">';
+    if(org.stage==='confirm'){
+      h+='<p><b>Confirme as novas datas.</b> Elas serão gravadas na planilha Estratégia Social (colunas Data e Dia). Artes, horários e checklists acompanham cada post.</p><ul class="chg">'
+        +ch.map(c=>'<li><b>'+esc(c.it.tema||'Post')+'</b>: '+shortDay(c.it.date)+' ('+WD[fromIso(c.it.date).getDay()]+') → <b>'+shortDay(c.to)+' ('+WD[fromIso(c.to).getDay()]+')</b></li>').join('')+'</ul>'
+        +'<div class="row"><button class="btn primary" data-act="orgconfirm"'+(org.busy?' disabled':'')+'>'+ic.check+(org.busy?'Gravando…':'Confirmar e gravar na planilha')+'</button><button class="btn" data-act="orgback">Voltar</button></div>';
+    }else{
+      h+='<p><b>Organizando a grade.</b> Use as setas para trocar posts futuros de lugar. Nada muda na planilha até você aplicar.</p>'
+        +'<div class="row"><button class="btn primary" data-act="orgapply"'+(ch.length?'':' disabled')+'>'+ic.check+'Aplicar datas'+(ch.length?' ('+ch.length+')':'')+'</button><button class="btn" data-act="orgcancel">Cancelar</button></div>';
+    }
+    h+='</div><div class="grid org">'+L.map(x=>{
+      const k=mv.findIndex(y=>y.id===x.id), changed=x.nd!==x.date;
+      const extra=(k>=0&&org.stage!=='confirm'?'<span class="om"><span role="button" data-act="omove" data-id="'+esc(x.id)+'" data-n="-1" aria-label="Mover para uma data mais recente"'+(k===0?' aria-disabled="true"':'')+'>'+ic.left+'</span><span role="button" data-act="omove" data-id="'+esc(x.id)+'" data-n="1" aria-label="Mover para uma data mais antiga"'+(k===mv.length-1?' aria-disabled="true"':'')+'>'+ic.right+'</span></span>':'')
+        +(changed?'<span class="nd">'+shortDay(x.date)+' → '+shortDay(x.nd)+'</span>':'');
+      return tileHTML(x,extra,changed?'mv':'');
     }).join('')+'</div>';
     return h;
   }
+  async function exportLegendas(){
+    const list=feed.slice().sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+    const txt='LEGENDAS DO FEED · Belle Software\nExportado em '+shortDay(todayIso())+'\n\n'+list.map(x=>{
+      const d=fromIso(x.date); const head=pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' ('+WD[d.getDay()]+') · '+statusOf(x)+(x.formato?' · '+x.formato:'');
+      return head+'\nTema: '+(x.tema||'')+(x.gancho?'\nGancho: '+x.gancho:'')+'\n\n'+(x.legenda||'(sem legenda na planilha)')+(x.cta?'\n\nCTA: '+x.cta:'');
+    }).join('\n\n────────────────────\n\n')+'\n';
+    const blob=new Blob([txt],{type:'text/plain;charset=utf-8'}), nm='legendas-belle-'+todayIso()+'.txt';
+    try{ if(dls){ await dls.save({filename:nm,data:blob}); } else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nm; a.click(); } toast('Legendas exportadas'); }
+    catch(e){ if(!(e&&e.code==='declined')) toast('Não consegui exportar'); }
+  }
+  async function aplicarDatas(){
+    const ch=orgChanges(); if(!ch.length) return;
+    if(!window.belleSheets){ toast('Gravação na planilha indisponível'); return; }
+    org.busy=true; renderAll();
+    const pr=window.belleSheets.applyDates(SHEET_ID,ch.map(c=>({from:c.it.date,ord:+c.it.id.split('_')[2],to:c.to})),parseDate);
+    try{
+      const r=await pr;
+      // leva os dados do app (artes, horários, checklists) para os novos ids
+      const per={}, newId={};
+      feed.forEach(x=>{ const nd=org.dates[x.id]||x.date; const o=per[nd]=(per[nd]==null?0:per[nd]+1); newId[x.id]='f_'+nd+'_'+o; });
+      const moved=feed.filter(x=>newId[x.id]!==x.id);
+      if(moved.length){
+        const snap={}; feed.forEach(x=>{ snap[x.id]=JSON.parse(JSON.stringify(M(x.id))); });
+        const touched=new Set(); moved.forEach(x=>{ touched.add(x.id); touched.add(newId[x.id]); });
+        const target={}; touched.forEach(id=>{ target[id]={}; });
+        feed.forEach(x=>{ if(touched.has(newId[x.id])) target[newId[x.id]]=snap[x.id]; });
+        for(const id of touched){ meta.set(id,target[id]); await saveItem(id,{},true); }
+      }
+      org=null; toast(r.updated+(r.updated===1?' data gravada':' datas gravadas')+' na planilha');
+      renderAll(); setTimeout(load,2500);
+    }catch(e){ org.busy=false; renderAll(); toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
+  }
+  function closeMenu(){ const sd=$('#side'); if(sd) sd.classList.remove('open'); const sc=$('#scrim'); if(sc) sc.hidden=true; }
   function renderAll(){
     const sy=$('#sync');
     if(lastRead){ const d=new Date(lastRead); sy.textContent='Planilha lida às '+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+feed.length+' posts, '+stories.filter(x=>x.kind==='story').length+' stories'; }
     else sy.textContent=loaded?'Não consegui ler a planilha':'Lendo a planilha…';
     $('#banner').innerHTML=loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
+    { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina'); $('#today-txt').textContent=longDay(todayIso()); }
     [['painel','Painel',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Feed',ic.grid]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span>'+t[1]+'</span>'; b.setAttribute('aria-selected',String(view===t[0])); });
-    const v=$('#view');
+    const v=$('#view'); v.dataset.v=view;
     if(!loaded&&!feed.length){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():renderFeed();
     if(dayOpen) renderDay();
@@ -694,7 +887,7 @@ label.f:first-of-type{margin-top:0}
     // artes
     h+='<div class="blk"><h4>Artes</h4>';
     if(arts.length){ h+='<div class="arts">'+arts.map((a,i)=>'<div class="art"><img src="'+PX+'" data-blob="'+esc(a)+'" alt="Arte '+(i+1)+'">'
-      +'<span class="no">'+(i+1)+'</span><div class="acts"><button data-act="dl" data-i="'+i+'" aria-label="Baixar arte '+(i+1)+'">'+ic.dl+'</button>'+(assets?'<button data-act="arep" data-i="'+i+'" aria-label="Substituir arte '+(i+1)+'">'+ic.swap+'</button>':'')+'<button data-act="adel" data-i="'+i+'" aria-label="Remover arte '+(i+1)+'">'+ic.trash+'</button></div></div>').join('')+'</div>'; }
+      +'<span class="no">'+(i+1)+'</span>'+(arts.length>1?'<span class="mvb"><button data-act="amove" data-i="'+i+'" data-n="-1" aria-label="Mover arte '+(i+1)+' para antes"'+(i===0?' disabled':'')+'>'+ic.left+'</button><button data-act="amove" data-i="'+i+'" data-n="1" aria-label="Mover arte '+(i+1)+' para depois"'+(i===arts.length-1?' disabled':'')+'>'+ic.right+'</button></span>':'')+'<div class="acts"><button data-act="dl" data-i="'+i+'" aria-label="Baixar arte '+(i+1)+'">'+ic.dl+'</button>'+(assets?'<button data-act="arep" data-i="'+i+'" aria-label="Substituir arte '+(i+1)+'">'+ic.swap+'</button>':'')+'<button data-act="adel" data-i="'+i+'" aria-label="Remover arte '+(i+1)+'">'+ic.trash+'</button></div></div>').join('')+'</div>'; }
     else h+='<p class="txt sm" style="margin-bottom:10px">Nenhuma arte enviada ainda.</p>';
     h+='<div class="row">'+(assets?'<button class="btn primary" data-act="aadd">'+ic.plus+'Adicionar artes</button>':'<span class="hint">Só quem edita a página envia artes.</span>')
       +(arts.length>1?'<button class="btn" data-act="dlall">'+ic.dl+'Baixar todas</button>':'')
@@ -805,9 +998,22 @@ label.f:first-of-type{margin-top:0}
     if(act==='gday'){ makeAlarms(sortItems(feedOn(dayOpen)).concat(sortItems(storiesOn(dayOpen).filter(x=>x.kind==='story'))).filter(x=>!alarmOk(x)&&statusOf(x)!=='Publicado')); return; }
     if(act==='unalarm'){ const it=itemById(openId); if(it){ await saveItem(it.id,{alarme:false},true); renderAll(); renderSheet(); } return; }
     if(act==='done'){ e.stopPropagation(); const it=itemById(el.dataset.id); if(!it) return; const now=statusOf(it)==='Publicado'; const back=it.sheetStatus==='Publicado'?'Aprovado':it.sheetStatus; await saveItem(it.id,{status:now?back:'Publicado'},true); renderAll(); return; }
-    if(act==='open'){ openItem(el.dataset.id); return; }
+    if(act==='open'){ if(org) return; openItem(el.dataset.id); return; }
     if(act==='close'){ closeItem(); return; }
-    if(act==='tab'){ view=el.dataset.v; renderAll(); window.scrollTo(0,0); return; }
+    if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
+    if(act==='menu'){ $('#side').classList.add('open'); $('#scrim').hidden=false; return; }
+    if(act==='menuclose'){ closeMenu(); return; }
+    if(act==='gtoday'){ const t=todayIso(); makeAlarms(sortItems(feedOn(t).concat(storiesOn(t).filter(x=>x.kind==='story'))).filter(x=>statusOf(x)!=='Publicado'&&!alarmOk(x))); return; }
+    if(act==='fideas'){ showIdeas=!showIdeas; renderAll(); return; }
+    if(act==='exportleg'){ exportLegendas(); return; }
+    if(act==='org'){ fFilter='Todos'; org={dates:{},stage:'edit'}; renderAll(); return; }
+    if(act==='orgcancel'){ org=null; renderAll(); return; }
+    if(act==='orgapply'){ if(org&&orgChanges().length){ org.stage='confirm'; renderAll(); window.scrollTo(0,0); } return; }
+    if(act==='orgback'){ if(org){ org.stage='edit'; renderAll(); } return; }
+    if(act==='orgconfirm'){ if(org&&!org.busy) aplicarDatas(); return; }
+    if(act==='omove'){ e.stopPropagation(); if(!org||el.getAttribute('aria-disabled')==='true') return;
+      const mv=orgList().filter(orgMovable), k=mv.findIndex(y=>y.id===el.dataset.id), o=mv[k+Number(el.dataset.n)]; if(k<0||!o) return;
+      const a=mv[k], da=a.nd, db=o.nd; org.dates[a.id]=db; org.dates[o.id]=da; renderAll(); return; }
     if(act==='day'){ sel=el.dataset.d; renderAll(); return; }
     if(act==='today'){ sel=todayIso(); renderAll(); return; }
     if(act==='wk'){ sel=addDays(sel,7*Number(el.dataset.n)); renderAll(); return; }
@@ -841,6 +1047,7 @@ label.f:first-of-type{margin-top:0}
     if(act==='copylink'){ const l=M(it.id).link||''; if(l) copyText(l); else toast('Cole um link primeiro'); return; }
     if(act==='chk'){ const l=checklistFor(it)[+el.dataset.i]; const ck=Object.assign({},M(it.id).checks||{}); ck[l]=!ck[l]; await saveItem(it.id,{checks:ck},true); renderSheet(); return; }
     if(act==='aadd'){ replaceIdx=null; uploadFor=it.id; $('#file-in').click(); return; }
+    if(act==='amove'){ const a=artIds(it).slice(), i=+el.dataset.i, k=i+Number(el.dataset.n); if(k<0||k>=a.length) return; const tmp=a[i]; a[i]=a[k]; a[k]=tmp; await saveItem(it.id,{art:a},true); renderAll(); renderSheet(); return; }
     if(act==='arep'){ replaceIdx=+el.dataset.i; uploadFor=it.id; $('#file-in').click(); return; }
     if(act==='shide'){
       if(el.dataset.armed!=='1'){ el.dataset.armed='1'; el.classList.add('armed'); toast('Toque de novo para excluir do app'); setTimeout(()=>{ if(el.isConnected){ el.dataset.armed='0'; el.classList.remove('armed'); } },3500); return; }

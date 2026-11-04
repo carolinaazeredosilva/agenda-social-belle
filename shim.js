@@ -160,7 +160,7 @@
     if(gTok&&gExp>Date.now()+60000) return Promise.resolve(gTok);
     return new Promise(function(res,rej){
       if(!(window.google&&google.accounts&&google.accounts.oauth2)) return rej(err('gis'));
-      gClient=gClient||google.accounts.oauth2.initTokenClient({client_id:CFG.GOOGLE_CLIENT_ID,scope:'https://www.googleapis.com/auth/calendar.events',callback:function(){}});
+      gClient=gClient||google.accounts.oauth2.initTokenClient({client_id:CFG.GOOGLE_CLIENT_ID,scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/spreadsheets',callback:function(){}});
       gClient.callback=function(r){ if(r.error) return rej(err(r.error)); gTok=r.access_token; gExp=Date.now()+(r.expires_in-60)*1000; res(gTok); };
       gClient.error_callback=function(e){ rej(err(e&&e.type||'popup')); };
       gClient.requestAccessToken({prompt:'',login_hint:CFG.EMAIL});
@@ -184,6 +184,33 @@
         }catch(e){ out[x.key]={error:String(e&&e.message||e)}; }
       }
       return out;
+    }
+  };
+
+
+  /* ---------- Planilha: grava novas datas (só com confirmação no app) ---------- */
+  function colL(i){ var s=''; i++; while(i>0){ var m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=Math.floor((i-1)/26); } return s; }
+  function nrm(v){ return String(v==null?'':v).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim(); }
+  var WDS=['dom','seg','ter','qua','qui','sex','sáb'];
+  window.belleSheets={
+    applyDates:async function(sheetId,changes,parseDate){
+      var t=await gToken();
+      var base='https://sheets.googleapis.com/v4/spreadsheets/'+sheetId+'/values';
+      var r=await fetch(base+'/'+encodeURIComponent('Calendário!A1:Z400')+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
+      if(!r.ok) throw err('sheet','Não consegui ler a planilha para gravar ('+r.status+').');
+      var rows=(await r.json()).values||[], hi=-1, dc=-1, wc=-1;
+      for(var i=0;i<rows.length&&hi<0;i++){ var h=(rows[i]||[]).map(nrm); var k=h.indexOf('data'); if(k>=0){ hi=i; dc=k; wc=h.indexOf('dia'); } }
+      if(hi<0) throw err('sheet','Não achei a coluna Data na aba Calendário.');
+      var per={}, pos={};
+      for(var j=hi+1;j<rows.length;j++){ var d=parseDate((rows[j]||[])[dc]||''); if(!d) continue; var o=per[d]=(per[d]==null?0:per[d]+1); pos[d+'#'+o]=j+1; }
+      var data=[], miss=[];
+      changes.forEach(function(c){ var row=pos[c.from+'#'+c.ord]; if(!row){ miss.push(c.from); return; }
+        var p=c.to.split('-'); data.push({range:'Calendário!'+colL(dc)+row,values:[[p[2]+'/'+p[1]+'/'+p[0]]]});
+        if(wc>=0){ var dt=new Date(+p[0],+p[1]-1,+p[2],12); data.push({range:'Calendário!'+colL(wc)+row,values:[[WDS[dt.getDay()]]]}); } });
+      if(miss.length) throw err('sheet','A planilha mudou desde a última leitura. Atualize e organize de novo.');
+      var w=await fetch(base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'USER_ENTERED',data:data})});
+      if(!w.ok) throw err('sheet','O Google recusou a gravação na planilha ('+w.status+').');
+      return {updated:changes.length};
     }
   };
 

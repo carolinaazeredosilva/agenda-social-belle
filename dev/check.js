@@ -116,7 +116,7 @@ const fdates=new Set(F.map(x=>x.date)), sdates=new Set(St.map(x=>x.date));
 const lostF=A.slice(1).filter(r=>r.some(c=>c.trim())&&!parseDate(r[A[0].findIndex(h=>norm(h)==='data')]||'')).map(r=>r.slice(0,8).join(' | ').slice(0,120));
 const ci=B[0].findIndex(h=>norm(h)==='data');
 const lostS=B.slice(1).filter(r=>r.some(c=>c.trim())&&!parseDate(r[ci]||'')).map(r=>r.slice(0,7).join(' | ').slice(0,120));
-return ({headF:A[0].slice(0,18), headS:B[0].slice(0,8), feed:F.length, feedList:F.map(x=>x.date.slice(5)+' '+x.sheetStatus+' · '+(x.tema||'').slice(0,28)+' · leg:'+(x.legenda?x.legenda.length:0)),
+return ({ids:F.map(x=>x.id).concat(St.map(x=>x.id)),headF:A[0].slice(0,18), headS:B[0].slice(0,8), feed:F.length, feedList:F.map(x=>x.date.slice(5)+' '+x.sheetStatus+' · '+(x.tema||'').slice(0,28)+' · leg:'+(x.legenda?x.legenda.length:0)),
  storyItems:St.filter(x=>x.kind==='story').length, destaques:St.filter(x=>x.kind==='destaque').length, storyDays:[...sdates].sort().map(d=>d.slice(5)+':'+St.filter(x=>x.date===d&&x.kind==='story').length+'s'+St.filter(x=>x.date===d&&x.kind==='destaque').length+'d').join(' '),
  lostFeedRows:lostF, lostStoryRows:lostS, rowsF:A.length-1, rowsS:B.length-1})
 };

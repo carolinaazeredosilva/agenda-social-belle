@@ -18,7 +18,7 @@
       var inp='display:block;width:100%;box-sizing:border-box;min-height:48px;margin:0 0 10px;padding:0 14px;border:1px solid var(--line,#E6DCEE);border-radius:12px;background:var(--panel,#fff);color:var(--ink,#381B49);font:16px var(--font-body,system-ui)';
       overlay.innerHTML='<form id="lg-form" style="width:100%;max-width:320px"><div style="font:800 26px/1.1 var(--font-display,system-ui);color:var(--ink,#381B49)">Agenda Social</div>'+
         '<p id="lg-msg" style="margin:12px 0 20px;color:var(--body,#5A4869);font-size:15px;line-height:1.45">Entre para ver a planilha e salvar o que você organizar.</p>'+
-        '<input id="lg-mail" type="email" autocomplete="username" placeholder="E-mail" style="'+inp+'" value="'+(CFG.EMAIL||'')+'">'+
+        '<input id="lg-mail" type="email" autocomplete="username" placeholder="E-mail" style="'+inp+'" value="'+((function(){ try{ return localStorage.getItem('belle_mail')||''; }catch(_){ return ''; } })())+'">'+
         '<input id="lg-pass" type="password" autocomplete="current-password" placeholder="Senha" style="'+inp+'">'+
         '<button id="lg-btn" type="submit" style="width:100%;min-height:48px;margin-top:6px;border:0;border-radius:14px;background:var(--accent,#A11176);color:var(--accent-ink,#fff);font:700 15px var(--font-display,system-ui);cursor:pointer">Entrar</button></form>';
       document.body.appendChild(overlay);
@@ -27,14 +27,21 @@
         var r=await client().auth.signInWithPassword({email:overlay.querySelector('#lg-mail').value.trim(),password:overlay.querySelector('#lg-pass').value});
         b.disabled=false; b.textContent='Entrar';
         if(r.error){ overlay.querySelector('#lg-msg').textContent='E-mail ou senha incorretos. Tente de novo.'; return; }
-        overlay.style.display='none'; if(loginResolve){ var f=loginResolve; loginResolve=null; loginPromise=null; f(r.data.session); }
+        setRole(r.data.session); overlay.style.display='none'; if(loginResolve){ var f=loginResolve; loginResolve=null; loginPromise=null; f(r.data.session); }
       });
     }
     if(msg) overlay.querySelector('#lg-msg').textContent=msg;
     overlay.style.display='flex';
   }
+  function setRole(sess){
+    var em=(sess&&sess.user&&sess.user.email||'').toLowerCase(), dona=em===String(CFG.EMAIL||'').toLowerCase();
+    window.belleRole=dona?'dona':'leitor'; window.belleEmail=em;
+    var apply=function(){ document.body.classList.toggle('ro',!dona); window.dispatchEvent(new CustomEvent('belle-role',{detail:window.belleRole})); };
+    if(document.body) apply(); else document.addEventListener('DOMContentLoaded',apply);
+    try{ localStorage.setItem('belle_mail',em); }catch(_){}
+  }
   async function ensureSession(){
-    var s=(await client().auth.getSession()).data.session; if(s) return s;
+    var s=(await client().auth.getSession()).data.session; if(s){ if(!window.belleRole) setRole(s); return s; }
     if(!loginPromise){ loginPromise=new Promise(function(res){ loginResolve=res; }); if(document.body) showOverlay(); else document.addEventListener('DOMContentLoaded',function(){ showOverlay(); }); }
     return loginPromise;
   }

@@ -934,7 +934,7 @@ label.f:first-of-type{margin-top:0}
       +(st==='Agendado'&&m.hora?'<p class="txt sm" style="margin-bottom:10px"><b>Agendado para '+esc(m.hora)+'</b> no Meta.</p>':'')
       +'<label class="f" for="f-hora">Horário (em que agendou ou vai postar)<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"></label>'
       +'<div class="row" style="margin-top:10px">'+(sg&&sg!==m.hora?'<button class="btn" data-act="sugg" data-h="'+sg+'">'+ic.clock+'Usar sugerido '+sg+'</button>':'')
-      +'<button class="btn primary" data-act="sched">'+ic.check+'Agendei no Meta'+(m.hora?' às '+esc(m.hora):'')+'</button></div>'
+      +(st==='Agendado'?'<button class="btn" data-act="unsched" title="Desfaz a marcação de agendado">'+ic.x+'Desmarcar agendado no Meta</button>':'<button class="btn primary" data-act="sched">'+ic.check+'Agendei no Meta'+(m.hora?' às '+esc(m.hora):'')+'</button>')+'</div>'
       +'<p class="hint">Sugestão pelo tipo de post e pelo estudo global de horários (feed por volta do almoço, Reels à noite, stories entre 11h e 14h). É um ponto de partida: ajuste com os seus Insights.</p>'
       +'<div class="row" style="margin-top:10px"><button class="btn primary" data-act="galarm"'+(m.hora?'':' disabled')+'>'+ic.clock+(m.gEvent?'Atualizar alarme no Google Agenda':'Criar alarme no Google Agenda')+'</button></div>'
       +(alarmOk(it)?'<p class="txt sm" style="margin-top:10px"><b>Alarme criado às '+esc(m.hora)+'</b>, com aviso 10 min antes. <button class="btn" data-act="unalarm">Desmarcar</button></p>'
@@ -1062,7 +1062,13 @@ label.f:first-of-type{margin-top:0}
     if(act==='sched'){
       const mm=M(it.id); if(!mm.hora){ toast('Informe o horário em que agendou'); const f=$('#f-hora'); if(f) f.focus(); return; }
       const ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=true; });
-      await saveItem(it.id,{status:'Agendado',checks:ck},true); renderAll(); renderSheet(); toast('Marcado como agendado às '+mm.hora); return;
+      await saveItem(it.id,{status:'Agendado',antes:statusOf(it),checks:ck},true); renderAll(); renderSheet(); toast('Marcado como agendado às '+mm.hora); return;
+    }
+    if(act==='unsched'){
+      const mm=M(it.id), ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=false; });
+      let back=mm.antes&&mm.antes!=='Agendado'?mm.antes:null;
+      if(!back&&it.sheetStatus==='Agendado') back='Aprovado';
+      await saveItem(it.id,{status:back,antes:null,checks:ck},true); renderAll(); renderSheet(); toast('Agendamento desmarcado · status: '+statusOf(it)); return;
     }
     if(act==='copy'){ copyText(copyReg[el.dataset.k]||''); return; }
     if(act==='copylink'){ const l=M(it.id).link||''; if(l) copyText(l); else toast('Cole um link primeiro'); return; }

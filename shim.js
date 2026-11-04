@@ -181,7 +181,7 @@
     upsert:async function(list){
       var out={}; await gToken();
       for(var i=0;i<list.length;i++){ var x=list[i];
-        var body=Object.assign({},x.ev,{colorId:'3',reminders:{useDefault:false,overrides:[{method:'popup',minutes:10}]}});
+        var body=Object.assign({},x.ev,{colorId:'3',reminders:{useDefault:false,overrides:[{method:'popup',minutes:(CFG.AVISO_MIN||5)}]}});
         try{
           var r=null;
           if(x.eventId){ r=await gcal('PATCH','/'+encodeURIComponent(x.eventId),body); if(r.status===404||r.status===410) r=null; else if(r.ok){ var j0=await r.json(); if(j0.status==='cancelled') r=null; else { out[x.key]={id:j0.id}; continue; } } }

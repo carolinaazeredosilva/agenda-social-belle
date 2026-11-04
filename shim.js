@@ -226,6 +226,40 @@
     }
   };
 
+
+  /* ---------- Planilha: grava um texto editado no app (só quando a dona salva) ---------- */
+  function norm2(v){ return String(v==null?'':v).replace(/\r\n/g,'\n').trim(); }
+  window.belleSheets.updateText=async function(o,parseDate,labelled){
+    var t=await gToken(), aba=o.kind==='feed'?'Calendário':'Stories';
+    var base='https://sheets.googleapis.com/v4/spreadsheets/'+o.sheetId+'/values';
+    var r=await fetch(base+'/'+encodeURIComponent(aba+'!A1:Z400')+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
+    if(!r.ok) throw err('sheet','Não consegui ler a planilha ('+r.status+').');
+    var rows=(await r.json()).values||[], hi=-1, h=[];
+    for(var i=0;i<rows.length&&hi<0;i++){ h=(rows[i]||[]).map(nrm); if(h.indexOf('data')>=0) hi=i; }
+    if(hi<0&&aba==='Stories'){ hi=0; h=(rows[0]||[]).map(nrm); }
+    var dc=h.indexOf('data'); if(dc<0&&aba==='Stories'){ dc=0; }
+    var pick={legenda:function(x){return x.indexOf('legenda')===0;},gancho:function(x){return x.indexOf('gancho')===0;},cta:function(x){return x==='cta';},roteiro:function(x){return x.indexOf('roteiro')===0;},copy:function(x){return x.indexOf('conteudo')===0;}}[o.field];
+    var cc=-1; for(var k=0;k<h.length;k++){ if(pick&&pick(h[k])){ cc=k; break; } }
+    if(dc<0||cc<0) throw err('sheet','Não achei a coluna na aba '+aba+'.');
+    var per={}, row=-1;
+    for(var j=hi+1;j<rows.length;j++){ var d=parseDate((rows[j]||[])[dc]||''); if(!d) continue; var n=per[d]=(per[d]==null?0:per[d]+1); if(d===o.date&&n===o.ord){ row=j; break; } }
+    if(row<0) throw err('sheet','Não achei a linha deste item. Atualize a planilha e tente de novo.');
+    var cur=String((rows[row]||[])[cc]||''), next;
+    if(o.kind==='story'&&o.n!=null&&labelled(cur,'STORY')){
+      var mp=labelled(cur,'STORY'); if(norm2(mp[o.n])!==norm2(o.old)) throw err('conflito','Esse texto mudou na planilha. Atualize antes de editar.');
+      var re=/STORY\s*(\d+)\s*:/gi, hits=[], m; while((m=re.exec(cur))){ hits.push({n:+m[1],start:m.index,end:re.lastIndex}); }
+      var hh=null, end=cur.length; for(var q=0;q<hits.length;q++){ if(hits[q].n===o.n){ hh=hits[q]; end=q+1<hits.length?hits[q+1].start:cur.length; break; } }
+      var seg=cur.slice(hh.end,end), keep=(seg.match(/\s*APROVADO em [\d\/]+[^\n]*\s*$/i)||[''])[0], body=keep?seg.slice(0,seg.length-keep.length):seg, tail=(body.match(/\s*$/)||[''])[0];
+      next=cur.slice(0,hh.end)+' '+norm2(o.value)+(tail||(end<cur.length?'\n':''))+keep+cur.slice(end);
+    }else{
+      if(norm2(cur)!==norm2(o.old)) throw err('conflito','Esse texto mudou na planilha. Atualize antes de editar.');
+      next=o.value;
+    }
+    var w=await fetch(base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'RAW',data:[{range:aba+'!'+colL(cc)+(row+1),values:[[next]]}]})});
+    if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').');
+    return true;
+  };
+
   window.claude={use:async function(n){ return n==='mcp'?mcp:n==='db'?db:n==='assets'?assets:n==='downloads'?downloads:null; }};
   window.addEventListener('belle-msg',function(e){ var t=document.getElementById('toast'); if(t){ t.textContent=e.detail; t.hidden=false; clearTimeout(window.__bt); window.__bt=setTimeout(function(){ t.hidden=true; },3500); } });
 

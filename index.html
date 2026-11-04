@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261104145620">
+<meta name="belle-ver" content="20261104150736">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -465,6 +465,9 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .swt input:checked+.sl{background:var(--accent)}.swt input:checked+.sl::after{transform:translateX(18px)}
 .swt input:focus-visible+.sl{outline:2px solid var(--violet);outline-offset:2px}
 .swt .st b{display:block;color:var(--ink);font-size:14px}.swt .st small{color:var(--muted);font-size:12px}
+.tedit{font:15px/1.55 var(--font-body);min-height:120px;resize:vertical}
+.blk h4 .row{margin:0}
+.ro [data-act="tedit"]{display:none!important}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -538,6 +541,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     down:'<svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
     pin:'<svg class="i" viewBox="0 0 24 24"><path d="M9 3h6l-1 6 4 4H6l4-4-1-6zM12 13v8"/></svg>',
     send:'<svg class="i" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>',
+    edit:'<svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/></svg>',
     dash:'<svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     trash:'<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>'
   };
@@ -546,7 +550,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   let feed=[], stories=[], loaded=false, loadErr=null, lastRead=0;
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
-  let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null;
+  let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null, editF=null, editBusy=false;
   let view='painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
@@ -1159,7 +1163,16 @@ body.mini .grp,body.mini .tab .ct{display:none}
   const inSheetFocus=()=>{ const a=document.activeElement; return !!(a&&a.closest&&a.closest('#panel')&&/INPUT|TEXTAREA/.test(a.tagName)); };
 
   /* ---------- folha de detalhe ---------- */
+  function txtBlk(it,f,title,cls,primaryCopy,emptyMsg){
+    const v=it[f]||'', ed=editF===f;
+    const head='<h4><span>'+title+'</span><span class="row" style="gap:6px">'+(!ed&&v?'<button class="btn'+(primaryCopy?' primary':'')+'" data-act="copy" data-k="'+reg(v)+'">'+ic.copy+(primaryCopy?'Copiar '+title.toLowerCase():'Copiar')+'</button>':'')+(!ed?'<button class="btn" data-act="tedit" data-f="'+f+'" title="Editar e salvar na planilha">'+ic.edit+'Editar</button>':'')+'</span></h4>';
+    if(ed) return '<div class="blk">'+head+'<textarea class="in tedit" id="t-edit" rows="'+Math.min(14,Math.max(4,v.split('\n').length+2))+'">'+esc(v)+'</textarea>'
+      +'<div class="row" style="margin-top:8px"><button class="btn primary" data-act="tsave" data-f="'+f+'"'+(editBusy?' disabled':'')+'>'+ic.check+(editBusy?'Salvando…':'Salvar na planilha')+'</button><button class="btn" data-act="tcancel">Cancelar</button></div>'
+      +'<p class="hint">Grava direto na planilha Estratégia Social. Se o texto tiver mudado lá enquanto isso, eu aviso e não sobrescrevo.</p></div>';
+    return '<div class="blk">'+head+'<p class="'+(cls||'txt')+'">'+(v?esc(v):'<span style="color:var(--muted)">'+emptyMsg+'</span>')+'</p></div>';
+  }
   function renderSheet(){
+    if(renderSheet.last!==openId){ editF=null; editBusy=false; renderSheet.last=openId; }
     const it=itemById(openId); const sh=$('#sheet'), p=$('#panel');
     if(!it){ sh.hidden=true; openId=null; return; }
     copyReg={}; const m=M(it.id), st=statusOf(it), arts=artIds(it);
@@ -1191,13 +1204,13 @@ body.mini .grp,body.mini .tab .ct{display:none}
       +'<p class="hint">Baixe só na hora de postar, para não lotar a memória do celular. O ícone de setas troca aquela arte, mantendo a posição.'+(it.kind!=='feed'?' Excluir tira do app; a planilha não é alterada e dá para restaurar no popup do dia.':'')+'</p></div>';
     // texto
     if(it.kind==='feed'){
-      if(it.gancho) h+='<div class="blk"><h4><span>Gancho</span><button class="btn" data-act="copy" data-k="'+reg(it.gancho)+'">'+ic.copy+'Copiar</button></h4><p class="txt">'+esc(it.gancho)+'</p></div>';
-      h+='<div class="blk"><h4><span>Legenda</span>'+(it.legenda?'<button class="btn primary" data-act="copy" data-k="'+reg(it.legenda)+'">'+ic.copy+'Copiar legenda</button>':'')+'</h4><p class="txt">'+(it.legenda?esc(it.legenda):'<span style="color:var(--muted)">Sem legenda pronta na planilha.</span>')+'</p></div>';
-      if(it.cta) h+='<div class="blk"><h4><span>CTA</span><button class="btn" data-act="copy" data-k="'+reg(it.cta)+'">'+ic.copy+'Copiar</button></h4><p class="txt">'+esc(it.cta)+'</p></div>';
-      if(it.roteiro) h+='<div class="blk"><h4><span>Roteiro e cards</span><button class="btn" data-act="copy" data-k="'+reg(it.roteiro)+'">'+ic.copy+'Copiar</button></h4><p class="txt sm">'+esc(it.roteiro)+'</p></div>';
+      h+=txtBlk(it,'gancho','Gancho','txt',false,'Sem gancho na planilha.');
+      h+=txtBlk(it,'legenda','Legenda','txt',true,'Sem legenda pronta na planilha.');
+      h+=txtBlk(it,'cta','CTA','txt',false,'Sem CTA na planilha.');
+      h+=txtBlk(it,'roteiro','Roteiro e cards','txt sm',false,'Sem roteiro na planilha.');
       h+='<div class="blk"><h4>Dados</h4><p class="txt sm">'+esc([it.formato,it.pilar,(it.redes||[]).join(', ')].filter(Boolean).join(' · '))+'</p></div>';
     }else{
-      h+='<div class="blk"><h4><span>Texto do '+(it.kind==='destaque'?'destaque':'story')+'</span>'+(it.copy?'<button class="btn primary" data-act="copy" data-k="'+reg(it.copy)+'">'+ic.copy+'Copiar texto</button>':'')+'</h4><p class="txt">'+(it.copy?esc(it.copy):'<span style="color:var(--muted)">Sem texto na planilha.</span>')+'</p></div>';
+      h+=txtBlk(it,'copy',it.kind==='destaque'?'Texto do destaque':'Texto do story','txt',true,'Sem texto na planilha.');
       if(it.sticker||it.rowNote){ h+='<div class="blk"><h4>Figurinha e interação</h4>'+(st0.length?'<div class="chips" style="margin:0 0 8px">'+st0.map(s=>'<span class="chip manual">'+esc(s)+'</span>').join('')+'</div>':'')+'<p class="txt sm">'+esc(it.sticker||it.rowNote)+'</p></div>'; }
       if(it.objetivo) h+='<div class="blk"><h4>Objetivo</h4><p class="txt sm">'+esc(it.objetivo)+'</p></div>';
     }
@@ -1294,7 +1307,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   async function downloadAll(it){ const n=artIds(it).length; for(let i=0;i<n;i++){ const ok=await downloadArt(it,i); if(ok===false) break; } }
 
   /* ---------- eventos ---------- */
-  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart']);
+  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart','tedit','tsave']);
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
@@ -1380,6 +1393,17 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(act==='copylink'){ const l=M(it.id).link||''; if(l) copyText(l); else toast('Cole um link primeiro'); return; }
     if(act==='chk'){ const l=checklistFor(it)[+el.dataset.i]; const ck=Object.assign({},M(it.id).checks||{}); ck[l]=!ck[l]; await saveItem(it.id,{checks:ck},true); renderSheet(); return; }
     if(act==='aadd'){ replaceIdx=null; uploadFor=it.id; $('#file-in').click(); return; }
+    if(act==='tedit'){ editF=el.dataset.f; renderSheet(); const ta=$('#t-edit'); if(ta){ ta.focus(); ta.scrollIntoView({block:'center'}); } return; }
+    if(act==='tcancel'){ editF=null; renderSheet(); return; }
+    if(act==='tsave'){ const f=el.dataset.f, ta=$('#t-edit'); if(!ta||editBusy) return; const val=ta.value.replace(/\r\n/g,'\n');
+      if(val.trim()===(it[f]||'').trim()){ editF=null; renderSheet(); return; }
+      if(!window.belleSheets||!window.belleSheets.updateText){ toast('Gravação na planilha indisponível'); return; }
+      const ord=it.kind==='feed'?+it.id.split('_')[2]:it.rowIdx;
+      const pr=window.belleSheets.updateText({sheetId:SHEET_ID,kind:it.kind,date:it.date,ord:ord,n:it.kind==='story'?it.n:null,field:f,old:it[f]||'',value:val},parseDate,labelled);
+      editBusy=true; renderSheet(); const keep=val;
+      pr.then(()=>{ it[f]=keep; editF=null; editBusy=false; renderAll(); renderSheet(); toast('Salvo na planilha'); setTimeout(load,3000); })
+        .catch(e=>{ editBusy=false; renderSheet(); const ta2=$('#t-edit'); if(ta2) ta2.value=keep; toast(e&&e.message?e.message:'Não consegui salvar na planilha'); });
+      return; }
     if(act==='noart'){ const on=!M(it.id).semArte; await saveItem(it.id,{semArte:on},true); renderAll(); renderSheet(); toast(on?'Marcado como sem arte (repost)':'Volta a precisar de arte'); return; }
     if(act==='amove'){ const a=artIds(it).slice(), i=+el.dataset.i, k=i+Number(el.dataset.n); if(k<0||k>=a.length) return; const tmp=a[i]; a[i]=a[k]; a[k]=tmp; await saveItem(it.id,{art:a},true); renderAll(); renderSheet(); return; }
     if(act==='arep'){ replaceIdx=+el.dataset.i; uploadFor=it.id; $('#file-in').click(); return; }

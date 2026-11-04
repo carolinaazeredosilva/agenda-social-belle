@@ -368,6 +368,9 @@ label.f:first-of-type{margin-top:0}
 .tin input{border:0;background:transparent;color:inherit;font:inherit;font-weight:700;padding:0;width:auto;min-width:56px;outline:none}
 .tin.add input{color:var(--muted)}
 .tin:focus-within{border-color:var(--accent)}
+.tile .pin{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:999px;background:rgba(20,8,28,.72);display:grid;place-items:center;color:#fff}
+.tile .pin svg{width:15px;height:15px}
+.qv .qs svg{width:14px;height:14px}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -436,6 +439,7 @@ label.f:first-of-type{margin-top:0}
     swap:'<svg class="i" viewBox="0 0 24 24"><path d="M17 3l4 4-4 4M21 7H8a4 4 0 0 0-4 4M7 21l-4-4 4-4M3 17h13a4 4 0 0 0 4-4"/></svg>',
     up:'<svg class="i" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>',
     down:'<svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
+    pin:'<svg class="i" viewBox="0 0 24 24"><path d="M9 3h6l-1 6 4 4H6l4-4-1-6zM12 13v8"/></svg>',
     dash:'<svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     trash:'<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>'
   };
@@ -859,16 +863,18 @@ label.f:first-of-type{margin-top:0}
       +'<div class="legend"><span><i style="background:var(--s-ideia)"></i>Ideia</span><span><i style="background:var(--s-prod)"></i>Em produção</span><span><i style="background:var(--s-ok)"></i>Aprovado</span><span><i style="background:var(--s-agend)"></i>Agendado</span><span><i style="background:var(--s-pub)"></i>Publicado</span><span style="color:var(--violet)">st = stories do dia</span><span><i class="dz" style="background:var(--danger)"></i>Dia por organizar</span><span><i class="dz" style="background:var(--s-green)"></i>Tudo agendado, com horário e alarme</span></div></div>';
   }
   const descDate=(a,b)=>a.date<b.date?1:a.date>b.date?-1:0;
+  const pinOf=x=>{ const v=M(x.id).fixado; return typeof v==='number'&&v>0?v:0; };
+  const gridSort=(a,b)=>{ const pa=pinOf(a), pb=pinOf(b); if(pa||pb) return (pa||99)-(pb||99); return a.date<b.date?1:a.date>b.date?-1:0; };
   function tileHTML(it,extra,cls){
     const a=artIds(it)[0], col='var(--s-'+({'Ideia':'ideia','Em produção':'prod','Aprovado':'ok','Agendado':'agend','Publicado':'pub'}[statusOf(it)]||'ideia')+')';
     return '<button class="tile'+(cls?' '+cls:'')+'" data-act="open" data-id="'+esc(it.id)+'" aria-label="'+esc((it.tema||'Post')+', '+statusOf(it)+', '+shortDay(it.date))+'">'
       +(a?'<img src="'+PX+'" data-blob="'+esc(a)+'" alt="" loading="lazy">':'<span class="ph"><b>'+esc(it.tema||'Sem tema')+'</b><span>'+esc(it.formato||'')+'</span></span>')
-      +(artIds(it).length>1?'<span class="ly">'+ic.layers+'</span>':'')+(extra||'')
+      +(artIds(it).length>1&&!pinOf(it)?'<span class="ly">'+ic.layers+'</span>':'')+(pinOf(it)?'<span class="pin" title="Fixado no perfil">'+ic.pin+'</span>':'')+(extra||'')
       +'<span class="bd" style="--pc:'+col+'"><i></i>'+shortDay(it.date)+'</span></button>';
   }
   function renderFeed(){
     if(org) return renderOrg();
-    const list=feed.slice().sort(descDate);
+    const list=feed.slice().sort(gridSort);
     const nIdeia=list.filter(x=>statusOf(x)==='Ideia').length;
     const shown=fFilter==='Todos'?(showIdeas?list:list.filter(x=>statusOf(x)!=='Ideia')):list.filter(x=>statusOf(x)===fFilter);
     let h='<div class="fchips">'+['Todos'].concat(STATUSES).map(s=>'<button class="chip" data-act="ff" data-s="'+esc(s)+'" aria-pressed="'+(fFilter===s)+'">'+esc(s==='Todos'?'Grade':s)+' <span style="opacity:.7">'+(s==='Todos'?list.length-(showIdeas?0:nIdeia):list.filter(x=>statusOf(x)===s).length)+'</span></button>').join('')+'</div>';
@@ -878,8 +884,8 @@ label.f:first-of-type{margin-top:0}
     if(!shown.length) return h+'<p class="empty">Nada neste filtro.</p>';
     return h+'<div class="grid">'+shown.map(it=>tileHTML(it)).join('')+'</div>';
   }
-  function orgList(){ return feed.filter(x=>showIdeas||statusOf(x)!=='Ideia').map(x=>Object.assign({},x,{nd:org.dates[x.id]||x.date})).sort((a,b)=>a.nd<b.nd?1:a.nd>b.nd?-1:0); }
-  const orgMovable=x=>x.date>=todayIso()&&statusOf(x)!=='Publicado';
+  function orgList(){ return feed.filter(x=>showIdeas||statusOf(x)!=='Ideia').map(x=>Object.assign({},x,{nd:org.dates[x.id]||x.date})).sort((a,b)=>{ const pa=pinOf(a), pb=pinOf(b); if(pa||pb) return (pa||99)-(pb||99); return a.nd<b.nd?1:a.nd>b.nd?-1:0; }); }
+  const orgMovable=x=>x.date>=todayIso()&&statusOf(x)!=='Publicado'&&!pinOf(x);
   function orgChanges(){ return feed.filter(x=>org.dates[x.id]&&org.dates[x.id]!==x.date).map(x=>({it:x,to:org.dates[x.id]})); }
   function renderOrg(){
     const L=orgList(), mv=L.filter(orgMovable), ch=orgChanges();
@@ -1013,9 +1019,13 @@ label.f:first-of-type{margin-top:0}
       const meta=pub?(m.manual?'Postado manual':'Publicado'):ag?'Agendado no Meta'+(m.hora?' às '+esc(m.hora):''):'Ainda não agendado';
       const alT=pub?'':(!m.hora?'Sem horário':al?'Alarme às '+esc(m.hora)+' ✓':'Sem alarme');
       h+='<button class="qv '+lv+'" data-act="tohora" aria-label="Ir para horário e alarme"><span class="qm"><i class="dot '+lv+'"></i><b>'+meta+'</b></span>'
-        +'<span class="qs">'+(alT?'<span>'+ic.clock+alT+'</span>':'')+'<span>'+ic.img+(na?na+(na===1?' arte':' artes'):'sem arte')+'</span><span>'+esc(st)+'</span></span></button>'; }
+        +'<span class="qs">'+(alT?'<span>'+ic.clock+alT+'</span>':'')+(pinOf(it)?'<span>'+ic.pin+'Fixado '+pinOf(it)+'º</span>':'')+'<span>'+ic.img+(na?na+(na===1?' arte':' artes'):'sem arte')+'</span><span>'+esc(st)+'</span></span></button>'; }
     h+='<div class="blk"><h4>Situação</h4><div class="seg">'+STATUSES.map(s=>'<button data-act="status" data-s="'+esc(s)+'" aria-pressed="'+(st===s)+'">'+esc(s)+'</button>').join('')+'</div>'
       +'<p class="hint">Vem da planilha. Se você mudar aqui, vale só neste app até a planilha mudar também.</p></div>';
+    if(it.kind==='feed'){ const pv=pinOf(it), used={}; feed.forEach(x=>{ if(x.id!==it.id&&pinOf(x)) used[pinOf(x)]=x; });
+      h+='<div class="blk"><h4>Fixado no perfil</h4><div class="row" style="align-items:center"><select class="in" id="f-pin" style="width:auto;min-width:220px">'
+        +'<option value="0"'+(pv?'':' selected')+'>Não fixado</option>'+[1,2,3].map(n=>'<option value="'+n+'"'+(pv===n?' selected':'')+'>Fixado em '+n+'º'+(used[n]?' (troca com '+esc((used[n].tema||'post').slice(0,22))+')':'')+'</option>').join('')+'</select></div>'
+        +'<p class="hint">Fica no topo da grade do Feed, como no Instagram (até 3 fixados).</p></div>'; }
     // artes
     h+='<div class="blk"><h4>Artes</h4>';
     if(arts.length){ h+='<div class="arts">'+arts.map((a,i)=>'<div class="art"><img src="'+PX+'" data-blob="'+esc(a)+'" alt="Arte '+(i+1)+'">'
@@ -1241,6 +1251,9 @@ label.f:first-of-type{margin-top:0}
     if(t.classList&&t.classList.contains('tchip')){ const id=t.dataset.id, v=t.value; saveItem(id,{hora:v},true).then(()=>{ renderAll(); toast(v?'Horário: '+v:'Horário removido'); }); return; }
     if(t.classList&&t.classList.contains('st-sel')){ saveItem(t.dataset.id,{status:t.value},true).then(()=>{ renderAll(); toast('Status: '+t.value); }); return; }
     if(!openId) return;
+    if(t.id==='f-pin'){ const it=itemById(openId); if(!it) return; const n=+t.value;
+      (async()=>{ if(n){ const other=feed.find(x=>x.id!==it.id&&pinOf(x)===n); if(other) await saveItem(other.id,{fixado:pinOf(it)||null},true); }
+        await saveItem(it.id,{fixado:n||null},true); renderAll(); renderSheet(); toast(n?'Fixado em '+n+'º no perfil':'Desafixado'); })(); return; }
     if(t.id==='f-meta'){ const it=itemById(openId); if(!it) return; const v=t.value;
       if(v==='ag') doSched(it);
       else if(v==='nao') doUnsched(it);

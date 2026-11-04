@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261104144407">
+<meta name="belle-ver" content="20261104145035">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -937,7 +937,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     h+='<div class="daytitle" style="margin-top:26px"><h2>Detalhes</h2><span class="hint" style="margin:0">'+shortDay(t)+' a '+shortDay(end)+'</span></div>';
     h+='<div class="pgrid">';
     // semanas
-    h+='<section class="sec wide h-violet"><h3><span>Cadência por semana</span><span>feed seg, qua e sex · vermelho falta organizar · verde tudo pronto</span></h3><div class="sb">';
+    h+='<section class="sec wide h-violet"><h3><span>Cadência por semana</span><span>feed seg, qua e sex · vermelho falta organizar · verde tudo com check</span></h3><div class="sb">';
     let mon=(function(){ const d=fromIso(t); d.setDate(d.getDate()-((d.getDay()+6)%7)); return iso(d); })();
     while(mon<=end){
       const wd=[0,1,2,3,4,5,6].map(i=>addDays(mon,i));
@@ -985,7 +985,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   function dayState(k){
     if(k<todayIso()) return '';
     const its=feedOn(k).concat(storiesOn(k).filter(x=>x.kind==='story')); if(!its.length) return '';
-    const ok=its.every(x=>{ const st=statusOf(x), m=M(x.id); return st==='Publicado'||(st==='Agendado'&&(!needAlarm(x)||alarmOk(x))); });
+    const ok=its.every(x=>{ const st=statusOf(x), m=M(x.id); return !!m.feito||st==='Publicado'; });
     return ok?'dz-ok':'dz-todo';
   }
   function renderCal(){
@@ -1001,7 +1001,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     const label=new Date(y,mo,1,12).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
     return '<div class="month"><div class="mhead"><button class="iconbtn" data-act="mon" data-n="-1" aria-label="Mês anterior">'+ic.left+'</button><h2>'+esc(label)+'</h2><button class="iconbtn" data-act="mon" data-n="1" aria-label="Próximo mês">'+ic.right+'</button></div>'
       +'<div class="mgrid">'+['seg','ter','qua','qui','sex','sáb','dom'].map(w=>'<div class="wd">'+w+'</div>').join('')+cells+'</div>'
-      +'<div class="legend"><span><i style="background:var(--s-ideia)"></i>Ideia</span><span><i style="background:var(--s-prod)"></i>Em produção</span><span><i style="background:var(--s-ok)"></i>Aprovado</span><span><i style="background:var(--s-agend)"></i>Agendado</span><span><i style="background:var(--s-pub)"></i>Publicado</span><span style="color:var(--violet)">st = stories do dia</span><span><i class="dz" style="background:var(--danger)"></i>Dia por organizar</span><span><i class="dz" style="background:var(--s-green)"></i>Tudo agendado, com horário e alarme</span></div></div>';
+      +'<div class="legend"><span><i style="background:var(--s-ideia)"></i>Ideia</span><span><i style="background:var(--s-prod)"></i>Em produção</span><span><i style="background:var(--s-ok)"></i>Aprovado</span><span><i style="background:var(--s-agend)"></i>Agendado</span><span><i style="background:var(--s-pub)"></i>Publicado</span><span style="color:var(--violet)">st = stories do dia</span><span><i class="dz" style="background:var(--danger)"></i>Dia por organizar</span><span><i class="dz" style="background:var(--s-green)"></i>Tudo com check de pronto</span></div></div>';
   }
   const descDate=(a,b)=>a.date<b.date?1:a.date>b.date?-1:0;
   const pinOf=x=>{ const v=M(x.id).fixado; return typeof v==='number'&&v>0?v:0; };

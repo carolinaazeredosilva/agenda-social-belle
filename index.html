@@ -356,7 +356,13 @@ label.f:first-of-type{margin-top:0}
 .grip svg{width:20px;height:20px;fill:currentColor;stroke:none}
 .card.st{transition:transform .15s ease}
 .card.dragging{transition:none;position:relative;z-index:5;box-shadow:0 12px 30px var(--shade);border-color:var(--accent);cursor:grabbing}
-.tl .grip{display:none}
+.tlist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.tlr{display:grid;grid-template-columns:62px minmax(0,1fr);gap:10px;align-items:start;transition:transform .15s ease}
+.tlr .tm{font:800 16px/1.2 var(--font-display);color:var(--ink);padding-top:16px;font-variant-numeric:tabular-nums}
+.tlr .tm.none{font-size:12px;color:var(--muted);font-weight:700}
+.tlr .tc{min-width:0}.tlr .card{margin-bottom:0}
+.tlr.dragging{transition:none;position:relative;z-index:5}
+.tlr.dragging .card{box-shadow:0 12px 30px var(--shade);border-color:var(--accent)}
 .tin{cursor:pointer;padding-right:4px}
 .tin input::-webkit-calendar-picker-indicator{display:none}
 .tin input{border:0;background:transparent;color:inherit;font:inherit;font-weight:700;padding:0;width:auto;min-width:56px;outline:none}
@@ -440,7 +446,7 @@ label.f:first-of-type{margin-top:0}
   let db=null, assets=null, dls=null, mcp=null;
   let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null;
   let view='painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
-  let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='lista';
+  let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
 
   /* ---------- leitura da planilha ---------- */
@@ -673,6 +679,12 @@ label.f:first-of-type{margin-top:0}
       +(it.kind==='story'?'<span class="grip" data-act="grip" title="Segure e arraste para mudar a ordem" aria-label="Arrastar para mudar a ordem"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></svg></span>':'')
       +thumbHTML(it)+'</div>';
   }
+  function timelineHTML(items){
+    const wh=items.filter(x=>M(x.id).hora).sort((a,b)=>timeKey(a).localeCompare(timeKey(b))||(a.kind==='feed'?-1:b.kind==='feed'?1:0)||(a.rowIdx||0)-(b.rowIdx||0)||a.n-b.n);
+    const nh=sortItems(items.filter(x=>!M(x.id).hora));
+    const row=(x,lab,cls)=>'<div class="tlr'+(x.kind==='story'?' st':'')+'" data-id="'+esc(x.id)+'"><div class="tm'+(cls?' '+cls:'')+'">'+lab+'</div><div class="tc">'+cardHTML(x)+'</div></div>';
+    return '<div class="tlist">'+wh.map(x=>row(x,esc(M(x.id).hora))).join('')+nh.map((x,i)=>row(x,i===0?'Sem horário':'','none')).join('')+'</div>';
+  }
   function renderHoje(){
     const mon=(()=>{const d=fromIso(sel);const w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);return iso(d);})();
     let wk='';
@@ -687,10 +699,10 @@ label.f:first-of-type{margin-top:0}
     const notes=[]; all.forEach(x=>{ if(x.rowNote&&notes.indexOf(x.rowNote)<0) notes.push(x.rowNote); });
     let h='<div class="weekbar"><button class="iconbtn" data-act="wk" data-n="-1" aria-label="Semana anterior">'+ic.left+'</button><div class="week">'+wk+'</div><button class="iconbtn" data-act="wk" data-n="1" aria-label="Próxima semana">'+ic.right+'</button></div>';
     h+='<div class="daytitle"><h2>'+(sel===todayIso()?'Hoje, ':'')+esc(longDay(sel))+'</h2>'+(sel!==todayIso()?'<button class="linkbtn" data-act="today">Ir para hoje</button>':'')+'</div>';
-    h+='<section class="sec"><h3><span>Feed</span></h3>'+(fs.length?fs.map(cardHTML).join(''):'<p class="empty">Nenhum post de feed planejado para este dia.</p>')+'</section>';
-    h+='<section class="sec"><h3><span>Stories</span><span>'+(hasOrdem(sel)?'<button class="linkbtn" data-act="sreset" data-d="'+sel+'" style="padding:0;font-size:12px;text-transform:none;letter-spacing:0">ordenar por horário</button> · ':'')+(ss.length?done+' de '+ss.length+' publicados':'')+'</span></h3>';
-    if(ss.length){ h+='<div class="meter"><i style="width:'+Math.round(done/ss.length*100)+'%"></i></div>'+ss.map(cardHTML).join(''); }
-    else h+='<p class="empty">Nenhum story planejado para este dia.</p>';
+    h+='<section class="sec"><h3><span>Cronograma do dia</span><span>'+(ss.length?done+' de '+ss.length+' stories publicados':'')+'</span></h3>';
+    if(ss.length) h+='<div class="meter"><i style="width:'+Math.round(done/ss.length*100)+'%"></i></div>';
+    h+=(fs.length||ss.length)?timelineHTML(fs.concat(ss)):'<p class="empty">Nada planejado para este dia.</p>';
+    if(ss.length>1) h+='<p class="hint">Segure a alça ⋮⋮ de um story e arraste: ele troca de horário com a posição para onde for. Para ajustar um horário, toque no relógio do cartão.</p>';
     if(notes.length) h+='<div class="note"><b>Interações previstas na planilha:</b> '+notes.map(esc).join(' · ')+'</div>';
     h+='</section>';
     if(ds.length) h+='<section class="sec"><h3><span>Destaques</span></h3>'+ds.map(cardHTML).join('')+'</section>';
@@ -934,8 +946,8 @@ label.f:first-of-type{margin-top:0}
   let drag=null, dragJustEnded=false;
   document.addEventListener('pointerdown',e=>{
     const g=e.target.closest&&e.target.closest('.grip'); if(!g) return;
-    const card=g.closest('.card.st'); if(!card||!card.parentElement) return;
-    const cards=[...card.parentElement.querySelectorAll(':scope > .card.st')]; if(cards.length<2) return;
+    const card=g.closest('.tlr.st')||g.closest('.card.st'); if(!card||!card.parentElement) return;
+    const cards=[...card.parentElement.querySelectorAll(card.classList.contains('tlr')?':scope > .tlr.st':':scope > .card.st')]; if(cards.length<2) return;
     e.preventDefault();
     const rects=cards.map(c=>c.getBoundingClientRect()), idx=cards.indexOf(card);
     const gap=Math.max(0,rects[1].top-rects[0].bottom), step=rects[idx].height+gap;
@@ -956,6 +968,15 @@ label.f:first-of-type{margin-top:0}
     if(d.moved) dragJustEnded=true;
     if(d.to===d.idx) return;
     const ids=d.cards.map(c=>c.dataset.id); const [m0]=ids.splice(d.idx,1); ids.splice(d.to,0,m0);
+    if(d.card.classList.contains('tlr')){
+      /* na linha do tempo, cada posição tem um horário: quem vai para a posição assume o horário dela */
+      const slots=d.cards.map(c=>M(c.dataset.id).hora||'');
+      const ch=[];
+      for(let i=0;i<ids.length;i++){ const h=slots[i]; if(h&&M(ids[i]).hora!==h){ ch.push(ids[i]); await saveItem(ids[i],{hora:h,ordem:null},true); } }
+      renderAll(); renderDay&&dayOpen&&renderDay();
+      const it=itemById(m0); toast(it&&M(m0).hora?itemLabel(it)+' agora às '+M(m0).hora+(ch.length>1?' · horários trocados':''):'Ordem atualizada');
+      return;
+    }
     for(let i=0;i<ids.length;i++){ if(M(ids[i]).ordem!==i) await saveItem(ids[i],{ordem:i},true); }
     renderAll(); toast('Ordem atualizada. Ajuste os horários se precisar.');
   }
@@ -1064,10 +1085,10 @@ label.f:first-of-type{margin-top:0}
       h+='<section class="sec"><h3><span>Stories</span>'+(hasOrdem(d)?'<button class="linkbtn" data-act="sreset" data-d="'+d+'" style="padding:0;font-size:12px;text-transform:none;letter-spacing:0">ordenar por horário</button>':'')+'</h3>'+(ss.length?ss.map(cardHTML).join(''):'<p class="empty">Sem stories.</p>')+'</section>';
       if(ds.length) h+='<section class="sec"><h3><span>Destaques</span></h3>'+ds.map(cardHTML).join('')+'</section>';
     }else{
-      const g={}; all.forEach(it=>{ const k=M(it.id).hora||''; (g[k]=g[k]||[]).push(it); });
-      Object.keys(g).filter(Boolean).sort().forEach(k=>{ h+='<div class="tl"><div class="tm">'+esc(k)+'</div><div class="tc">'+g[k].map(cardHTML).join('')+'</div></div>'; });
-      if(g['']) h+='<div class="tl"><div class="tm none">Sem horário</div><div class="tc">'+g[''].map(cardHTML).join('')+'</div></div>';
-      if(!Object.keys(g).some(Boolean)) h+='<p class="hint">Defina o horário de cada item (toque no item) para montar o cronograma do dia.</p>';
+      const its=fs.concat(ss);
+      h+=its.length?timelineHTML(its):'';
+      if(its.length&&!its.some(x=>M(x.id).hora)) h+='<p class="hint">Defina o horário de cada item (toque no relógio do cartão) para montar o cronograma do dia.</p>';
+      if(ds.length) h+='<section class="sec"><h3><span>Destaques</span></h3>'+ds.map(cardHTML).join('')+'</section>';
     }
     const hid=hiddenOn(d);
     if(hid.length) h+='<section class="sec"><h3><span>Removidos do app</span></h3>'+hid.map(x=>'<div class="card" style="align-items:center"><div class="main"><div class="t">'+esc(itemLabel(x))+'</div><div class="x">'+esc(x.copy||x.sticker||'')+'</div></div><button class="btn" data-act="unhide" data-id="'+esc(x.id)+'">Restaurar</button></div>').join('')+'<p class="hint">Só saíram do app. Na planilha continuam como estão.</p></section>';

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261104150736">
+<meta name="belle-ver" content="20261104152601">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1215,8 +1215,9 @@ body.mini .grp,body.mini .tab .ct{display:none}
       if(it.objetivo) h+='<div class="blk"><h4>Objetivo</h4><p class="txt sm">'+esc(it.objetivo)+'</p></div>';
     }
     // link e horário
-    h+='<div class="blk"><h4>Link e observações</h4><label class="f" for="f-link">Link para colar na figurinha<input class="in" id="f-link" type="url" inputmode="url" placeholder="https://" value="'+esc(m.link||'')+'"></label>'
-      +'<div class="row" style="margin-top:8px"><button class="btn" data-act="copylink">'+ic.copy+'Copiar link</button></div>'
+    const WA=(window.BELLE_CONFIG&&BELLE_CONFIG.WHATSAPP)||'https://wa.me/551132305180', isSt=it.kind!=='feed', lk=m.link||(isSt?WA:'');
+    h+='<div class="blk"><h4>Link e observações</h4><label class="f" for="f-link">Link para colar na figurinha'+(isSt&&!m.link?' <span style="text-transform:none;letter-spacing:0;font-weight:600">(padrão: WhatsApp)</span>':'')+'<input class="in" id="f-link" type="url" inputmode="url" placeholder="https://" value="'+esc(lk)+'"></label>'
+      +'<div class="row" style="margin-top:8px"><button class="btn" data-act="copylink">'+ic.copy+'Copiar link</button><button class="btn" data-act="copywa">'+ic.copy+'Copiar WhatsApp</button></div>'
       +'<label class="f" for="f-note">Observações<textarea class="in" id="f-note" rows="3" placeholder="Anotações só deste item">'+esc(m.nota||'')+'</textarea></label></div>';
     const sg=suggestHora(it);
     const mv=st==='Agendado'?'ag':st==='Publicado'?(m.manual?'manual':'pub'):'nao', mo=(v,l)=>'<option value="'+v+'"'+(mv===v?' selected':'')+'>'+l+'</option>';
@@ -1390,7 +1391,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
       await saveItem(it.id,{status:back,antes:null,checks:ck},true); renderAll(); renderSheet(); toast('Agendamento desmarcado · status: '+statusOf(it)); return;
     }
     if(act==='copy'){ copyText(copyReg[el.dataset.k]||''); return; }
-    if(act==='copylink'){ const l=M(it.id).link||''; if(l) copyText(l); else toast('Cole um link primeiro'); return; }
+    if(act==='copylink'){ const WA=(window.BELLE_CONFIG&&BELLE_CONFIG.WHATSAPP)||'https://wa.me/551132305180'; const l=M(it.id).link||(it.kind!=='feed'?WA:''); if(l) copyText(l); else toast('Cole um link primeiro'); return; }
+    if(act==='copywa'){ copyText((window.BELLE_CONFIG&&BELLE_CONFIG.WHATSAPP)||'https://wa.me/551132305180'); return; }
     if(act==='chk'){ const l=checklistFor(it)[+el.dataset.i]; const ck=Object.assign({},M(it.id).checks||{}); ck[l]=!ck[l]; await saveItem(it.id,{checks:ck},true); renderSheet(); return; }
     if(act==='aadd'){ replaceIdx=null; uploadFor=it.id; $('#file-in').click(); return; }
     if(act==='tedit'){ editF=el.dataset.f; renderSheet(); const ta=$('#t-edit'); if(ta){ ta.focus(); ta.scrollIntoView({block:'center'}); } return; }

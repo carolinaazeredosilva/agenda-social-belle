@@ -5,5 +5,6 @@ window.BELLE_CONFIG={
   EMAIL:'carolinaazeredosilva@gmail.com',
   GOOGLE_CLIENT_ID:'128852705605-g2busj6kf3ief342un6ti1a53e58sis1.apps.googleusercontent.com',
   AVISO_MIN:5,
+  WHATSAPP:'https://wa.me/551132305180',
   PLANILHA:'1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4'
 };

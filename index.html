@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261104152601">
+<meta name="belle-ver" content="20261105081202">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1222,7 +1222,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
     const sg=suggestHora(it);
     const mv=st==='Agendado'?'ag':st==='Publicado'?(m.manual?'manual':'pub'):'nao', mo=(v,l)=>'<option value="'+v+'"'+(mv===v?' selected':'')+'>'+l+'</option>';
     let al='';
-    if(st!=='Publicado'){ const on=needAlarm(it);
+    const alOn=st!=='Publicado'||!!m.manual;
+    if(alOn){ const on=needAlarm(it);
       al='<label class="swt"><input type="checkbox" id="f-alarm"'+(on?' checked':'')+'><span class="sl"></span><span class="st"><b>Criar alarme no Google Agenda</b><small>Opcional. Aviso 5 minutos antes do horário.</small></span></label>';
       if(on){
         if(!m.hora) al+='<div class="ur"><i class="dot"></i><span class="tx">Falta o horário<small>Defina o horário acima para criar o alarme.</small></span></div>';
@@ -1237,7 +1238,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
       +'<label class="f" for="f-meta">No Meta<select class="in" id="f-meta">'+mo('nao','Ainda não agendado')+mo('ag','Agendado no Meta')+mo('manual','Postado manual')+mo('pub','Já publicado')+'</select></label></div>'
       +(sg&&sg!==m.hora&&st!=='Publicado'?'<p class="hint">Sugestão para este tipo de post: <button class="linkbtn" data-act="sugg" data-h="'+sg+'">usar '+sg+'</button></p>':'')
       +'<div style="margin-top:12px">'+al+'</div>'
-      +(m.hora&&st!=='Publicado'&&needAlarm(it)?'<p class="hint">Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">crie o alarme manualmente</a>.</p>':'')+'</div>';
+      +(m.hora&&alOn&&needAlarm(it)?'<p class="hint">Se preferir, <a id="gcal" data-act="alarm" target="_blank" rel="noopener" href="'+esc(gcalUrl(it,m.hora))+'">crie o alarme manualmente</a>.</p>':'')+'</div>';
     // checklist
     const cl=checklistFor(it), ck=m.checks||{};
     h+='<div class="blk"><h4>Checklist</h4><div class="cl">'+cl.map((l,i)=>'<button data-act="chk" data-i="'+i+'" aria-pressed="'+(!!ck[l])+'"><span class="bx">'+ic.check+'</span><span class="l">'+esc(l)+'</span></button>').join('')+'</div></div>';

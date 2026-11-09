@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261109112841">
+<meta name="belle-ver" content="20261109142127">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -469,6 +469,23 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .blk h4 .row{margin:0}
 .ro [data-act="tedit"]{display:none!important}
 .ro .edonly{display:none!important}
+.ro #ipanel input,.ro #ipanel textarea{pointer-events:none}.ro #ipanel [data-act="idtag"]{pointer-events:none}
+.idbar{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:8px;align-items:center}
+.idtags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
+.idtags .chip{min-height:32px;padding:4px 12px;font-size:13px;cursor:pointer}.idtags .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.idused{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);margin-left:auto}
+.idgrid{columns:4 220px;column-gap:14px}
+.idcard{break-inside:avoid;display:flex;flex-direction:column;width:100%;margin:0 0 14px;padding:0;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;color:var(--ink)}
+.idcard:hover{border-color:var(--accent)}.idcard.used{opacity:.6}
+.idthumb{width:100%;display:block;background:var(--tile);min-height:80px}
+.idbody{display:flex;flex-direction:column;gap:6px;padding:12px 14px}.idbody b{font:700 15px/1.3 var(--font-display)}
+.idnote{font-size:13px;color:var(--body);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.idmeta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;font-size:11px}
+.idmeta i{font-style:normal;font-weight:700;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--body)}.idmeta i.u{border-color:var(--s-green);color:var(--s-green)}
+.idmeta em{font-style:normal;color:var(--muted);margin-left:auto}
+.idimg{margin-bottom:10px}.idimg img,.idimg video{width:100%;border-radius:14px;display:block;background:var(--tile)}
+#ipanel .idtags{margin:6px 0 0}
+@media (max-width:640px){.idbar{grid-template-columns:1fr 1fr}.idbar #id-q{grid-column:1/-1}.idgrid{columns:2 140px;column-gap:10px}.idcard{margin-bottom:10px}}
 .evstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:10px 0 18px}
 .evmini{display:flex;flex-direction:column;gap:6px;text-align:left;background:linear-gradient(150deg,color-mix(in srgb,var(--accent) 14%,var(--panel)),var(--panel) 70%);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));border-radius:20px;padding:16px 18px;min-width:0;color:var(--ink)}
 .evmini b{font:800 22px/1.15 var(--font-display);letter-spacing:-.01em}
@@ -509,6 +526,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     <button class="tab" role="tab" data-act="tab" data-v="cal" id="tab-cal"></button>
     <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
     <button class="tab" role="tab" data-act="tab" data-v="prog" id="tab-prog"></button>
+    <button class="tab" role="tab" data-act="tab" data-v="ideias" id="tab-ideias"></button>
     <div class="grp">Ações</div>
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
   </div>
@@ -532,6 +550,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
 </div>
 
 <div class="sheet" id="dsheet" hidden role="dialog" aria-modal="true" aria-label="Dia no calendário"><div class="panel" id="dpanel"></div></div>
+<div class="sheet" id="isheet" hidden role="dialog" aria-modal="true" aria-label="Ideia"><div class="panel" id="ipanel"></div></div>
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Detalhes do item"><div class="panel" id="panel"></div></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <input type="file" id="file-in" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple hidden>
@@ -553,6 +572,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   const longDay=s=>fromIso(s).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
   const shortDay=s=>{const d=fromIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
   const ic={
+    bulb:'<svg class="i" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
     star:'<svg class="i" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>',
     refresh:'<svg class="i" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12A9 9 0 0 1 18.5 5.8M18.5 2v4h-4M5.5 22v-4h4"/></svg>',
     check:'<svg class="i" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
@@ -1260,6 +1280,57 @@ body.mini .grp,body.mini .tab .ct{display:none}
   async function evDownload(evId,i){ const ev=evById(evId), a=ev&&(ev.arts||[])[i]; if(!a) return;
     if(!dls){ window.open('/_blob/'+a.id,'_blank'); return; }
     try{ const b=await (await fetch('/_blob/'+a.id)).blob(); await dls.save({filename:'evento-'+evId.slice(3)+'-'+(i+1)+'.'+(EXT[b.type]||a.id.split('.').pop()),data:b}); }catch(e){ if(!(e&&e.code==='declined')) toast('Não consegui baixar.'); } }
+  /* ---------- banco de ideias ---------- */
+  const ID_TAGS=['Feed','Carrossel','Stories','Reels','Arte','Copy','Evento','Ads'];
+  let idUpload=null, idFilter='', idQ='', idShowUsed=false, idOpen=null;
+  function idList(){ const out=[]; meta.forEach((v,id)=>{ if(id.indexOf('id_')===0&&v&&v.tipo==='ideia'&&!v.removida) out.push(Object.assign({},v,{id})); }); return out.sort((a,b)=>(b.criado||0)-(a.criado||0)); }
+  const idById=id=>{ const v=meta.get(id); return v&&v.tipo==='ideia'?Object.assign({},v,{id}):null; };
+  function idMedia(a,cls){ return evMedia(a)?'<video class="'+(cls||'')+'" data-vblob="'+esc(a.id)+'" playsinline muted controls preload="metadata"></video>':'<img class="'+(cls||'')+'" src="'+PX+'" data-blob="'+esc(a.id)+'" alt="">'; }
+  function renderIdeias(){
+    const all=idList(), q=idQ.toLowerCase();
+    const L=all.filter(x=>(idShowUsed||!x.usada)&&(!idFilter||(x.tags||[]).indexOf(idFilter)>=0)&&(!q||((x.titulo||'')+' '+(x.nota||'')+' '+(x.link||'')).toLowerCase().indexOf(q)>=0));
+    let h='<div class="idbar"><button class="btn primary edonly" data-act="idnew">'+ic.plus+'Nova ideia com imagem</button><button class="btn edonly" data-act="idtext">'+ic.plus+'Só texto ou link</button>'
+      +'<input class="in" id="id-q" placeholder="Buscar" value="'+esc(idQ)+'" aria-label="Buscar ideias"></div>';
+    h+='<p class="hint" style="margin:6px 0 12px">No computador, você também pode colar um print aqui (Ctrl+V) para criar uma ideia.</p>';
+    h+='<div class="idtags"><button class="chip'+(!idFilter?' on':'')+'" data-act="idf" data-t="">Todas</button>'+ID_TAGS.map(t=>'<button class="chip'+(idFilter===t?' on':'')+'" data-act="idf" data-t="'+t+'">'+t+'</button>').join('')
+      +'<label class="idused"><input type="checkbox" id="id-used"'+(idShowUsed?' checked':'')+'> Mostrar já usadas</label></div>';
+    if(!all.length) h+='<p class="empty">Nenhuma ideia salva ainda. Toque em "Nova ideia com imagem" e escolha o print.</p>';
+    else if(!L.length) h+='<p class="empty">Nada com esse filtro.</p>';
+    h+='<div class="idgrid">'+L.map(x=>{ const im=(x.imgs||[])[0];
+      return '<button class="idcard'+(x.usada?' used':'')+'" data-act="idopen" data-id="'+esc(x.id)+'">'+(im?idMedia(im,'idthumb'):'')+'<span class="idbody">'
+        +(x.titulo?'<b>'+esc(x.titulo)+'</b>':'')+(x.nota?'<span class="idnote">'+esc(x.nota)+'</span>':'')+(!x.titulo&&!x.nota&&!im&&x.link?'<span class="idnote">'+esc(x.link)+'</span>':'')
+        +'<span class="idmeta">'+(x.tags||[]).map(t=>'<i>'+esc(t)+'</i>').join('')+(x.usada?'<i class="u">usada</i>':'')+'<em>'+shortDay(new Date(x.criado||Date.now()).toISOString().slice(0,10))+'</em></span></span></button>'; }).join('')+'</div>';
+    return h;
+  }
+  function renderIdSheet(){
+    const x=idById(idOpen), box=$('#isheet'), p=$('#ipanel'); if(!x){ box.hidden=true; idOpen=null; return; } box.hidden=false;
+    if(p.contains(document.activeElement)&&/INPUT|TEXTAREA/.test(document.activeElement.tagName)&&renderIdSheet.last===x.id) return; renderIdSheet.last=x.id;
+    const ck=evConfirm;
+    let h='<div class="ph-head"><button class="iconbtn" data-act="idclose" aria-label="Fechar">'+ic.x+'</button><h2>Ideia · '+shortDay(new Date(x.criado||Date.now()).toISOString().slice(0,10))+'</h2></div><div class="blk">';
+    h+=(x.imgs||[]).map((a,i)=>'<div class="idimg">'+idMedia(a)+'<div class="row edonly" style="gap:6px;margin-top:6px"><button class="iconbtn sm" data-act="iddl" data-i="'+i+'" aria-label="Baixar">'+ic.dl+'</button>'
+      +(ck==='idimg|'+a.id?'<button class="btn danger sm" data-act="idimgdel" data-a="'+esc(a.id)+'">Remover imagem?</button>':'<button class="iconbtn sm" data-act="evask" data-c="idimg|'+esc(a.id)+'" aria-label="Remover imagem">'+ic.trash+'</button>')+'</div></div>').join('');
+    h+='<button class="btn edonly" data-act="idaddimg" style="margin:4px 0 12px">'+ic.plus+'Adicionar imagem</button>';
+    h+='<label class="f">Título<input class="in idin" data-k="titulo" value="'+esc(x.titulo||'')+'" placeholder="Ex.: capa com pergunta grande"></label>';
+    h+='<label class="f">O que aproveitar<textarea class="in idin" data-k="nota" rows="4" placeholder="O que chamou atenção: layout, gancho, cores…">'+esc(x.nota||'')+'</textarea></label>';
+    h+='<label class="f">Link de origem<input class="in idin" type="url" data-k="link" value="'+esc(x.link||'')+'" placeholder="https://"></label>';
+    if(x.link&&/^https?:\/\//.test(x.link)) h+='<a class="linkbtn" href="'+esc(x.link)+'" target="_blank" rel="noopener">Abrir link</a>';
+    h+='<div class="f">Tipo<div class="idtags">'+ID_TAGS.map(t=>'<button class="chip'+((x.tags||[]).indexOf(t)>=0?' on':'')+'" data-act="idtag" data-t="'+t+'">'+t+'</button>').join('')+'</div></div>';
+    h+='</div><div class="blk"><label class="swt"><input type="checkbox" id="id-usada"'+(x.usada?' checked':'')+'><span class="sl"></span><span class="st"><b>Já usei esta ideia</b><small>Some da lista, mas fica guardada em "Mostrar já usadas".</small></span></label>';
+    h+='<div class="row edonly" style="margin-top:8px">'+(ck==='iddel|'+x.id?'<button class="btn danger" data-act="iddel">Confirmar: excluir ideia</button><button class="btn" data-act="evcancel">Cancelar</button>':'<button class="btn" data-act="evask" data-c="iddel|'+esc(x.id)+'">'+ic.trash+'Excluir ideia</button>')+'</div></div>';
+    p.innerHTML=h; evHydrate();
+  }
+  async function idCreate(files,extra){
+    if(RO()||busy) return; const id='id_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); const imgs=[];
+    busy=true;
+    try{ let n=0; for(const f of files){ toast('Enviando '+(++n)+' de '+files.length+'…'); const r=await assets.upload(f); imgs.push({id:r.id,kind:/^video\//.test(f.type)?'video':'img'}); }
+      await saveItem(id,Object.assign({tipo:'ideia',criado:Date.now(),titulo:'',nota:'',link:'',tags:[],imgs,usada:false},extra||{}),true);
+      idOpen=id; renderAll(); renderIdSheet(); toast('Ideia salva');
+    }catch(e){ toast(e&&e.code==='too_large'?'Arquivo acima do limite':'Envio interrompido. Tente de novo.'); }
+    finally{ busy=false; }
+  }
+  async function idAddImgs(files){ const x=idById(idOpen); if(!x||RO()||busy) return; busy=true;
+    try{ const imgs=(x.imgs||[]).slice(); for(const f of files){ const r=await assets.upload(f); imgs.push({id:r.id,kind:/^video\//.test(f.type)?'video':'img'}); }
+      await saveItem(x.id,{imgs},true); renderAll(); renderIdSheet(); toast('Imagem adicionada'); }catch(e){ toast('Envio interrompido. Tente de novo.'); } finally{ busy=false; } }
   function renderAll(){
     const sy=$('#sync');
     if(lastRead){ const d=new Date(lastRead); sy.textContent='Planilha lida às '+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+feed.length+' posts, '+stories.filter(x=>x.kind==='story').length+' stories'; }
@@ -1267,19 +1338,20 @@ body.mini .grp,body.mini .tab .ct{display:none}
     $('#banner').innerHTML=loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
     if(!loaded&&!feed.length){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
-    else if(view==='eventos'&&v.dataset.v==='eventos'&&evTyping()){ }
-    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():renderFeed();
+    else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }
+    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():renderFeed();
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();
+    if(idOpen) renderIdSheet();
     evSeed();
   }
   const inSheetFocus=()=>{ const a=document.activeElement; return !!(a&&a.closest&&a.closest('#panel')&&/INPUT|TEXTAREA/.test(a.tagName)); };
@@ -1432,7 +1504,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   async function downloadAll(it){ const n=artIds(it).length; for(let i=0;i<n;i++){ const ok=await downloadArt(it,i); if(ok===false) break; } }
 
   /* ---------- eventos ---------- */
-  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart','tedit','tsave','evnew','evcreate','evtadd','evtdel','evadel','evupl','evarch','evask']);
+  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart','tedit','tsave','evnew','evcreate','evtadd','evtdel','evadel','evupl','evarch','evask','idnew','idtext','idaddimg','idimgdel','iddel','idtag']);
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
@@ -1455,12 +1527,22 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(act==='open'){ if(org) return; openItem(el.dataset.id); return; }
     if(act==='close'){ closeItem(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
+    if(act==='idnew'){ idUpload='new'; $('#file-in').click(); return; }
+    if(act==='idtext'){ idCreate([],{}); return; }
+    if(act==='idaddimg'){ idUpload='add'; $('#file-in').click(); return; }
+    if(act==='idf'){ idFilter=el.dataset.t; renderAll(); return; }
+    if(act==='idopen'){ idOpen=el.dataset.id; evConfirm=null; renderIdSheet.last=null; renderIdSheet(); return; }
+    if(act==='idclose'){ idOpen=null; evConfirm=null; $('#isheet').hidden=true; renderAll(); return; }
+    if(act==='idtag'){ const x=idById(idOpen); if(!x) return; const T=(x.tags||[]).slice(), i=T.indexOf(el.dataset.t); if(i>=0) T.splice(i,1); else T.push(el.dataset.t); await saveItem(x.id,{tags:T},true); renderIdSheet.last=null; renderAll(); return; }
+    if(act==='idimgdel'){ const x=idById(idOpen); if(!x) return; evConfirm=null; const aid=el.dataset.a; await saveItem(x.id,{imgs:(x.imgs||[]).filter(a=>a.id!==aid)},true); if(assets) assets.delete(aid).catch(()=>{}); renderIdSheet.last=null; renderAll(); toast('Imagem removida'); return; }
+    if(act==='iddel'){ const x=idById(idOpen); if(!x) return; evConfirm=null; await saveItem(x.id,{removida:true},true); (x.imgs||[]).forEach(a=>assets&&assets.delete(a.id).catch(()=>{})); idOpen=null; $('#isheet').hidden=true; renderAll(); toast('Ideia excluída'); return; }
+    if(act==='iddl'){ const x=idById(idOpen), a=x&&(x.imgs||[])[+el.dataset.i]; if(!a) return; try{ const b=await (await fetch('/_blob/'+a.id)).blob(); if(dls) await dls.save({filename:'ideia-'+(+el.dataset.i+1)+'.'+(EXT[b.type]||a.id.split('.').pop()),data:b}); }catch(e){ if(!(e&&e.code==='declined')) toast('Não consegui baixar.'); } return; }
     if(act==='evgo'){ view='eventos'; renderAll(); const s=document.getElementById(el.dataset.id); if(s) s.scrollIntoView({block:'start'}); else window.scrollTo(0,0); return; }
     if(act==='evnew'){ evNew=!evNew; renderAll(); if(evNew){ const i=$('#ev-nome'); if(i) i.focus(); } return; }
-    if(act==='evcreate'){ const n=($('#ev-nome').value||'').trim(); if(!n){ toast('Dê um nome ao evento'); return; } const id='ev_'+Date.now().toString(36);
+    if(act==='evcreate'){ const n=($('#ev-nome').value||'').trim(); if(!n){ toast('Dê um nome ao evento'); return; } const id='ev_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
       evNew=false; await saveItem(id,{tipo:'evento',criado:Date.now(),nome:n,cidade:($('#ev-cid').value||'').trim(),data:'',dataFim:'',cortesias:'',nota:'',arts:[],tarefas:[]},true); renderAll(); toast('Evento criado'); return; }
-    if(act==='evask'){ evConfirm=el.dataset.c; renderAll(); return; }
-    if(act==='evcancel'){ evConfirm=null; renderAll(); return; }
+    if(act==='evask'){ evConfirm=el.dataset.c; renderIdSheet.last=null; renderAll(); return; }
+    if(act==='evcancel'){ evConfirm=null; renderIdSheet.last=null; renderAll(); return; }
     if(act==='evarch'){ evConfirm=null; await saveItem(el.dataset.id,{arquivado:true},true); renderAll(); toast('Evento arquivado'); return; }
     if(act==='evtadd'){ const id=el.dataset.id, ev=evById(id); if(!ev) return; const ti=document.getElementById('nt-'+id), ri=document.getElementById('nr-'+id), txt=(ti.value||'').trim(); if(!txt){ ti.focus(); return; }
       await saveItem(id,{tarefas:(ev.tarefas||[]).concat([{id:'t'+Date.now().toString(36),txt,resp:(ri.value||'').trim(),st:'A fazer'}])},true); renderAll(); toast('Ação adicionada'); return; }
@@ -1570,6 +1652,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
   document.addEventListener('input',e=>{
     const t=e.target; if(t.id==='d-hora'){ dHora=t.value; return; }
     if(t.classList&&t.classList.contains('evin')&&t.type!=='date'){ saveItem(t.dataset.ev,{[t.dataset.k]:t.value}); return; }
+    if(t.id==='id-q'){ idQ=t.value; const v=$('#view'); const pos=t.selectionStart; v.innerHTML=renderIdeias(); const n=$('#id-q'); n.focus(); try{ n.setSelectionRange(pos,pos); }catch(_){} evHydrate(); return; }
+    if(t.classList&&t.classList.contains('idin')&&idOpen){ saveItem(idOpen,{[t.dataset.k]:t.value}); return; }
     if(t.classList&&t.classList.contains('evresp')){ const ev=evById(t.dataset.ev); if(ev) saveItem(ev.id,{tarefas:(ev.tarefas||[]).map(x=>x.id===t.dataset.t?Object.assign({},x,{resp:t.value}):x)}); return; }
     if(t.classList&&t.classList.contains('evanote')){ const ev=evById(t.dataset.ev); if(ev) saveItem(ev.id,{arts:(ev.arts||[]).map(x=>x.id===t.dataset.a?Object.assign({},x,{nota:t.value}):x)}); return; }
     if(!openId) return;
@@ -1583,6 +1667,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(t.classList&&t.classList.contains('evin')&&t.type==='date'){ saveItem(t.dataset.ev,{[t.dataset.k]:t.value},true).then(()=>renderAll()); return; }
     if(t.classList&&t.classList.contains('st-sel')){ saveItem(t.dataset.id,{status:t.value},true).then(()=>{ renderAll(); toast('Status: '+t.value); }); return; }
     if(!openId) return;
+    if(t.id==='id-used'){ idShowUsed=t.checked; renderAll(); return; }
+    if(t.id==='id-usada'&&idOpen){ saveItem(idOpen,{usada:t.checked},true).then(()=>{ renderAll(); toast(t.checked?'Marcada como usada':'De volta à lista'); }); return; }
     if(t.id==='f-ev'){ saveItem(openId,{evento:t.value||null},true).then(()=>{ renderAll(); toast(t.value?'Ligado ao evento':'Sem evento'); }); return; }
     if(t.id==='f-pin'){ const it=itemById(openId); if(!it) return; const n=+t.value;
       (async()=>{ if(n){ const other=feed.find(x=>x.id!==it.id&&pinOf(x)===n); if(other) await saveItem(other.id,{fixado:pinOf(it)||null},true); }
@@ -1599,7 +1685,10 @@ body.mini .grp,body.mini .tab .ct{display:none}
       return; }
     if(t.id==='f-hora'){ saveItem(openId,{hora:t.value},true).then(()=>{ renderAll(); const it=itemById(openId); const a=$('#gcal'); if(a&&it){ if(t.value){ a.href=gcalUrl(it,t.value); a.removeAttribute('aria-disabled'); } else { a.removeAttribute('href'); a.setAttribute('aria-disabled','true'); } } }); }
   });
-  $('#file-in').addEventListener('change',e=>{ const f=[...e.target.files]; e.target.value=''; if(evUpload) evAddArts(f); else addArts(f); });
+  document.addEventListener('paste',e=>{ if(view!=='ideias'||RO()) return; const a=document.activeElement; if(a&&/INPUT|TEXTAREA/.test(a.tagName)) return;
+    const f=[...((e.clipboardData&&e.clipboardData.files)||[])].filter(x=>/^image\//.test(x.type)); if(!f.length) return; e.preventDefault();
+    if(idOpen) idAddImgs(f); else idCreate(f,{}); });
+  $('#file-in').addEventListener('change',e=>{ const f=[...e.target.files]; e.target.value=''; if(idUpload){ const m=idUpload; idUpload=null; if(m==='new') idCreate(f,{}); else idAddImgs(f); } else if(evUpload) evAddArts(f); else addArts(f); });
   $('#sheet').addEventListener('click',e=>{ if(e.target.id==='sheet') closeItem(); });
   $('#dsheet').addEventListener('click',e=>{ if(e.target.id==='dsheet') closeDay(); });
   document.addEventListener('error',e=>{ const t=e.target; if(t&&t.tagName==='IMG'&&t.closest('.art,.thumb,.tile')){ t.style.visibility='hidden'; } },true);

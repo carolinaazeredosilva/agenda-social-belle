@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261109142153">
+<meta name="belle-ver" content="20261109142411">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -469,6 +469,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .blk h4 .row{margin:0}
 .ro [data-act="tedit"]{display:none!important}
 .ro .edonly{display:none!important}
+.qidea{margin-left:auto;display:flex;gap:8px;align-self:center;flex:none}.qidea[hidden]{display:none}
+@media (max-width:640px){.qidea{align-self:flex-start}.qidea .btn:not(.primary){display:none}.qidea .btn{padding:0;width:44px;height:44px;justify-content:center}.qidea .ql{display:none}}
 .ro #ipanel input,.ro #ipanel textarea{pointer-events:none}.ro #ipanel [data-act="idtag"]{pointer-events:none}
 .idbar{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:8px;align-items:center}
 .idtags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
@@ -544,6 +546,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   <header class="top">
     <button class="iconbtn menu-btn" data-act="menu" aria-label="Abrir menu"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="hello"><div class="crumb" id="crumb"></div><h1 id="hello">Olá, Carolina</h1><div class="sub" id="today-txt"></div></div>
+    <div class="qidea edonly" id="qidea" hidden><button class="btn primary" data-act="idnew" title="Salvar print ou vídeo no banco de ideias" aria-label="Salvar ideia"><svg class="i" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg><span class="ql">Salvar ideia</span></button><button class="btn" data-act="idtext" aria-label="Ideia só com texto ou link">Texto</button></div>
   </header>
   <div id="banner"></div>
   <main id="view" aria-live="polite"></main>
@@ -1351,6 +1354,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();
+    $('#qidea').hidden=view!=='painel';
     if(idOpen) renderIdSheet();
     evSeed();
   }

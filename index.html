@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261109142127">
+<meta name="belle-ver" content="20261109142153">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -166,7 +166,7 @@ svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke
 .in{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px 12px;font-size:15px;width:100%;min-width:0}
 .in:focus{outline:2px solid var(--violet);outline-offset:0;border-color:var(--violet)}
 textarea.in{resize:vertical;line-height:1.5}
-label.f{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+label.f,div.f{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:10px}
 label.f:first-of-type{margin-top:0}
 .arts{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:8px;margin-bottom:10px}
 .art{position:relative;aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:var(--tile);border:1px solid var(--line)}
@@ -485,7 +485,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .idmeta em{font-style:normal;color:var(--muted);margin-left:auto}
 .idimg{margin-bottom:10px}.idimg img,.idimg video{width:100%;border-radius:14px;display:block;background:var(--tile)}
 #ipanel .idtags{margin:6px 0 0}
-@media (max-width:640px){.idbar{grid-template-columns:1fr 1fr}.idbar #id-q{grid-column:1/-1}.idgrid{columns:2 140px;column-gap:10px}.idcard{margin-bottom:10px}}
+@media (max-width:640px){.idhint{display:none}.idbar{grid-template-columns:1fr 1fr}.idbar #id-q{grid-column:1/-1}.idgrid{columns:2 140px;column-gap:10px}.idcard{margin-bottom:10px}}
 .evstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:10px 0 18px}
 .evmini{display:flex;flex-direction:column;gap:6px;text-align:left;background:linear-gradient(150deg,color-mix(in srgb,var(--accent) 14%,var(--panel)),var(--panel) 70%);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));border-radius:20px;padding:16px 18px;min-width:0;color:var(--ink)}
 .evmini b{font:800 22px/1.15 var(--font-display);letter-spacing:-.01em}
@@ -1289,12 +1289,12 @@ body.mini .grp,body.mini .tab .ct{display:none}
   function renderIdeias(){
     const all=idList(), q=idQ.toLowerCase();
     const L=all.filter(x=>(idShowUsed||!x.usada)&&(!idFilter||(x.tags||[]).indexOf(idFilter)>=0)&&(!q||((x.titulo||'')+' '+(x.nota||'')+' '+(x.link||'')).toLowerCase().indexOf(q)>=0));
-    let h='<div class="idbar"><button class="btn primary edonly" data-act="idnew">'+ic.plus+'Nova ideia com imagem</button><button class="btn edonly" data-act="idtext">'+ic.plus+'Só texto ou link</button>'
+    let h='<div class="idbar"><button class="btn primary edonly" data-act="idnew">'+ic.plus+'Imagem ou vídeo</button><button class="btn edonly" data-act="idtext">'+ic.plus+'Texto ou link</button>'
       +'<input class="in" id="id-q" placeholder="Buscar" value="'+esc(idQ)+'" aria-label="Buscar ideias"></div>';
-    h+='<p class="hint" style="margin:6px 0 12px">No computador, você também pode colar um print aqui (Ctrl+V) para criar uma ideia.</p>';
+    h+='<p class="hint idhint" style="margin:6px 0 12px">No computador, você também pode colar um print aqui (Ctrl+V) para criar uma ideia.</p>';
     h+='<div class="idtags"><button class="chip'+(!idFilter?' on':'')+'" data-act="idf" data-t="">Todas</button>'+ID_TAGS.map(t=>'<button class="chip'+(idFilter===t?' on':'')+'" data-act="idf" data-t="'+t+'">'+t+'</button>').join('')
       +'<label class="idused"><input type="checkbox" id="id-used"'+(idShowUsed?' checked':'')+'> Mostrar já usadas</label></div>';
-    if(!all.length) h+='<p class="empty">Nenhuma ideia salva ainda. Toque em "Nova ideia com imagem" e escolha o print.</p>';
+    if(!all.length) h+='<p class="empty">Nenhuma ideia salva ainda. Toque em "Imagem ou vídeo" e escolha o print ou o vídeo.</p>';
     else if(!L.length) h+='<p class="empty">Nada com esse filtro.</p>';
     h+='<div class="idgrid">'+L.map(x=>{ const im=(x.imgs||[])[0];
       return '<button class="idcard'+(x.usada?' used':'')+'" data-act="idopen" data-id="'+esc(x.id)+'">'+(im?idMedia(im,'idthumb'):'')+'<span class="idbody">'
@@ -1309,7 +1309,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     let h='<div class="ph-head"><button class="iconbtn" data-act="idclose" aria-label="Fechar">'+ic.x+'</button><h2>Ideia · '+shortDay(new Date(x.criado||Date.now()).toISOString().slice(0,10))+'</h2></div><div class="blk">';
     h+=(x.imgs||[]).map((a,i)=>'<div class="idimg">'+idMedia(a)+'<div class="row edonly" style="gap:6px;margin-top:6px"><button class="iconbtn sm" data-act="iddl" data-i="'+i+'" aria-label="Baixar">'+ic.dl+'</button>'
       +(ck==='idimg|'+a.id?'<button class="btn danger sm" data-act="idimgdel" data-a="'+esc(a.id)+'">Remover imagem?</button>':'<button class="iconbtn sm" data-act="evask" data-c="idimg|'+esc(a.id)+'" aria-label="Remover imagem">'+ic.trash+'</button>')+'</div></div>').join('');
-    h+='<button class="btn edonly" data-act="idaddimg" style="margin:4px 0 12px">'+ic.plus+'Adicionar imagem</button>';
+    h+='<button class="btn edonly" data-act="idaddimg" style="margin:4px 0 12px">'+ic.plus+'Adicionar imagem ou vídeo</button>';
     h+='<label class="f">Título<input class="in idin" data-k="titulo" value="'+esc(x.titulo||'')+'" placeholder="Ex.: capa com pergunta grande"></label>';
     h+='<label class="f">O que aproveitar<textarea class="in idin" data-k="nota" rows="4" placeholder="O que chamou atenção: layout, gancho, cores…">'+esc(x.nota||'')+'</textarea></label>';
     h+='<label class="f">Link de origem<input class="in idin" type="url" data-k="link" value="'+esc(x.link||'')+'" placeholder="https://"></label>';
@@ -1330,7 +1330,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   }
   async function idAddImgs(files){ const x=idById(idOpen); if(!x||RO()||busy) return; busy=true;
     try{ const imgs=(x.imgs||[]).slice(); for(const f of files){ const r=await assets.upload(f); imgs.push({id:r.id,kind:/^video\//.test(f.type)?'video':'img'}); }
-      await saveItem(x.id,{imgs},true); renderAll(); renderIdSheet(); toast('Imagem adicionada'); }catch(e){ toast('Envio interrompido. Tente de novo.'); } finally{ busy=false; } }
+      await saveItem(x.id,{imgs},true); renderAll(); renderIdSheet(); toast('Adicionado à ideia'); }catch(e){ toast('Envio interrompido. Tente de novo.'); } finally{ busy=false; } }
   function renderAll(){
     const sy=$('#sync');
     if(lastRead){ const d=new Date(lastRead); sy.textContent='Planilha lida às '+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+feed.length+' posts, '+stories.filter(x=>x.kind==='story').length+' stories'; }
@@ -1686,7 +1686,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(t.id==='f-hora'){ saveItem(openId,{hora:t.value},true).then(()=>{ renderAll(); const it=itemById(openId); const a=$('#gcal'); if(a&&it){ if(t.value){ a.href=gcalUrl(it,t.value); a.removeAttribute('aria-disabled'); } else { a.removeAttribute('href'); a.setAttribute('aria-disabled','true'); } } }); }
   });
   document.addEventListener('paste',e=>{ if(view!=='ideias'||RO()) return; const a=document.activeElement; if(a&&/INPUT|TEXTAREA/.test(a.tagName)) return;
-    const f=[...((e.clipboardData&&e.clipboardData.files)||[])].filter(x=>/^image\//.test(x.type)); if(!f.length) return; e.preventDefault();
+    const f=[...((e.clipboardData&&e.clipboardData.files)||[])].filter(x=>/^(image|video)\//.test(x.type)); if(!f.length) return; e.preventDefault();
     if(idOpen) idAddImgs(f); else idCreate(f,{}); });
   $('#file-in').addEventListener('change',e=>{ const f=[...e.target.files]; e.target.value=''; if(idUpload){ const m=idUpload; idUpload=null; if(m==='new') idCreate(f,{}); else idAddImgs(f); } else if(evUpload) evAddArts(f); else addArts(f); });
   $('#sheet').addEventListener('click',e=>{ if(e.target.id==='sheet') closeItem(); });

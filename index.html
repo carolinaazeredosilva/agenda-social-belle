@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261109142659">
+<meta name="belle-ver" content="20261109154209">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -469,6 +469,8 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .blk h4 .row{margin:0}
 .ro [data-act="tedit"]{display:none!important}
 .ro .edonly{display:none!important}
+.mvc{margin-top:10px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--accent) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line))}.mvc p{margin:0 0 10px;font-size:14px;line-height:1.45}
+.addf .f{margin-bottom:10px}.addf .f small{color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0}
 .qidea{margin-left:auto;display:flex;gap:8px;align-self:center;flex:none}.qidea[hidden]{display:none}
 .qidea{position:relative}.qmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:30;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 32px rgba(21,12,29,.18);padding:6px;min-width:230px;display:flex;flex-direction:column}.qmenu[hidden]{display:none}
 .qmenu button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:0;background:transparent;border-radius:12px;padding:10px 12px;color:var(--ink);cursor:pointer}.qmenu button:hover,.qmenu button:focus-visible{background:var(--bg)}.qmenu b{font-size:14px}.qmenu small{font-size:12px;color:var(--muted)}
@@ -692,7 +694,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
       else if(copy.indexOf('→')>=0){ copy.split('→').map(x=>x.trim()).filter(Boolean).forEach((x,i)=>parts.push({n:i+1,copy:x})); }
       else if(copy){ parts.push({n:1,copy}); }
       const rowNote=(inter&&!labInter)?inter:'';
-      parts.forEach(p=>{ out.push({id:'s_'+d+'_'+rowIdx+'_'+p.n,kind:'story',date:d,rowIdx,n:p.n,sheetStatus:st,tipo,copy:p.copy,sticker:labInter&&labInter[p.n]?labInter[p.n]:'',objetivo:obj,rowNote}); });
+      parts.forEach(p=>{ out.push({id:'s_'+d+'_'+rowIdx+'_'+p.n,kind:'story',lab:!!labCopy,date:d,rowIdx,n:p.n,sheetStatus:st,tipo,copy:p.copy,sticker:labInter&&labInter[p.n]?labInter[p.n]:'',objetivo:obj,rowNote}); });
       if(labInter){ Object.keys(labInter).forEach(n=>{ if(!parts.some(p=>p.n===+n)) out.push({id:'s_'+d+'_'+rowIdx+'_'+n,kind:'story',date:d,rowIdx,n:+n,sheetStatus:st,tipo,copy:'',sticker:labInter[n],objetivo:obj,rowNote:''}); }); }
     }
     return out;
@@ -1336,6 +1338,77 @@ body.mini .grp,body.mini .tab .ct{display:none}
   async function idAddImgs(files){ const x=idById(idOpen); if(!x||RO()||busy) return; busy=true;
     try{ const imgs=(x.imgs||[]).slice(); for(const f of files){ const r=await assets.upload(f); imgs.push({id:r.id,kind:/^video\//.test(f.type)?'video':'img'}); }
       await saveItem(x.id,{imgs},true); renderAll(); renderIdSheet(); toast('Adicionado à ideia'); }catch(e){ toast('Envio interrompido. Tente de novo.'); } finally{ busy=false; } }
+  /* ---------- novo item e mudar de dia (grava na planilha) ---------- */
+  let dAdd=null, mvTo=null, mvAsk=false, sheetBusy=false;
+  const FORMATOS=['Post único','Carrossel 4:5','Reels','Outro'], NSTAT=['Ideia','Em produção','Aprovado'];
+  function addFormHTML(d){
+    if(!dAdd) return '<div class="blk edonly"><h4>Adicionar na planilha</h4><div class="row"><button class="btn" data-act="dadd" data-k="feed">'+ic.plus+'Post no feed</button><button class="btn" data-act="dadd" data-k="story">'+ic.plus+'Story</button></div><p class="hint">Cria uma linha nova na planilha. Nada do que já existe é alterado.</p></div>';
+    const sel=(id,arr)=>'<select class="in" id="'+id+'">'+arr.map(x=>'<option>'+x+'</option>').join('')+'</select>';
+    let h='<div class="blk edonly addf"><h4>'+(dAdd==='feed'?'Novo post no feed':'Novo story')+'</h4>';
+    h+='<label class="f">Dia<input class="in" type="date" id="na-data" value="'+esc(d)+'"></label>';
+    if(dAdd==='feed') h+='<label class="f">Formato'+sel('na-formato',FORMATOS)+'</label><label class="f">Tema<input class="in" id="na-tema" placeholder="Ex.: Black Friday"></label><label class="f">Gancho / título<input class="in" id="na-gancho" placeholder="1ª linha do post"></label><label class="f">Legenda <small>(opcional)</small><textarea class="in" id="na-legenda" rows="4"></textarea></label><label class="f">CTA <small>(opcional)</small><input class="in" id="na-cta"></label>';
+    else h+='<label class="f">Tipo<input class="in" id="na-tipo" placeholder="Ex.: Repost, Dica, Bastidores"></label><label class="f">Conteúdo / copy<textarea class="in" id="na-copy" rows="3" placeholder="O que vai no story"></textarea></label><label class="f">Interação / figurinha <small>(opcional)</small><input class="in" id="na-inter" placeholder="Ex.: Enquete, Link, Caixa de perguntas"></label>';
+    h+='<label class="f">Status'+sel('na-status',NSTAT)+'</label>';
+    h+='<div class="row"><button class="btn primary" data-act="dsave"'+(sheetBusy?' disabled':'')+'>'+ic.check+(sheetBusy?'Gravando…':'Adicionar na planilha')+'</button><button class="btn" data-act="dadd" data-k="">Cancelar</button></div></div>';
+    return h;
+  }
+  async function saveNew(){
+    if(RO()||sheetBusy||!window.belleSheets) return;
+    const v=id=>{ const e=document.getElementById(id); return e?e.value.trim():''; }, data=v('na-data');
+    if(!/^\d{4}-\d\d-\d\d$/.test(data)){ toast('Escolha o dia'); return; }
+    let fields;
+    if(dAdd==='feed'){ fields={data,status:v('na-status'),formato:v('na-formato'),tema:v('na-tema'),gancho:v('na-gancho'),legenda:v('na-legenda'),cta:v('na-cta'),ig:'X'}; if(!fields.gancho&&!fields.tema){ toast('Escreva o tema ou o gancho'); return; } }
+    else { fields={data,status:v('na-status'),tipo:v('na-tipo'),copy:v('na-copy'),inter:v('na-inter')}; if(!fields.copy){ toast('Escreva o conteúdo do story'); return; } }
+    sheetBusy=true; renderDay();
+    try{ await window.belleSheets.appendItem({sheetId:SHEET_ID,kind:dAdd,fields},parseDate); dAdd=null; toast('Adicionado na planilha'); await new Promise(r=>setTimeout(r,1500)); await load(); if(dayOpen&&data!==dayOpen){ dayOpen=data; month=data.slice(0,7); renderAll(); } }
+    catch(e){ toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
+    finally{ sheetBusy=false; if(dayOpen) renderDay(); }
+  }
+  function rowMates(it){ return it.kind==='feed'?[it]:stories.filter(x=>x.date===it.date&&x.rowIdx===it.rowIdx); }
+  function moveHTML(it){
+    const mates=rowMates(it), split=it.kind==='story'&&mates.length>1&&it.lab, whole=it.kind!=='feed'&&mates.length>1&&!it.lab;
+    let h='<div class="blk edonly"><h4>Mudar de dia</h4><div class="row"><input class="in" type="date" id="mv-to" value="'+esc(mvTo||it.date)+'" style="width:auto" aria-label="Novo dia"><button class="btn" data-act="mvask">Mover</button></div>';
+    if(mvAsk&&mvTo&&mvTo!==it.date){
+      const msg=it.kind==='feed'?'A data deste post na planilha muda de '+shortDay(it.date)+' para '+shortDay(mvTo)+'. O texto não muda.'
+        :split?'Este story está na mesma linha da planilha que outros '+(mates.length-1)+'. Ele sai dessa linha e ganha uma linha nova em '+shortDay(mvTo)+', com o mesmo texto. Os outros ficam onde estão.'
+        :whole?'Este story está na mesma linha da planilha que outros '+(mates.length-1)+' e não dá para separar. Os '+mates.length+' vão juntos para '+shortDay(mvTo)+'.'
+        :'A data deste '+(it.kind==='destaque'?'destaque':'story')+' na planilha muda de '+shortDay(it.date)+' para '+shortDay(mvTo)+'. O texto não muda.';
+      h+='<div class="mvc"><p>'+esc(msg)+' Horário, artes e checks vão junto.</p><div class="row"><button class="btn primary" data-act="mvgo"'+(sheetBusy?' disabled':'')+'>'+(sheetBusy?'Gravando…':'Confirmar')+'</button><button class="btn" data-act="mvno">Cancelar</button></div></div>';
+    }
+    return h+'</div>';
+  }
+  async function moveMeta(pairs){ // pairs: [[old,new],...]
+    pairs=pairs.filter(p=>p[0]!==p[1]); if(!pairs.length) return;
+    const snap={}, touched=new Set(); pairs.forEach(p=>{ touched.add(p[0]); touched.add(p[1]); }); touched.forEach(id=>{ snap[id]=JSON.parse(JSON.stringify(M(id))); });
+    const target={}; touched.forEach(id=>{ target[id]={}; }); pairs.forEach(p=>{ target[p[1]]=snap[p[0]]; });
+    touched.forEach(id=>{ if(!pairs.some(p=>p[1]===id)&&!pairs.some(p=>p[0]===id)) target[id]=snap[id]; });
+    for(const id of touched){ meta.set(id,target[id]); await saveItem(id,{},true); }
+  }
+  async function doMove(it){
+    const to=mvTo; if(RO()||sheetBusy||!to||to===it.date||!window.belleSheets) return;
+    const mates=rowMates(it), split=it.kind==='story'&&mates.length>1&&it.lab;
+    sheetBusy=true; renderSheet(); let newOpen=it.id;
+    try{
+      if(it.kind==='feed'){
+        await window.belleSheets.moveRow({sheetId:SHEET_ID,kind:'feed',date:it.date,ord:+it.id.split('_')[2],to},parseDate);
+        const per={}, pairs=[]; feed.forEach(x=>{ const nd=x.id===it.id?to:x.date; const o=per[nd]=(per[nd]==null?0:per[nd]+1); pairs.push([x.id,'f_'+nd+'_'+o]); if(x.id===it.id) newOpen='f_'+nd+'_'+o; });
+        await moveMeta(pairs);
+      }else if(split){
+        await window.belleSheets.splitStory({sheetId:SHEET_ID,date:it.date,ord:it.rowIdx,n:it.n,old:it.copy,to},parseDate,labelled);
+        const k=new Set(stories.filter(x=>x.date===to).map(x=>x.rowIdx)).size; newOpen='s_'+to+'_'+k+'_1';
+        await moveMeta([[it.id,newOpen]]);
+      }else{
+        await window.belleSheets.moveRow({sheetId:SHEET_ID,kind:'story',date:it.date,ord:it.rowIdx,to},parseDate);
+        const rows=[], seen={}; stories.forEach(x=>{ const key=x.date+'|'+x.rowIdx; if(!seen[key]){ seen[key]=1; rows.push({date:x.date,rowIdx:x.rowIdx}); } });
+        const per={}, nmap={}; rows.forEach(r=>{ const nd=(r.date===it.date&&r.rowIdx===it.rowIdx)?to:r.date; nmap[r.date+'|'+r.rowIdx]=nd+'_'+(per[nd]=(per[nd]==null?0:per[nd]+1)); });
+        const pairs=stories.map(x=>{ const nid='s_'+nmap[x.date+'|'+x.rowIdx]+'_'+(x.kind==='destaque'?'d':x.n); if(x.id===it.id) newOpen=nid; return [x.id,nid]; });
+        await moveMeta(pairs);
+      }
+      toast('Movido para '+shortDay(to)); mvTo=null; mvAsk=false;
+      await new Promise(r=>setTimeout(r,1500)); await load(); openId=itemById(newOpen)?newOpen:null; if(!openId) closeItem(); renderAll();
+    }catch(e){ toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
+    finally{ sheetBusy=false; if(openId) renderSheet(); }
+  }
   function renderAll(){
     const sy=$('#sync');
     if(lastRead){ const d=new Date(lastRead); sy.textContent='Planilha lida às '+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+feed.length+' posts, '+stories.filter(x=>x.kind==='story').length+' stories'; }
@@ -1416,6 +1489,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     }
     // link e horário
     const WA=(window.BELLE_CONFIG&&BELLE_CONFIG.WHATSAPP)||'https://wa.me/551132305180', isSt=it.kind!=='feed', lk=m.link||(isSt?WA:'');
+    h+=moveHTML(it);
     { const L=evList(), cur=m.evento||''; if(L.length||cur) h+='<div class="blk"><h4>Evento</h4><select class="in" id="f-ev"><option value="">Nenhum evento</option>'+L.map(ev=>'<option value="'+esc(ev.id)+'"'+(cur===ev.id?' selected':'')+'>'+esc(ev.nome)+(ev.cidade?' · '+esc(ev.cidade):'')+'</option>').join('')+'</select><p class="hint">Liga este post ao evento. Ele aparece na tela Eventos.</p></div>'; }
     h+='<div class="blk"><h4>Link e observações</h4><label class="f" for="f-link">Link para colar na figurinha'+(isSt&&!m.link?' <span style="text-transform:none;letter-spacing:0;font-weight:600">(padrão: WhatsApp)</span>':'')+'<input class="in" id="f-link" type="url" inputmode="url" placeholder="https://" value="'+esc(lk)+'"></label>'
       +'<div class="row" style="margin-top:8px"><button class="btn" data-act="copylink">'+ic.copy+'Copiar link</button><button class="btn" data-act="copywa">'+ic.copy+'Copiar WhatsApp</button></div>'
@@ -1446,11 +1520,11 @@ body.mini .grp,body.mini .tab .ct{display:none}
     p.innerHTML=h; sh.hidden=false;
   }
   function lock(){ document.body.style.overflow=(openId||dayOpen)?'hidden':''; }
-  function openItem(id){ openId=id; renderSheet(); $('#panel').scrollTop=0; lock(); }
+  function openItem(id){ mvTo=null; mvAsk=false; openId=id; renderSheet(); $('#panel').scrollTop=0; lock(); }
   function closeItem(){ openId=null; $('#sheet').hidden=true; lock(); renderAll(); }
 
   /* ---------- popup do dia (calendário) ---------- */
-  function openDay(d){ dayOpen=d; renderDay(); $('#dpanel').scrollTop=0; lock(); }
+  function openDay(d){ dAdd=null; dayOpen=d; renderDay(); $('#dpanel').scrollTop=0; lock(); }
   function closeDay(){ dayOpen=null; $('#dsheet').hidden=true; lock(); }
   function renderDay(){
     const sh=$('#dsheet'), p=$('#dpanel'); if(!dayOpen){ sh.hidden=true; return; }
@@ -1460,6 +1534,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
     let h='<div class="ph-head"><button class="iconbtn" data-act="dclose" aria-label="Fechar">'+ic.x+'</button><h2>'+esc(longDay(d))+'</h2>'
       +'<button class="iconbtn" data-act="dnav" data-n="-1" aria-label="Dia anterior">'+ic.left+'</button><button class="iconbtn" data-act="dnav" data-n="1" aria-label="Próximo dia">'+ic.right+'</button></div>';
     h+='<div class="dsum"><span class="chip">'+fs.length+' feed</span><span class="chip">'+ss.length+' stories'+(ss.length?' · '+pub+' publicados':'')+'</span>'+(ds.length?'<span class="chip">'+ds.length+' destaque'+(ds.length>1?'s':'')+'</span>':'')+'</div>';
+    h+=addFormHTML(d);
     h+='<div class="seg" role="group" aria-label="Forma de ver o dia"><button data-act="dview" data-v="lista" aria-pressed="'+(dview==='lista')+'">Lista</button><button data-act="dview" data-v="horas" aria-pressed="'+(dview==='horas')+'">Por horário</button></div>';
     const simples=ss.filter(x=>!stickersOf(x.sticker).length);
     if(simples.length) h+='<div class="blk"><h4>Agendar os stories do dia</h4><div class="row"><input class="in" id="d-hora" type="time" style="width:auto" value="'+esc(dHora)+'" aria-label="Horário dos stories"><button class="btn primary" data-act="dsched">'+ic.check+'Agendei '+simples.length+(simples.length===1?' story simples':' stories simples')+'</button></div><p class="hint">Aplica o horário e marca como Agendado. Stories com figurinha ou link ficam de fora, porque você posta no celular.</p></div>';
@@ -1510,7 +1585,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
   async function downloadAll(it){ const n=artIds(it).length; for(let i=0;i<n;i++){ const ok=await downloadArt(it,i); if(ok===false) break; } }
 
   /* ---------- eventos ---------- */
-  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart','tedit','tsave','evnew','evcreate','evtadd','evtdel','evadel','evupl','evarch','evask','idnew','idtext','idaddimg','idimgdel','iddel','idtag','qmenu','qpick']);
+  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart','tedit','tsave','evnew','evcreate','evtadd','evtdel','evadel','evupl','evarch','evask','idnew','idtext','idaddimg','idimgdel','iddel','idtag','qmenu','qpick','dadd','dsave','mvask','mvgo']);
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
@@ -1534,6 +1609,11 @@ body.mini .grp,body.mini .tab .ct{display:none}
     if(act==='open'){ if(org) return; openItem(el.dataset.id); return; }
     if(act==='close'){ closeItem(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
+    if(act==='dadd'){ dAdd=el.dataset.k||null; renderDay(); if(dAdd){ const f=$('#dpanel .addf'); if(f) f.scrollIntoView({block:'nearest'}); } return; }
+    if(act==='dsave'){ saveNew(); return; }
+    if(act==='mvask'){ const f=$('#mv-to'); mvTo=f&&f.value||null; if(!mvTo||mvTo===(itemById(openId)||{}).date){ toast('Escolha outro dia'); return; } mvAsk=true; renderSheet(); return; }
+    if(act==='mvno'){ mvAsk=false; mvTo=null; renderSheet(); return; }
+    if(act==='mvgo'){ const it=itemById(openId); if(it) doMove(it); return; }
     if(act==='qmenu'){ const m=$('#qmenu'); m.hidden=!m.hidden; el.setAttribute('aria-expanded',String(!m.hidden)); return; }
     if(act==='qpick'){ const m=$('#qmenu'); m.hidden=true; $('[data-act="qmenu"]').setAttribute('aria-expanded','false'); const k=el.dataset.k;
       if(k==='txt'){ idCreate([],{}); return; }

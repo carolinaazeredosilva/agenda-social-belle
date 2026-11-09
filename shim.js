@@ -260,6 +260,63 @@
     return true;
   };
 
+
+  /* ---------- Planilha: novo item, mudar de dia, separar story ---------- */
+  async function readTab(sheetId,aba){
+    var t=await gToken(), base='https://sheets.googleapis.com/v4/spreadsheets/'+sheetId+'/values';
+    var r=await fetch(base+'/'+encodeURIComponent(aba+'!A1:Z400')+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
+    if(!r.ok) throw err('sheet','Não consegui ler a planilha ('+r.status+').');
+    var rows=(await r.json()).values||[], hi=-1, h=[];
+    for(var i=0;i<rows.length&&hi<0;i++){ h=(rows[i]||[]).map(nrm); if(h.indexOf('data')>=0) hi=i; }
+    if(hi<0&&aba==='Stories'){ hi=0; h=(rows[0]||[]).map(nrm); }
+    if(hi<0) throw err('sheet','Não achei a coluna Data na aba '+aba+'.');
+    return {t:t,base:base,rows:rows,hi:hi,h:h,dc:h.indexOf('data')};
+  }
+  function findRow(T,parseDate,date,ord){ var per={}; for(var j=T.hi+1;j<T.rows.length;j++){ var d=parseDate((T.rows[j]||[])[T.dc]||''); if(!d) continue; var n=per[d]=(per[d]==null?0:per[d]+1); if(d===date&&n===ord) return j; } return -1; }
+  function colOf(h,f){ for(var k=0;k<h.length;k++){ if(f(h[k])) return k; } return -1; }
+  function br(iso){ var p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+  function safe(v){ v=String(v==null?'':v); return /^[=+\-@]/.test(v)?"'"+v:v; }
+  var COLS={
+    feed:{data:function(x){return x==='data';},dia:function(x){return x==='dia';},status:function(x){return x==='status';},formato:function(x){return x==='formato';},tema:function(x){return x==='tema';},gancho:function(x){return x.indexOf('gancho')===0;},legenda:function(x){return x.indexOf('legenda')===0;},cta:function(x){return x==='cta';},ig:function(x){return x==='ig';}},
+    story:{data:function(x){return x==='data';},tipo:function(x){return x==='tipo';},copy:function(x){return x.indexOf('conteudo')===0;},inter:function(x){return x.indexOf('interacao')===0;},objetivo:function(x){return x==='objetivo';},status:function(x){return x==='status';},dest:function(x){return x.indexOf('salvar')===0;}}
+  };
+  async function writeAppend(T,aba,arr){
+    var w=await fetch(T.base+'/'+encodeURIComponent(aba+'!A'+(T.hi+1))+':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',{method:'POST',headers:{Authorization:'Bearer '+T.t,'Content-Type':'application/json'},body:JSON.stringify({values:[arr]})});
+    if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').');
+  }
+  function rowFrom(T,kind,f){ var arr=[], map=COLS[kind]; for(var k=0;k<T.h.length;k++) arr.push('');
+    Object.keys(f).forEach(function(key){ var c=map[key]?colOf(T.h,map[key]):-1; if(c<0||f[key]==null||f[key]==='') return; arr[c]=key==='data'?br(f[key]):safe(f[key]); });
+    if(kind==='feed'){ var dc=colOf(T.h,map.dia); if(dc>=0){ var p=f.data.split('-'); arr[dc]=WDS[new Date(+p[0],+p[1]-1,+p[2],12).getDay()]; } }
+    while(arr.length&&arr[arr.length-1]==='') arr.pop(); return arr; }
+  window.belleSheets.appendItem=async function(o,parseDate){
+    var aba=o.kind==='feed'?'Calendário':'Stories', T=await readTab(o.sheetId,aba);
+    await writeAppend(T,aba,rowFrom(T,o.kind,o.fields)); return true;
+  };
+  window.belleSheets.moveRow=async function(o,parseDate){
+    var aba=o.kind==='feed'?'Calendário':'Stories', T=await readTab(o.sheetId,aba), row=findRow(T,parseDate,o.date,o.ord);
+    if(row<0) throw err('sheet','Não achei a linha deste item. Atualize e tente de novo.');
+    var data=[{range:aba+'!'+colL(T.dc)+(row+1),values:[[br(o.to)]]}], wc=colOf(T.h,COLS.feed.dia);
+    if(o.kind==='feed'&&wc>=0){ var p=o.to.split('-'); data.push({range:aba+'!'+colL(wc)+(row+1),values:[[WDS[new Date(+p[0],+p[1]-1,+p[2],12).getDay()]]]}); }
+    var w=await fetch(T.base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+T.t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'USER_ENTERED',data:data})});
+    if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').'); return true;
+  };
+  function cutSeg(text,word,n){
+    var re=new RegExp(word+'\\s*(\\d+)\\s*:','gi'), hits=[], m; while((m=re.exec(text))){ hits.push({n:+m[1],start:m.index,end:re.lastIndex}); }
+    for(var q=0;q<hits.length;q++){ if(hits[q].n===n){ var end=q+1<hits.length?hits[q+1].start:text.length; return {seg:text.slice(hits[q].end,end).trim(),rest:(text.slice(0,hits[q].start)+text.slice(end)).replace(/\n{3,}/g,'\n\n').trim()}; } }
+    return null;
+  }
+  window.belleSheets.splitStory=async function(o,parseDate,labelled){
+    var T=await readTab(o.sheetId,'Stories'), row=findRow(T,parseDate,o.date,o.ord);
+    if(row<0) throw err('sheet','Não achei a linha deste story. Atualize e tente de novo.');
+    var map=COLS.story, cc=colOf(T.h,map.copy), ic=colOf(T.h,map.inter), r=T.rows[row]||[];
+    var cur=String(r[cc]||''), lab=labelled(cur,'STORY'); if(!lab||norm2(lab[o.n])!==norm2(o.old)) throw err('conflito','Esse story mudou na planilha. Atualize antes de mover.');
+    var c=cutSeg(cur,'STORY',o.n), inter=String(ic>=0?(r[ic]||''):''), ci=inter&&labelled(inter,'Story')?cutSeg(inter,'Story',o.n):null;
+    var f={data:o.to,tipo:r[colOf(T.h,map.tipo)]||'',copy:'STORY 1: '+c.seg,inter:ci?'Story 1: '+ci.seg:'',objetivo:r[colOf(T.h,map.objetivo)]||'',status:r[colOf(T.h,map.status)]||''};
+    var data=[{range:'Stories!'+colL(cc)+(row+1),values:[[c.rest]]}]; if(ci) data.push({range:'Stories!'+colL(ic)+(row+1),values:[[ci.rest]]});
+    var w=await fetch(T.base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+T.t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'RAW',data:data})});
+    if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').');
+    await writeAppend(T,'Stories',rowFrom(T,'story',f)); return true;
+  };
   window.claude={use:async function(n){ return n==='mcp'?mcp:n==='db'?db:n==='assets'?assets:n==='downloads'?downloads:null; }};
   window.addEventListener('belle-msg',function(e){ var t=document.getElementById('toast'); if(t){ t.textContent=e.detail; t.hidden=false; clearTimeout(window.__bt); window.__bt=setTimeout(function(){ t.hidden=true; },3500); } });
 

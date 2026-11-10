@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261109155555">
+<meta name="belle-ver" content="20261110095927">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -372,6 +372,12 @@ label.f:first-of-type{margin-top:0}
 .tile .pin{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:999px;background:rgba(20,8,28,.72);display:grid;place-items:center;color:#fff}
 .tile .pin svg{width:15px;height:15px}
 .qv .qs svg{width:14px;height:14px}
+.ptr{position:fixed;left:50%;top:0;z-index:80;transform:translate(-50%,-56px);opacity:0;display:flex;align-items:center;gap:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 14px 8px 8px;font:600 13px var(--font-body);box-shadow:0 8px 24px var(--shade);pointer-events:none;transition:opacity .15s}
+.ptr:not(.on){transition:transform .2s,opacity .2s}
+.ptr-c{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--bg);font-size:14px;transition:transform .15s}
+.ptr.go .ptr-c{background:var(--accent);color:var(--accent-ink)}
+.ptr.load .ptr-c{animation:ptrspin .8s linear infinite}@keyframes ptrspin{to{transform:rotate(360deg)}}
+html,body{overscroll-behavior-y:contain}
 .nv{position:fixed;left:50%;translate:-50% 0;top:12px;z-index:70;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font:700 13px var(--font-body);padding:10px 18px;box-shadow:0 8px 24px var(--shade)}
 
 /* ===== visual v2 ===== */
@@ -1794,6 +1800,14 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 
 
   /* avisa quando houver versão nova do site publicada */
+  (function(){ /* puxar para atualizar (celular) */
+    let y0=null, dy=0; const TH=80; const ind=document.createElement('div'); ind.className='ptr'; ind.setAttribute('aria-hidden','true'); ind.innerHTML='<span class="ptr-c">↓</span><span class="ptr-t">Puxe para atualizar</span>'; document.body.appendChild(ind);
+    const blocked=()=>[...document.querySelectorAll('.sheet')].some(x=>!x.hidden)||!!document.querySelector('#side.open')||!!document.querySelector('.qmenu:not([hidden])');
+    const set=d=>{ ind.style.transform='translate(-50%,'+(Math.min(d,TH*1.4)-56)+'px)'; ind.style.opacity=String(Math.min(1,d/TH)); ind.classList.toggle('go',d>=TH); ind.querySelector('.ptr-t').textContent=d>=TH?'Solte para atualizar':'Puxe para atualizar'; ind.querySelector('.ptr-c').style.transform='rotate('+(d>=TH?180:Math.round(d/TH*180))+'deg)'; };
+    window.addEventListener('touchstart',e=>{ if(e.touches.length!==1||window.scrollY>0||blocked()){ y0=null; return; } y0=e.touches[0].clientY; dy=0; },{passive:true});
+    window.addEventListener('touchmove',e=>{ if(y0==null) return; dy=(e.touches[0].clientY-y0)*0.5; if(dy<=0||window.scrollY>0){ dy=0; set(0); return; } ind.classList.add('on'); set(dy); },{passive:true});
+    window.addEventListener('touchend',()=>{ if(y0==null) return; y0=null; if(dy>=TH){ ind.classList.add('load'); ind.querySelector('.ptr-t').textContent='Atualizando…'; setTimeout(()=>location.reload(),150); } else { ind.classList.remove('on'); set(0); } dy=0; },{passive:true});
+  })();
   (function(){ const cur=(document.querySelector('meta[name="belle-ver"]')||{}).content||'';
     async function chk(){ try{ const t=await (await fetch('index.html?'+Date.now(),{cache:'no-store'})).text(); const m=t.match(/name="belle-ver" content="(\d+)"/); if(m&&cur&&m[1]>cur&&!document.getElementById('nv')){ const b=document.createElement('button'); b.id='nv'; b.className='nv'; b.textContent='Nova versão do site disponível · toque para atualizar'; b.onclick=()=>location.reload(); document.body.appendChild(b); } }catch(_){} }
     setTimeout(chk,8000); setInterval(chk,120000); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) chk(); }); })();

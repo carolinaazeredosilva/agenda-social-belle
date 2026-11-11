@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261111093527">
+<meta name="belle-ver" content="20261111094519">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -489,6 +489,10 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .itr:last-child{border-bottom:0}.ith{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.itr span:nth-child(n+3){text-align:right}.itt{min-width:0;overflow-wrap:anywhere}.itt .linkbtn{padding:0;text-align:left;white-space:normal;min-height:0;font-size:inherit}
 .itag{font-style:normal;font-size:11px;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:0 6px;color:var(--muted)}
 .ish{margin:26px 0 10px}
+.isum{margin-bottom:6px}.iwsel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.iwsel .chip{min-height:34px;padding:4px 14px;cursor:pointer}.iwsel .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}.iwsel small{opacity:.7}
+.ibest{display:flex;flex-direction:column;gap:8px}.ibest .itr.i3{grid-template-columns:76px minmax(0,1fr) 60px}.ibest>b{font:700 18px/1.3 var(--font-display);color:var(--ink)}.ibest>b .linkbtn{padding:0;font:inherit;text-align:left;white-space:normal;min-height:0}
+.ihours{display:flex;align-items:flex-end;gap:6px;height:90px;margin:4px 0}.ihb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}.ihb i{display:block;width:100%;max-width:40px;border-radius:6px 6px 2px 2px;background:color-mix(in srgb,var(--accent) 45%,var(--bg))}.ihb.pk i{background:var(--accent)}.ihb span{font-size:11px;color:var(--muted)}
+
 .ires{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ires span{display:flex;flex-direction:column;background:var(--bg);border-radius:12px;padding:8px 10px;font-size:12px;color:var(--muted)}.ires b{font:800 20px/1.2 var(--font-display);color:var(--ink)}
 @media (max-width:640px){.ikpis{grid-template-columns:1fr 1fr;gap:8px}.ik{padding:12px 14px}.ik b{font-size:22px}.itr{grid-template-columns:44px minmax(0,1fr) 58px;font-size:13px}.itr span:nth-child(n+4){display:none}.ibr{grid-template-columns:90px minmax(0,1fr) 52px}.ires{grid-template-columns:repeat(2,1fr)}.iwk b{font-size:20px}}
 video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(--tile)}.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:rgba(21,12,29,.55);color:#fff;display:grid;place-items:center;font-size:13px;pointer-events:none}
@@ -1439,7 +1443,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     finally{ sheetBusy=false; if(openId) renderSheet(); }
   }
   /* ---------- insights (dados dos prints) ---------- */
-  let INS=null, insLoading=false;
+  let INS=null, insLoading=false, insWk=2;
+  const INS_WK=[['25/10 a 31/10','2026-10-25','2026-10-31'],['01/11 a 07/11','2026-11-01','2026-11-07'],['08/11 a 10/11','2026-11-08','2026-11-10',1]];
   function insLoad(){ if(INS||insLoading) return; insLoading=true; fetch('insights.json?v='+((document.querySelector('meta[name="belle-ver"]')||{}).content||''),{cache:'no-store'}).then(r=>r.json()).then(j=>{ INS=j; insLoading=false; renderAll(); if(openId) renderSheet(); }).catch(()=>{ insLoading=false; }); }
   const nf=n=>typeof n==='number'?n.toLocaleString('pt-BR'):esc(String(n));
   const pct=v=>(v>0?'+':'')+Number(v).toFixed(1).replace('.',',')+'%';
@@ -1449,6 +1454,28 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   function insForItem(it){ if(!INS||it.kind!=='feed') return null; const L=insPostsOn(it.date); if(L.length!==1) return null; if(feed.filter(x=>x.date===it.date).length!==1) return null; return L[0]; }
   function insBlock(it){ const c=insForItem(it); if(!c) return '';
     return '<div class="blk"><h4>Resultado no Instagram</h4><div class="ires"><span><b>'+nf(c.views)+'</b>visualizações</span><span><b>'+nf(c.likes)+'</b>curtidas</span><span><b>'+nf(c.coment)+'</b>comentários</span><span><b>'+nf(c.shares)+'</b>compartilh.</span></div><p class="hint">Dos prints de '+shortDay(INS.atualizado)+'. Ligado pela data do post.</p></div>'; }
+  function insItemFor(c){ const fs=feed.filter(x=>x.date===c.data); return fs.length===1&&insPostsOn(c.data).length===1?fs[0]:null; }
+  function insResumo(C){
+    const w=INS_WK[insWk], inW=C.filter(c=>c.data>=w[1]&&c.data<=w[2]);
+    const ps=inW.filter(c=>c.tipo!=='s').sort((a,b)=>b.views-a.views), ss=inW.filter(c=>c.tipo==='s').sort((a,b)=>b.views-a.views);
+    const prevW=INS_WK[insWk-1], prevS=prevW?C.filter(c=>c.tipo==='s'&&c.data>=prevW[1]&&c.data<=prevW[2]):[];
+    const avg=a=>a.length?Math.round(a.reduce((x,c)=>x+c.views,0)/a.length):0;
+    let h='<div class="isum"><div class="iwsel" role="group" aria-label="Semana">'+INS_WK.map((x,i)=>'<button class="chip'+(i===insWk?' on':'')+'" data-act="insw" data-i="'+i+'">'+x[0]+(x[3]?' <small>parcial</small>':'')+'</button>').join('')+'</div>';
+    const bp=ps[0], it=bp&&insItemFor(bp), hr=it&&M(it.id).hora;
+    h+='<div class="igrid">';
+    h+='<div class="vcard ibest"><span class="evk">Melhor post da semana</span>'+(bp?'<b>'+(it?'<button class="linkbtn" data-act="open" data-id="'+esc(it.id)+'">'+esc(bp.titulo)+'</button>':esc(bp.titulo))+'</b><div class="ires"><span><b>'+nf(bp.views)+'</b>visualizações</span><span><b>'+nf(bp.likes)+'</b>curtidas</span><span><b>'+nf(bp.coment)+'</b>comentários</span><span><b>'+nf(bp.shares)+'</b>compartilh.</span></div><p class="hint">'+shortDay(bp.data)+(hr?' · postado às '+esc(hr):'')+(ps.length>1?' · '+ps.length+' posts na semana; o segundo foi "'+esc(ps[1].titulo)+'" com '+nf(ps[1].views):'')+'</p>':'<p class="txt">Nenhum post de feed nesta semana nos prints.</p>')+'</div>';
+    const a=avg(ss), pa=avg(prevS);
+    h+='<div class="vcard ibest"><span class="evk">Melhores stories da semana</span>'+(ss.length?'<div class="itab">'+ss.slice(0,3).map((c,i)=>'<div class="itr i3"><span>'+(i+1)+'º · '+c.data.slice(8)+'/'+c.data.slice(5,7)+'</span><span class="itt">'+esc(c.titulo)+'</span><span><b>'+nf(c.views)+'</b></span></div>').join('')+'</div><p class="hint">'+ss.length+' stories, média de '+a+' visualizações por story'+(prevS.length?' ('+(a>=pa?'+':'')+(a-pa)+' em relação à semana anterior, que teve '+pa+')':'')+'.</p>':'<p class="txt">Sem stories nesta semana.</p>')+'</div>';
+    h+='</div>';
+    // horários
+    const ph=C.filter(c=>c.tipo!=='s').map(c=>{ const x=insItemFor(c); return x&&M(x.id).hora?{c,h:M(x.id).hora}:null; }).filter(Boolean).sort((x,y)=>y.c.views-x.c.views);
+    h+='<div class="vcard ibest" style="margin-top:14px"><span class="evk">Melhores horários</span><div class="ihours">'+[['0h',47],['3h',13],['6h',35],['9h',82],['12h',94],['15h',95],['18h',100],['21h',97]].map(x=>'<div class="ihb'+(x[0]==='18h'?' pk':'')+'"><i style="height:'+Math.round(x[1]*0.7)+'px"></i><span>'+x[0]+'</span></div>').join('')+'</div>'
+      +'<p class="txt">Seus seguidores ficam mais ativos das <b>12h às 21h</b>, com pico às <b>18h</b>. Segundas, terças e quartas: 18h às 21h. De madrugada (3h) o movimento quase some.</p>'
+      +'<p class="hint">Barras copiadas a olho do gráfico de domingo dos prints (o Instagram não mostra os números). Os outros dias têm o mesmo formato.</p>'
+      +(ph.length?'<p class="txt" style="margin-top:10px"><b>Seus posts com horário anotado na agenda:</b></p><div class="itab">'+ph.map(x=>'<div class="itr i3"><span>'+esc(x.h)+'</span><span class="itt">'+esc(x.c.titulo)+' <small>('+shortDay(x.c.data)+')</small></span><span><b>'+nf(x.c.views)+'</b></span></div>').join('')+'</div>':'<p class="hint">Quando os posts tiverem o horário preenchido na agenda, aparece aqui o horário de cada um ao lado das visualizações, para comparar.</p>')
+      +'</div></div>';
+    return h;
+  }
   function renderInsights(){
     if(!INS){ insLoad(); return '<p class="empty">Carregando os números…</p>'; }
     const R=INS.resumo, P=INS.periodo, C=INS.conteudo.filter(c=>c.data>=P.inicio&&c.data<=P.fim);
@@ -1456,9 +1483,10 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const st=C.filter(c=>c.tipo==='s'), posts=C.filter(c=>c.tipo!=='s').sort((a,b)=>b.views-a.views);
     const byDay={}; st.forEach(c=>{ (byDay[c.data]=byDay[c.data]||[]).push(c.views); });
     const days=Object.keys(byDay).sort(), avg=a=>Math.round(a.reduce((s,x)=>s+x,0)/a.length);
-    const wk=[['25/10 a 31/10','2026-10-25','2026-10-31'],['01/11 a 07/11','2026-11-01','2026-11-07'],['08/11 a 10/11','2026-11-08','2026-11-10']].map(w=>{ const v=st.filter(c=>c.data>=w[1]&&c.data<=w[2]).map(c=>c.views); return [w[0],v.length?avg(v):0,v.length]; });
+    const wk=INS_WK.map(w=>{ const v=st.filter(c=>c.data>=w[1]&&c.data<=w[2]).map(c=>c.views); return [w[0],v.length?avg(v):0,v.length]; });
     let h='<p class="ihd">'+shortDay(P.inicio)+' a '+shortDay(P.fim)+' · '+nd+' dias · comparação com o '+esc(P.comparacao)+'<br><small>'+esc(INS.fonte)+'</small></p>';
-    h+='<div class="ikpis">'
+    h+=insResumo(C);
+    h+='<h2 class="ish">Números do período</h2><div class="ikpis">'
       +'<div class="vcard ik"><span>Visualizações</span><b>'+nf(R.visualizacoes)+'</b><em class="'+(R.visualizacoes_var<0?'dn':'up')+'">'+pct(R.visualizacoes_var)+'</em></div>'
       +'<div class="vcard ik"><span>Visualizadores (contas)</span><b>'+nf(R.visualizadores)+'</b><em class="'+(R.visualizadores_var<0?'dn':'up')+'">'+pct(R.visualizadores_var)+'</em></div>'
       +'<div class="vcard ik"><span>Seguidores</span><b>'+nf(R.seguidores)+'</b><em class="up">+'+nf(R.seguidores_novos)+' novos · +'+nf(R.seguidores_liquidos)+' no saldo</em></div>'
@@ -1687,6 +1715,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='close'){ closeItem(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='dadd'){ dAdd=el.dataset.k||null; renderDay(); if(dAdd){ const f=$('#dpanel .addf'); if(f) f.scrollIntoView({block:'nearest'}); } return; }
+    if(act==='insw'){ insWk=+el.dataset.i; renderAll(); return; }
     if(act==='dsave'){ saveNew(); return; }
     if(act==='mvask'){ const f=$('#mv-to'); mvTo=f&&f.value||null; if(!mvTo||mvTo===(itemById(openId)||{}).date){ toast('Escolha outro dia'); return; } mvAsk=true; renderSheet(); return; }
     if(act==='mvno'){ mvAsk=false; mvTo=null; renderSheet(); return; }

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261110112604">
+<meta name="belle-ver" content="20261111093527">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -475,6 +475,22 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .blk h4 .row{margin:0}
 .ro [data-act="tedit"]{display:none!important}
 .ro .edonly{display:none!important}
+.ihd{margin:0 0 14px;color:var(--body);font-size:14px;line-height:1.5}.ihd small{color:var(--muted)}
+.ikpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:12px}
+.ik{display:flex;flex-direction:column;gap:4px;padding:16px 18px}.ik span{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ik b{font:800 30px/1.1 var(--font-display);letter-spacing:-.02em;color:var(--ink)}.ik em{font-style:normal;font-size:13px;color:var(--muted)}.ik em.up{color:var(--s-green)}.ik em.dn{color:var(--danger)}
+.igrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.ibars{display:flex;flex-direction:column;gap:8px;margin-top:8px}.ibr{display:grid;grid-template-columns:110px minmax(0,1fr) 64px;gap:10px;align-items:center;font-size:14px}
+.ibl{color:var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ibt{height:10px;border-radius:99px;background:var(--bg);overflow:hidden}.ibt i{display:block;height:100%;border-radius:99px;background:var(--accent)}.ibr b{text-align:right;color:var(--ink)}
+.iwk{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 14px}.iwk span{display:flex;flex-direction:column;background:var(--bg);border-radius:14px;padding:10px 12px}.iwk small{color:var(--muted);font-size:12px}.iwk b{font:800 24px/1.2 var(--font-display);color:var(--ink)}.iwk em{font-style:normal;font-size:12px;color:var(--muted)}
+.icol{display:flex;align-items:flex-end;gap:4px;height:170px;padding-top:18px;overflow-x:auto}
+.icb{flex:1 0 24px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}.icb i{display:block;width:100%;max-width:28px;border-radius:6px 6px 2px 2px;background:var(--accent)}.icb b{font-size:10px;color:var(--body)}.icb span{font-size:10px;color:var(--muted);white-space:nowrap}
+.itab{display:flex;flex-direction:column;margin-top:8px}.itr{display:grid;grid-template-columns:52px minmax(0,1fr) 72px 60px 58px 64px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.itr.i3{grid-template-columns:52px minmax(0,1fr) 72px}
+.itr:last-child{border-bottom:0}.ith{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.itr span:nth-child(n+3){text-align:right}.itt{min-width:0;overflow-wrap:anywhere}.itt .linkbtn{padding:0;text-align:left;white-space:normal;min-height:0;font-size:inherit}
+.itag{font-style:normal;font-size:11px;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:0 6px;color:var(--muted)}
+.ish{margin:26px 0 10px}
+.ires{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ires span{display:flex;flex-direction:column;background:var(--bg);border-radius:12px;padding:8px 10px;font-size:12px;color:var(--muted)}.ires b{font:800 20px/1.2 var(--font-display);color:var(--ink)}
+@media (max-width:640px){.ikpis{grid-template-columns:1fr 1fr;gap:8px}.ik{padding:12px 14px}.ik b{font-size:22px}.itr{grid-template-columns:44px minmax(0,1fr) 58px;font-size:13px}.itr span:nth-child(n+4){display:none}.ibr{grid-template-columns:90px minmax(0,1fr) 52px}.ires{grid-template-columns:repeat(2,1fr)}.iwk b{font-size:20px}}
 video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(--tile)}.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:rgba(21,12,29,.55);color:#fff;display:grid;place-items:center;font-size:13px;pointer-events:none}
 .thumb,.art,.tile,.vmini button{position:relative}
 .mvc{margin-top:10px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--accent) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line))}.mvc p{margin:0 0 10px;font-size:14px;line-height:1.45}
@@ -541,6 +557,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
     <button class="tab" role="tab" data-act="tab" data-v="prog" id="tab-prog"></button>
     <button class="tab" role="tab" data-act="tab" data-v="ideias" id="tab-ideias"></button>
+    <div class="grp">Resultados</div>
+    <button class="tab" role="tab" data-act="tab" data-v="insights" id="tab-insights"></button>
     <div class="grp">Ações</div>
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
   </div>
@@ -587,6 +605,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const longDay=s=>fromIso(s).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
   const shortDay=s=>{const d=fromIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
   const ic={
+    chart:'<svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     bulb:'<svg class="i" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
     star:'<svg class="i" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>',
     refresh:'<svg class="i" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12A9 9 0 0 1 18.5 5.8M18.5 2v4h-4M5.5 22v-4h4"/></svg>',
@@ -1419,23 +1438,70 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }catch(e){ toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
     finally{ sheetBusy=false; if(openId) renderSheet(); }
   }
+  /* ---------- insights (dados dos prints) ---------- */
+  let INS=null, insLoading=false;
+  function insLoad(){ if(INS||insLoading) return; insLoading=true; fetch('insights.json?v='+((document.querySelector('meta[name="belle-ver"]')||{}).content||''),{cache:'no-store'}).then(r=>r.json()).then(j=>{ INS=j; insLoading=false; renderAll(); if(openId) renderSheet(); }).catch(()=>{ insLoading=false; }); }
+  const nf=n=>typeof n==='number'?n.toLocaleString('pt-BR'):esc(String(n));
+  const pct=v=>(v>0?'+':'')+Number(v).toFixed(1).replace('.',',')+'%';
+  function insBars(obj,fmt,maxv){ const ks=Object.keys(obj), mx=maxv||Math.max(...ks.map(k=>+obj[k]||0),1);
+    return '<div class="ibars">'+ks.map(k=>{ const v=+obj[k]||0; return '<div class="ibr"><span class="ibl">'+esc(k)+'</span><span class="ibt"><i style="width:'+Math.max(v>0?2:0,Math.round(v/mx*100))+'%"></i></span><b>'+(fmt?fmt(obj[k],k):nf(obj[k]))+'</b></div>'; }).join('')+'</div>'; }
+  function insPostsOn(d){ return INS?INS.conteudo.filter(c=>c.data===d&&c.tipo!=='s'):[]; }
+  function insForItem(it){ if(!INS||it.kind!=='feed') return null; const L=insPostsOn(it.date); if(L.length!==1) return null; if(feed.filter(x=>x.date===it.date).length!==1) return null; return L[0]; }
+  function insBlock(it){ const c=insForItem(it); if(!c) return '';
+    return '<div class="blk"><h4>Resultado no Instagram</h4><div class="ires"><span><b>'+nf(c.views)+'</b>visualizações</span><span><b>'+nf(c.likes)+'</b>curtidas</span><span><b>'+nf(c.coment)+'</b>comentários</span><span><b>'+nf(c.shares)+'</b>compartilh.</span></div><p class="hint">Dos prints de '+shortDay(INS.atualizado)+'. Ligado pela data do post.</p></div>'; }
+  function renderInsights(){
+    if(!INS){ insLoad(); return '<p class="empty">Carregando os números…</p>'; }
+    const R=INS.resumo, P=INS.periodo, C=INS.conteudo.filter(c=>c.data>=P.inicio&&c.data<=P.fim);
+    const nd=Math.round((new Date(P.fim+'T12:00')-new Date(P.inicio+'T12:00'))/864e5)+1;
+    const st=C.filter(c=>c.tipo==='s'), posts=C.filter(c=>c.tipo!=='s').sort((a,b)=>b.views-a.views);
+    const byDay={}; st.forEach(c=>{ (byDay[c.data]=byDay[c.data]||[]).push(c.views); });
+    const days=Object.keys(byDay).sort(), avg=a=>Math.round(a.reduce((s,x)=>s+x,0)/a.length);
+    const wk=[['25/10 a 31/10','2026-10-25','2026-10-31'],['01/11 a 07/11','2026-11-01','2026-11-07'],['08/11 a 10/11','2026-11-08','2026-11-10']].map(w=>{ const v=st.filter(c=>c.data>=w[1]&&c.data<=w[2]).map(c=>c.views); return [w[0],v.length?avg(v):0,v.length]; });
+    let h='<p class="ihd">'+shortDay(P.inicio)+' a '+shortDay(P.fim)+' · '+nd+' dias · comparação com o '+esc(P.comparacao)+'<br><small>'+esc(INS.fonte)+'</small></p>';
+    h+='<div class="ikpis">'
+      +'<div class="vcard ik"><span>Visualizações</span><b>'+nf(R.visualizacoes)+'</b><em class="'+(R.visualizacoes_var<0?'dn':'up')+'">'+pct(R.visualizacoes_var)+'</em></div>'
+      +'<div class="vcard ik"><span>Visualizadores (contas)</span><b>'+nf(R.visualizadores)+'</b><em class="'+(R.visualizadores_var<0?'dn':'up')+'">'+pct(R.visualizadores_var)+'</em></div>'
+      +'<div class="vcard ik"><span>Seguidores</span><b>'+nf(R.seguidores)+'</b><em class="up">+'+nf(R.seguidores_novos)+' novos · +'+nf(R.seguidores_liquidos)+' no saldo</em></div>'
+      +'<div class="vcard ik"><span>Perfil</span><b>'+esc(R.visitas_perfil)+'</b><em>visitas · '+nf(R.toques_link)+' toques no link da bio</em></div></div>';
+    h+='<p class="hint" style="margin:-4px 0 18px">Pela divisão por tipo, stories, posts e reels somam cerca de 12,8 mil visualizações. O total de '+nf(R.visualizacoes)+' inclui o que o Instagram não mostra nessa divisão, como visualizações vindas de anúncios.</p>';
+    h+='<div class="igrid"><div class="vcard"><h3>Visualizações por tipo</h3>'+insBars(INS.por_tipo.views_num,(v,k)=>esc(INS.por_tipo.views[k]))+'</div>'
+      +'<div class="vcard"><h3>Interações por tipo</h3>'+insBars(INS.por_tipo.interacoes)+'<p class="hint">Total: '+nf(Object.values(INS.por_tipo.interacoes).reduce((s,x)=>s+x,0))+' interações.</p></div></div>';
+    // stories
+    const mx=Math.max(...days.map(d=>avg(byDay[d])),1);
+    h+='<div class="vcard" style="margin-top:14px"><h3>Stories: média de visualizações por story</h3><div class="iwk">'+wk.map(w=>'<span><small>'+w[0]+'</small><b>'+w[1]+'</b><em>'+w[2]+' stories</em></span>').join('')+'</div>'
+      +'<div class="icol">'+days.map(d=>{ const a=avg(byDay[d]); return '<div class="icb" title="'+shortDay(d)+': média '+a+' em '+byDay[d].length+' stories"><b>'+a+'</b><i style="height:'+Math.round(a/mx*100)+'%"></i><span>'+d.slice(8)+'/'+d.slice(5,7)+'</span></div>'; }).join('')+'</div>'
+      +'<p class="hint">'+st.length+' stories no período, somando '+nf(st.reduce((s,c)=>s+c.views,0))+' visualizações. O número em cima de cada barra é a média do dia.</p></div>';
+    // posts
+    h+='<div class="vcard" style="margin-top:14px"><h3>Posts e reels do período</h3><div class="itab"><div class="itr ith"><span>Data</span><span>Post</span><span>Visualiz.</span><span>Curtidas</span><span>Coment.</span><span>Compart.</span></div>'
+      +posts.map(c=>{ const it=feed.find(x=>x.date===c.data&&feed.filter(y=>y.date===c.data).length===1&&insPostsOn(c.data).length===1);
+        return '<div class="itr"><span>'+shortDay(c.data)+'</span><span class="itt">'+(it?'<button class="linkbtn" data-act="open" data-id="'+esc(it.id)+'">'+esc(c.titulo)+'</button>':esc(c.titulo))+(c.tipo==='r'?' <i class="itag">reel</i>':'')+'</span><span><b>'+nf(c.views)+'</b></span><span>'+nf(c.likes)+'</span><span>'+nf(c.coment)+'</span><span>'+nf(c.shares)+'</span></div>'; }).join('')+'</div>'
+      +'<p class="hint">"Mais um expositor confirmado" aparece no print como 1,7 mil, sem o número exato.</p></div>';
+    const top=st.slice().sort((a,b)=>b.views-a.views).slice(0,8);
+    h+='<div class="vcard" style="margin-top:14px"><h3>Stories com mais visualizações</h3><div class="itab">'+top.map(c=>'<div class="itr i3"><span>'+shortDay(c.data)+'</span><span class="itt">'+esc(c.titulo)+'</span><span><b>'+nf(c.views)+'</b></span></div>').join('')+'</div></div>';
+    // público
+    const pb=INS.publico, pf=v=>String(v).replace('.',',')+'%';
+    h+='<h2 class="ish">Público</h2><div class="igrid"><div class="vcard"><h3>Gênero</h3>'+insBars(pb.genero,pf,100)+'<h3 style="margin-top:16px">Faixa etária</h3>'+insBars(pb.idade,pf)+'</div>'
+      +'<div class="vcard"><h3>Países</h3>'+insBars(pb.paises,pf,100)+'<h3 style="margin-top:16px">Idiomas</h3>'+insBars(pb.idiomas,pf,100)+'<h3 style="margin-top:16px">Quando estão mais ativos</h3><p class="txt">'+esc(pb.mais_ativos)+'</p><p class="txt">'+esc(pb.horario_obs)+'</p></div></div>';
+    return h;
+  }
   function renderAll(){
+    insLoad();
     const sy=$('#sync');
     if(lastRead){ const d=new Date(lastRead); sy.textContent='Planilha lida às '+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+feed.length+' posts, '+stories.filter(x=>x.kind==='story').length+' stories'; }
     else sy.textContent=loaded?'Não consegui ler a planilha':'Lendo a planilha…';
     $('#banner').innerHTML=loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['insights','Insights',ic.chart],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
     if(!loaded&&!feed.length){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }
-    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():renderFeed();
+    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():renderFeed();
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();
@@ -1499,6 +1565,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }
     // link e horário
     const WA=(window.BELLE_CONFIG&&BELLE_CONFIG.WHATSAPP)||'https://wa.me/551132305180', isSt=it.kind!=='feed', lk=m.link||(isSt?WA:'');
+    h+=insBlock(it);
     h+=moveHTML(it);
     { const L=evList(), cur=m.evento||''; if(L.length||cur) h+='<div class="blk"><h4>Evento</h4><select class="in" id="f-ev"><option value="">Nenhum evento</option>'+L.map(ev=>'<option value="'+esc(ev.id)+'"'+(cur===ev.id?' selected':'')+'>'+esc(ev.nome)+(ev.cidade?' · '+esc(ev.cidade):'')+'</option>').join('')+'</select><p class="hint">Liga este post ao evento. Ele aparece na tela Eventos.</p></div>'; }
     h+='<div class="blk"><h4>Link e observações</h4><label class="f" for="f-link">Link para colar na figurinha'+(isSt&&!m.link?' <span style="text-transform:none;letter-spacing:0;font-weight:600">(padrão: WhatsApp)</span>':'')+'<input class="in" id="f-link" type="url" inputmode="url" placeholder="https://" value="'+esc(lk)+'"></label>'

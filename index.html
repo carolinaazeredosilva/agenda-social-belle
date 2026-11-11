@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261111094519">
+<meta name="belle-ver" content="20261111101016">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -489,6 +489,14 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .itr:last-child{border-bottom:0}.ith{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.itr span:nth-child(n+3){text-align:right}.itt{min-width:0;overflow-wrap:anywhere}.itt .linkbtn{padding:0;text-align:left;white-space:normal;min-height:0;font-size:inherit}
 .itag{font-style:normal;font-size:11px;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:0 6px;color:var(--muted)}
 .ish{margin:26px 0 10px}
+.bh{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 14px;margin-bottom:14px}
+.bh-i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:color-mix(in srgb,var(--accent) 14%,var(--panel));color:var(--accent);flex:none}
+.bh-t{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1;font-size:13px;color:var(--body)}.bh-t>b{font-size:14px;color:var(--ink)}
+.bh-g{display:flex;align-items:flex-end;gap:3px;height:28px;flex:none}.bh-g i{display:block;width:7px;border-radius:2px;background:color-mix(in srgb,var(--accent) 40%,var(--bg))}.bh-g i.pk{background:var(--accent)}
+.bh .linkbtn{flex:none;padding:0 4px}
+.hsug{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}.hsug button{border:1px solid var(--line);background:var(--panel);color:var(--body);border-radius:99px;padding:3px 10px;font:600 12px var(--font-body);cursor:pointer;text-transform:none;letter-spacing:0}.hsug button.pk{border-color:var(--accent);color:var(--accent)}.hsug button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:640px){.bh-g{display:none}.bh{padding:10px 12px}}
+
 .isum{margin-bottom:6px}.iwsel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.iwsel .chip{min-height:34px;padding:4px 14px;cursor:pointer}.iwsel .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}.iwsel small{opacity:.7}
 .ibest{display:flex;flex-direction:column;gap:8px}.ibest .itr.i3{grid-template-columns:76px minmax(0,1fr) 60px}.ibest>b{font:700 18px/1.3 var(--font-display);color:var(--ink)}.ibest>b .linkbtn{padding:0;font:inherit;text-align:left;white-space:normal;min-height:0}
 .ihours{display:flex;align-items:flex-end;gap:6px;height:90px;margin:4px 0}.ihb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}.ihb i{display:block;width:100%;max-width:40px;border-radius:6px 6px 2px 2px;background:color-mix(in srgb,var(--accent) 45%,var(--bg))}.ihb.pk i{background:var(--accent)}.ihb span{font-size:11px;color:var(--muted)}
@@ -1084,6 +1092,13 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(k<todayIso()) return ok?'dz-ok':'';
     return ok?'dz-ok':'dz-todo';
   }
+  const BEST_H=[['0h',47],['3h',13],['6h',35],['9h',82],['12h',94],['15h',95],['18h',100],['21h',97]];
+  function bestHoursHTML(d){
+    const wd=d?new Date(d+'T12:00').getDay():-1, mtq=wd>=1&&wd<=3;
+    return '<div class="bh"><span class="bh-i">'+ic.clock+'</span><div class="bh-t"><b>Melhores horários</b><span>Pico às <b>18h</b> · forte das 12h às 21h'+(d?(mtq?' · <b>hoje (seg a qua): 18h–21h</b>':''):' · seg a qua: 18h–21h')+'</span></div>'
+      +'<div class="bh-g" aria-hidden="true">'+BEST_H.map(x=>'<i class="'+(x[0]==='18h'?'pk':'')+'" style="height:'+Math.round(x[1]*0.26)+'px" title="'+x[0]+'"></i>').join('')+'</div>'
+      +'<button class="linkbtn" data-act="tab" data-v="insights">insights</button></div>';
+  }
   function renderCal(){
     const y=+month.slice(0,4), mo=+month.slice(5,7)-1;
     const first=new Date(y,mo,1,12), lead=(first.getDay()+6)%7, days=new Date(y,mo+1,0).getDate();
@@ -1095,7 +1110,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       cells+='<button class="cell'+(k===todayIso()?' today':'')+' '+dayState(k)+'" data-act="goto" data-d="'+k+'" aria-label="'+esc(longDay(k))+'"><span class="n">'+d+'</span><span class="mk">'+mk+'</span></button>';
     }
     const label=new Date(y,mo,1,12).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
-    return '<div class="month"><div class="mhead"><button class="iconbtn" data-act="mon" data-n="-1" aria-label="Mês anterior">'+ic.left+'</button><h2>'+esc(label)+'</h2><button class="iconbtn" data-act="mon" data-n="1" aria-label="Próximo mês">'+ic.right+'</button></div>'
+    return bestHoursHTML()+'<div class="month"><div class="mhead"><button class="iconbtn" data-act="mon" data-n="-1" aria-label="Mês anterior">'+ic.left+'</button><h2>'+esc(label)+'</h2><button class="iconbtn" data-act="mon" data-n="1" aria-label="Próximo mês">'+ic.right+'</button></div>'
       +'<div class="mgrid">'+['seg','ter','qua','qui','sex','sáb','dom'].map(w=>'<div class="wd">'+w+'</div>').join('')+cells+'</div>'
       +'<div class="legend"><span><i style="background:var(--s-ideia)"></i>Ideia</span><span><i style="background:var(--s-prod)"></i>Em produção</span><span><i style="background:var(--s-ok)"></i>Aprovado</span><span><i style="background:var(--s-agend)"></i>Agendado</span><span><i style="background:var(--s-pub)"></i>Publicado</span><span style="color:var(--violet)">st = stories do dia</span><span><i class="dz" style="background:var(--danger)"></i>Dia por organizar</span><span><i class="dz" style="background:var(--s-green)"></i>Tudo com check de pronto</span></div></div>';
   }
@@ -1614,7 +1629,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       }
     }
     h+='<div class="blk" id="blk-hora"><h4>Horário e alarme</h4><div class="hgrid">'
-      +'<label class="f" for="f-hora">Horário<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"></label>'
+      +'<label class="f" for="f-hora">Horário<input class="in" id="f-hora" type="time" value="'+esc(m.hora||'')+'"><span class="hsug edonly">'+['12:00','18:00','19:00','20:00'].map(x=>'<button type="button" class="'+(x==='18:00'?'pk':'')+(m.hora===x?' on':'')+'" data-act="hsug" data-h="'+x+'">'+x.replace(':00','h')+'</button>').join('')+'</span></label>'
       +'<label class="f" for="f-meta">Agendamento<select class="in" id="f-meta">'+mo('nao','Ainda não agendado')+mo('ag','Agendado no Meta')+mo('agig','Agendado no Instagram')+mo('manual','Postado manual')+mo('pub','Já publicado')+'</select></label></div>'
       +(sg&&sg!==m.hora&&st!=='Publicado'?'<p class="hint">Sugestão para este tipo de post: <button class="linkbtn" data-act="sugg" data-h="'+sg+'">usar '+sg+'</button></p>':'')
       +'<div style="margin-top:12px">'+al+'</div>'
@@ -1639,6 +1654,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     let h='<div class="ph-head"><button class="iconbtn" data-act="dclose" aria-label="Fechar">'+ic.x+'</button><h2>'+esc(longDay(d))+'</h2>'
       +'<button class="iconbtn" data-act="dnav" data-n="-1" aria-label="Dia anterior">'+ic.left+'</button><button class="iconbtn" data-act="dnav" data-n="1" aria-label="Próximo dia">'+ic.right+'</button></div>';
     h+='<div class="dsum"><span class="chip">'+fs.length+' feed</span><span class="chip">'+ss.length+' stories'+(ss.length?' · '+pub+' publicados':'')+'</span>'+(ds.length?'<span class="chip">'+ds.length+' destaque'+(ds.length>1?'s':'')+'</span>':'')+'</div>';
+    h+=bestHoursHTML(d);
     h+=addFormHTML(d);
     h+='<div class="seg" role="group" aria-label="Forma de ver o dia"><button data-act="dview" data-v="lista" aria-pressed="'+(dview==='lista')+'">Lista</button><button data-act="dview" data-v="horas" aria-pressed="'+(dview==='horas')+'">Por horário</button></div>';
     const simples=ss.filter(x=>!stickersOf(x.sticker).length);
@@ -1690,7 +1706,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   async function downloadAll(it){ const n=artIds(it).length; for(let i=0;i<n;i++){ const ok=await downloadArt(it,i); if(ok===false) break; } }
 
   /* ---------- eventos ---------- */
-  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart','tedit','tsave','evnew','evcreate','evtadd','evtdel','evadel','evupl','evarch','evask','idnew','idtext','idaddimg','idimgdel','iddel','idtag','qmenu','qpick','dadd','dsave','mvask','mvgo']);
+  const EDIT=new Set(['done','status','sched','unsched','galarm','gday','gtoday','unalarm','alarm','aadd','arep','adel','amove','chk','sugg','shide','unhide','smove','grip','org','orgapply','orgconfirm','omove','dsched','sreset','noart','tedit','tsave','evnew','evcreate','evtadd','evtdel','evadel','evupl','evarch','evask','idnew','idtext','idaddimg','idimgdel','iddel','idtag','qmenu','qpick','hsug','dadd','dsave','mvask','mvgo']);
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
@@ -1715,6 +1731,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='close'){ closeItem(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='dadd'){ dAdd=el.dataset.k||null; renderDay(); if(dAdd){ const f=$('#dpanel .addf'); if(f) f.scrollIntoView({block:'nearest'}); } return; }
+    if(act==='hsug'){ e.preventDefault(); const f=$('#f-hora'); if(f){ f.value=el.dataset.h; f.dispatchEvent(new Event('change',{bubbles:true})); } toast('Horário '+el.dataset.h); setTimeout(()=>renderSheet(),300); return; }
     if(act==='insw'){ insWk=+el.dataset.i; renderAll(); return; }
     if(act==='dsave'){ saveNew(); return; }
     if(act==='mvask'){ const f=$('#mv-to'); mvTo=f&&f.value||null; if(!mvTo||mvTo===(itemById(openId)||{}).date){ toast('Escolha outro dia'); return; } mvAsk=true; renderSheet(); return; }

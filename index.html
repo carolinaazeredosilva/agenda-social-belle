@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261113194805">
+<meta name="belle-ver" content="20261113200132">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -639,6 +639,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 (function(){
   const SHEET_ID='1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4';
   const SERVER='Google Sheets';
+  const ABA_FEED=(window.BELLE_CONFIG&&BELLE_CONFIG.ABA_FEED)||'Calendário', ABA_ST=(window.BELLE_CONFIG&&BELLE_CONFIG.ABA_STORIES)||'Stories';
   const STATUSES=['Ideia','Em produção','Aprovado','Agendado','Publicado'];
   const $=s=>document.querySelector(s);
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -746,7 +747,38 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     hits.forEach((h,i)=>{ const seg=text.slice(h.end,i+1<hits.length?hits[i+1].start:text.length); map[h.n]=seg.replace(/\s*APROVADO em [\d\/]+[^\n]*$/i,'').replace(/^[\s'"“‘]+|[\s.;'"”’]+$/g,'').trim(); });
     return map;
   }
+  /* Aba Stories: uma linha por story. Colunas lidas pelo nome do cabeçalho (a ordem não importa):
+     Data · Horário · Sequência · Ordem ("Único" ou "2 de 5") · O que é · Copy · Interação / figurinha · Pilar · Onde postar · Salvar no destaque · Status · Observações */
+  const ST_COLS={data:h=>h==='data',hora:h=>h.startsWith('horario')||h==='hora',seq:h=>h.startsWith('sequencia'),ordem:h=>h==='ordem',
+    tipo:h=>h==='o que e'||h==='tipo',copy:h=>h==='copy'||h.startsWith('conteudo'),inter:h=>h.startsWith('interacao'),pilar:h=>h==='pilar',
+    onde:h=>h.startsWith('onde'),dest:h=>h.startsWith('salvar'),status:h=>h==='status',obs:h=>h.startsWith('observ')};
+  const ST_REQ=[['data','Data'],['copy','Copy'],['status','Status']];
+  let stFmtErr='';
+  const stSlug=t=>norm(t).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+  function stAssignIds(list){ /* id estável: data + sequência + posição; não depende da linha da planilha */
+    const seen={}; list.forEach(x=>{ const base='s_'+x.date+'_'+(x.seqSlug||'u')+'_'+x.n; const c=seen[base]=(seen[base]||0)+1; x.id=c>1?base+'-'+c:base; }); return list; }
+  const stPlanHora=t=>{ const m=String(t||'').match(/^(\d{1,2}):(\d{2})/); if(m) return pad(+m[1])+':'+m[2]; const n=norm(t); return n.startsWith('manha')?'09:00':n.startsWith('tarde')?'14:00':n.startsWith('noite')?'20:00':''; };
   function parseStories(values){
+    stFmtErr='';
+    if(!values||values.length<2) return [];
+    const head=values[0].map(norm), c={}; Object.keys(ST_COLS).forEach(k=>{ c[k]=colIndex(head,ST_COLS[k]); });
+    const miss=ST_REQ.filter(r=>c[r[0]]<0).map(r=>r[1]);
+    if(miss.length){ stFmtErr='Na aba '+ABA_ST+' não achei '+(miss.length===1?'a coluna ':'as colunas ')+miss.join(', ')+'. Confira o cabeçalho da primeira linha.'; return []; }
+    const g=(r,i)=>i>=0&&r[i]!=null?String(r[i]).trim():'';
+    const perDate={}, out=[], first={};
+    for(let k=1;k<values.length;k++){
+      const r=values[k]; const d=parseDate(g(r,c.data)); if(!d) continue;
+      const rowIdx=perDate[d]=(perDate[d]==null?0:perDate[d]+1);
+      const seq=g(r,c.seq), ord=g(r,c.ordem), om=ord.match(/(\d+)\s*(?:de|\/)\s*(\d+)/i), tipo=g(r,c.tipo), dest=g(r,c.dest).replace(/^[-—–\s]+$/,'');
+      const it={kind:/destaque/i.test(tipo)?'destaque':'story',date:d,ri:k,rowIdx,seq,seqSlug:stSlug(seq),n:om?+om[1]:1,of:om?+om[2]:1,tipo,
+        copy:g(r,c.copy),sticker:g(r,c.inter).replace(/^[-—–\s]+$/,''),pilar:g(r,c.pilar),onde:g(r,c.onde),destaque:dest,sheetStatus:normStatus(g(r,c.status)),
+        obs:g(r,c.obs),planHora:g(r,c.hora),share:/compartilh/i.test(tipo),lab:false,rowNote:''};
+      const fk=d+'|'+it.seqSlug; if(seq){ if(!first[fk]) first[fk]=it; else if(first[fk].obs&&first[fk].obs!==it.obs) it.seqObs=first[fk].obs; }
+      out.push(it);
+    }
+    return stAssignIds(out);
+  }
+  function parseStoriesOld(values){
     if(!values||values.length<2) return [];
     const head=values[0].map(norm);
     const c={data:colIndex(head,h=>h==='data'),dest:colIndex(head,h=>h.startsWith('salvar')),tipo:colIndex(head,h=>h==='tipo'),
@@ -774,6 +806,39 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }
     return out;
   }
+  /* Migração da aba antiga (formato com várias linhas por story) para a nova (uma linha por story).
+     Liga cada story novo ao id antigo para manter artes, horários, alarmes e checks. Roda uma vez e fica salva. */
+  const ABA_OLD=(window.BELLE_CONFIG&&BELLE_CONFIG.ABA_STORIES_ANTIGA)||'excluir';
+  const STOP=new Set('para com que uma das dos nas nos por sua seu mais sem como você voce story stories apoio rodape botao titulo arte manha noite aprovado'.split(' '));
+  const toks=t=>new Set(norm(t).replace(/[^a-z0-9%]+/g,' ').split(' ').filter(w=>w.length>2&&!STOP.has(w)));
+  function simil(a,b){ const A=toks(a),B=toks(b); if(!A.size||!B.size) return 0; let n=0; A.forEach(w=>{ if(B.has(w)) n++; }); return n/Math.min(A.size,B.size); }
+  function buildAlias(oldList,newList,hasData){
+    const map={}, usedN=new Set(), usedO=new Set(), cand=[];
+    oldList.forEach(o=>{ if(!hasData(o.id)) return;
+      newList.forEach(n=>{ if(n.date!==o.date) return;
+        let sc;
+        if(o.kind==='destaque'){ if(n.kind!=='destaque'||n.n!==1) return; sc=norm(n.destaque)&&norm(o.destaque).indexOf(norm(n.destaque))>=0?1:simil(o.copy,n.copy); }
+        else{ if(n.kind!=='story') return; sc=simil(o.copy||o.sticker,n.copy)+(o.n===n.n?0.05:0); }
+        if(sc>=0.5) cand.push([sc,o.id,n.id]); }); });
+    cand.sort((a,b)=>b[0]-a[0]).forEach(c=>{ if(usedO.has(c[1])||usedN.has(c[2])) return; usedO.add(c[1]); usedN.add(c[2]); if(c[1]!==c[2]) map[c[2]]=c[1]; });
+    return map;
+  }
+  let migBusy=false;
+  async function stMigrate(){
+    const sa=meta.get('sys_alias'); if(sa&&sa.map){ ALIAS=sa.map; return; }
+    if(migBusy||!dbReady||!loaded||!stories.length||!mcp||RO()) return; migBusy=true;
+    try{
+      const oldIds=[]; meta.forEach((v,id)=>{ if(/^s_\d{4}-\d\d-\d\d_\d+_(\d+|d)$/.test(id)&&v&&Object.keys(v).length) oldIds.push(id); });
+      if(!oldIds.length){ await saveItem('sys_alias',{v:2,map:{},quando:Date.now()},true); return; }
+      const res=await mcp.callTool(SERVER,'get_values',{spreadsheetId:SHEET_ID,range:ABA_OLD+'!A1:Z400'});
+      const oldList=parseStoriesOld(payloadValues(res)); if(!oldList.length) return;
+      const has=new Set(oldIds), map=buildAlias(oldList,stories,id=>has.has(id));
+      ALIAS=map; await saveItem('sys_alias',{v:2,map,quando:Date.now(),ligados:Object.keys(map).length,antigos:oldIds.length},true);
+      if(Object.keys(map).length) toast('Artes e checks ligados ao novo formato dos stories');
+      renderAll();
+    }catch(_){ }
+    finally{ migBusy=false; }
+  }
   function payloadValues(res){
     let p=res&&res.payload; if(typeof p==='string'){ try{ p=JSON.parse(p); }catch(_){ p=null; } }
     if(p&&p.values) return p.values;
@@ -796,20 +861,21 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     setBusy(true);
     try{
       const [a,b]=await Promise.all([
-        mcp.callTool(SERVER,'get_values',{spreadsheetId:SHEET_ID,range:'Calendário!A3:R300'}),
-        mcp.callTool(SERVER,'get_values',{spreadsheetId:SHEET_ID,range:'Stories!A1:H300'})
+        mcp.callTool(SERVER,'get_values',{spreadsheetId:SHEET_ID,range:ABA_FEED+'!A3:R300'}),
+        mcp.callTool(SERVER,'get_values',{spreadsheetId:SHEET_ID,range:ABA_ST+'!A1:Z400'})
       ]);
       feed=parseFeed(payloadValues(a)); stories=parseStories(payloadValues(b));
       loadErr=null; lastRead=Date.now();
     }catch(e){
       loadErr=e&&e.code?e:{code:'upstream_error',message:String(e&&e.message||e)};
     }
-    loaded=true; setBusy(false); renderAll();
+    loaded=true; setBusy(false); renderAll(); stMigrate();
   }
   function setBusy(on){ const b=$('#btn-refresh'); b.classList.toggle('spin',!!on); }
 
   /* ---------- dados do app (db) ---------- */
-  const M=id=>meta.get(id)||{};
+  let ALIAS={};
+  const M=id=>meta.get(id)||(ALIAS[id]&&meta.get(ALIAS[id]))||{};
   const statusOf=it=>M(it.id).status||it.sheetStatus;
   const RO=()=>document.body.classList.contains('ro');
   function saveItem(id,patch,immediate){
@@ -840,13 +906,14 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const thumbHTML=it=>{ const a=artIds(it)[0]; return a?'<div class="thumb">'+artTag(a,'',1)+'</div>':'<div class="thumb">'+ic.img+'</div>'; };
   function itemLabel(it){
     if(it.kind==='feed') return 'Feed · '+(it.formato||'post');
-    if(it.kind==='destaque') return 'Destaque'+(it.destaque?' '+it.destaque:'');
-    return 'Story '+it.n;
+    if(it.kind==='destaque') return 'Destaque'+(it.destaque?' '+it.destaque:'')+(it.of>1?' · tela '+it.n+' de '+it.of:'');
+    return it.of>1?'Story '+it.n+' de '+it.of:'Story';
   }
+  const stHead=it=>itemLabel(it)+(it.kind==='story'&&it.seq?' · '+it.seq:'')+(it.planHora&&!/^\d/.test(it.planHora)?' · '+it.planHora:'');
   function checklistFor(it){
     if(it.kind==='feed') return ['Arte final conferida','Legenda colada','Agendado no Meta Business Suite','Publicação conferida'];
-    if(it.kind==='destaque') return ['Telas na ordem','Link conferido','Destaque atualizado'];
-    const l=['Arte salva no celular']; stickersOf(it.sticker).forEach(s=>l.push('Colocar: '+s)); l.push('Postar'); return l;
+    const l=it.share?['Abrir o post no Instagram','Compartilhar no story']:['Arte salva no celular']; stickersOf(it.sticker).forEach(s=>l.push('Colocar: '+s)); l.push('Postar');
+    if(it.destaque) l.push('Salvar no destaque'+(/^sim\b/i.test(it.destaque)?'':' '+it.destaque)); return l;
   }
   function sibsOf(it){
     const l=it.kind==='feed'?feedOn(it.date):storiesOn(it.date).filter(x=>x.kind===it.kind);
@@ -854,8 +921,9 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   }
   function suggestHora(it){
     if(it.kind==='feed') return norm(it.formato).indexOf('reels')>=0?'18:30':'12:00';
+    const ph=stPlanHora(it.planHora); if(ph) return ph;
     if(it.kind==='destaque') return '';
-    const t=12*60+((it.n||1)-1)*30; return pad(Math.floor(t/60))+':'+pad(t%60);
+    const t=12*60+(it.rowIdx||0)*30; return pad(Math.floor(t/60)%24)+':'+pad(t%60);
   }
   function evOf(it,hora){
     const p=hora.split(':').map(Number); const e0=fromIso(it.date); e0.setHours(p[0],p[1]+15,0,0);
@@ -914,10 +982,10 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const m=M(it.id), st=statusOf(it), done=st==='Publicado';
     const stk=stickersOf(it.sticker);
     const main=it.kind==='feed'?(it.gancho||it.tema||'Sem título'):(it.copy||it.sticker||'Sem texto');
-    const head=it.kind==='feed'?esc(it.formato||'Feed')+' · '+esc(it.tema||''):it.kind==='destaque'?'Destaque'+(it.destaque?' · '+esc(it.destaque):''):'Story '+it.n;
+    const head=it.kind==='feed'?esc(it.formato||'Feed')+' · '+esc(it.tema||''):esc(stHead(it));
     const chips=[];
     stk.forEach(s=>chips.push('<span class="chip manual">'+esc(s)+'</span>'));
-    chips.push('<label class="chip time tin'+(m.hora?'':' add')+'" title="Alterar horário">'+ic.clock+'<input type="time" class="tchip" data-id="'+esc(it.id)+'" value="'+esc(m.hora||'')+'" aria-label="Horário de '+esc(it.kind==='feed'?'post':'story '+it.n)+'"></label>');
+    chips.push('<label class="chip time tin'+(m.hora?'':' add')+'" title="Alterar horário">'+ic.clock+'<input type="time" class="tchip" data-id="'+esc(it.id)+'" value="'+esc(m.hora||'')+'" aria-label="Horário de '+esc(it.kind==='feed'?'post':itemLabel(it))+'"></label>');
     if(artIds(it).length) chips.push('<span class="chip">'+ic.img+artIds(it).length+'</span>'); else if(m.semArte) chips.push('<span class="chip">'+ic.swap+'repost</span>');
     return '<div class="card'+(it.kind==='story'?' st':'')+'" style="cursor:pointer" role="button" tabindex="0" data-act="open" data-id="'+esc(it.id)+'">'
       +'<button class="ck" data-act="done" data-id="'+esc(it.id)+'" aria-pressed="'+(!!m.feito)+'" aria-label="'+(m.feito?'Desmarcar como pronto':'Marcar como pronto')+'" title="'+(m.feito?'Pronto ✓ (toque para desmarcar)':'Marcar como pronto')+'">'+ic.check+'</button>'
@@ -956,7 +1024,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   }
   /* ---------- painel gerencial (cadência: feed seg/qua/sex, até 4 por semana; stories todo dia) ---------- */
   const FEED_DOW=[1,3,5], FEED_MAX=4;
-  const hasArt=it=>artIds(it).length>0||!!M(it.id).semArte;
+  const hasArt=it=>artIds(it).length>0||!!M(it.id).semArte||!!it.share;
   const byDate=(a,b)=>a.date<b.date?-1:a.date>b.date?1:(a.rowIdx||0)-(b.rowIdx||0);
   const dleft=d=>Math.round((fromIso(d)-fromIso(todayIso()))/864e5);
   const dueTxt=n=>n<0?'atrasado '+(-n)+(n===-1?' dia':' dias'):n===0?'hoje':n===1?'amanhã':'em '+n+' dias';
@@ -967,7 +1035,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     return '<button class="rw" data-act="open" data-id="'+esc(it.id)+'"><span class="rd"><b>'+shortDay(it.date)+'</b><span>'+WD[fromIso(it.date).getDay()]+'</span></span>'
       +'<span class="rm"><span class="rt">'+esc(it.tema||it.formato||'Post')+'</span><span class="rs">'+esc(it.formato||'')+' '+pill(statusOf(it))+(M(it.id).hora?'<span class="chip time">'+ic.clock+esc(M(it.id).hora)+'</span>':'')+'</span></span>'+right+'</button>';
   }
-  function itemShort(x){ return x.kind==='feed'?'Feed · '+(x.tema||x.formato||'post'):(x.kind==='destaque'?'Destaque':'Story '+x.n)+(x.copy?' · '+x.copy.replace(/\s+/g,' ').slice(0,34):''); }
+  function itemShort(x){ return x.kind==='feed'?'Feed · '+(x.tema||x.formato||'post'):itemLabel(x)+(x.copy?' · '+x.copy.replace(/\s+/g,' ').slice(0,34):''); }
   function todayData(){
     const t=todayIso(), tm=addDays(t,1);
     const fT=feedOn(t), sT=storiesOn(t).filter(x=>x.kind==='story');
@@ -980,7 +1048,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       else if(statusOf(x)!=='Agendado') U.push(['warm','Post de hoje ainda não está agendado',x.tema||'',btn(t)]);
     });
     const noArt=sT.filter(x=>!hasArt(x)&&statusOf(x)!=='Publicado');
-    if(noArt.length) U.push(['hot',noArt.length===1?'Story '+noArt[0].n+' de hoje está sem arte':noArt.length+' stories de hoje sem arte',noArt.length===1?(noArt[0].copy||'').replace(/\s+/g,' ').slice(0,70):'Stories '+noArt.map(x=>x.n).join(', '),btn(t)]);
+    if(noArt.length) U.push(['hot',noArt.length===1?stHead(noArt[0])+': hoje, sem arte':noArt.length+' stories de hoje sem arte',noArt.length===1?(noArt[0].copy||'').replace(/\s+/g,' ').slice(0,70):noArt.map(x=>x.seq?x.seq+' '+x.n:(x.copy||'').slice(0,24)).join(' · '),btn(t)]);
     const noH=open.filter(x=>!M(x.id).hora);
     if(noH.length) U.push(['warm',noH.length===1?'1 item de hoje sem horário':noH.length+' itens de hoje sem horário','Defina o horário para criar o alarme',btn(t)]);
     const pendA=open.filter(x=>needAlarm(x)&&M(x.id).hora&&(!alarmOk(x)||oldAviso(x)));
@@ -992,8 +1060,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 
   function conferencia(){
     const L=[], all=feed.concat(stories);
-    const known=new Set(all.map(x=>x.id));
-    const desc=id=>{ const m=id.match(/^([fs])_(\d{4}-\d{2}-\d{2})_(\d+)(?:_(\w+))?$/); if(!m) return id; return (m[1]==='f'?'Feed':m[4]==='d'?'Destaque':'Story '+m[4])+' de '+shortDay(m[2]); };
+    const known=new Set(all.map(x=>x.id)); all.forEach(x=>{ if(ALIAS[x.id]&&!meta.has(x.id)) known.add(ALIAS[x.id]); });
+    const desc=id=>{ const m=id.match(/^([fs])_(\d{4}-\d{2}-\d{2})_/); if(!m) return id; return (m[1]==='f'?'Feed':/_d$/.test(id)?'Destaque':'Story')+' de '+shortDay(m[2]); };
     const orf=[]; meta.forEach((v,id)=>{ if(v&&v.art&&v.art.length&&!known.has(id)) orf.push([id,v.art.length]); });
     orf.sort((a,b)=>a[0]<b[0]?-1:1);
     if(orf.length) L.push(['hot',orf.length===1?'Arte sem item na planilha: '+desc(orf[0][0]):orf.length+' itens com arte que não existem mais na planilha','Provável mudança de data ou de linha na planilha. '+orf.slice(0,6).map(o=>desc(o[0])+' ('+o[1]+')').join(' · ')+(orf.length>6?' · e mais '+(orf.length-6):''),'']);
@@ -1424,14 +1492,14 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       await saveItem(x.id,{imgs},true); renderAll(); renderIdSheet(); toast('Adicionado à ideia'); }catch(e){ toast('Envio interrompido. Tente de novo.'); } finally{ busy=false; } }
   /* ---------- novo item e mudar de dia (grava na planilha) ---------- */
   let dAdd=null, mvTo=null, mvAsk=false, sheetBusy=false;
-  const FORMATOS=['Post único','Carrossel 4:5','Reels','Outro'], NSTAT=['Ideia','Em produção','Aprovado'];
+  const ST_TIPOS=['Arte','Vídeo','Compartilhar post','Tela de destaque'], FORMATOS=['Post único','Carrossel 4:5','Reels','Outro'], NSTAT=['Ideia','Em produção','Aprovado'];
   function addFormHTML(d){
     if(!dAdd) return '<div class="blk edonly"><h4>Adicionar na planilha</h4><div class="row"><button class="btn" data-act="dadd" data-k="feed">'+ic.plus+'Post no feed</button><button class="btn" data-act="dadd" data-k="story">'+ic.plus+'Story</button></div><p class="hint">Cria uma linha nova na planilha. Nada do que já existe é alterado.</p></div>';
     const sel=(id,arr)=>'<select class="in" id="'+id+'">'+arr.map(x=>'<option>'+x+'</option>').join('')+'</select>';
     let h='<div class="blk edonly addf"><h4>'+(dAdd==='feed'?'Novo post no feed':'Novo story')+'</h4>';
     h+='<label class="f">Dia<input class="in" type="date" id="na-data" value="'+esc(d)+'"></label>';
     if(dAdd==='feed') h+='<label class="f">Formato'+sel('na-formato',FORMATOS)+'</label><label class="f">Tema<input class="in" id="na-tema" placeholder="Ex.: Black Friday"></label><label class="f">Gancho / título<input class="in" id="na-gancho" placeholder="1ª linha do post"></label><label class="f">Legenda <small>(opcional)</small><textarea class="in" id="na-legenda" rows="4"></textarea></label><label class="f">CTA <small>(opcional)</small><input class="in" id="na-cta"></label>';
-    else h+='<label class="f">Tipo<input class="in" id="na-tipo" placeholder="Ex.: Repost, Dica, Bastidores"></label><label class="f">Conteúdo / copy<textarea class="in" id="na-copy" rows="3" placeholder="O que vai no story"></textarea></label><label class="f">Interação / figurinha <small>(opcional)</small><input class="in" id="na-inter" placeholder="Ex.: Enquete, Link, Caixa de perguntas"></label>';
+    else h+='<label class="f">O que é'+sel('na-tipo',ST_TIPOS)+'</label><label class="f">Copy<textarea class="in" id="na-copy" rows="3" placeholder="O que vai no story"></textarea></label><label class="f">Interação / figurinha <small>(opcional)</small><input class="in" id="na-inter" placeholder="Ex.: Enquete, Link, Caixa de perguntas"></label><label class="f">Sequência <small>(opcional)</small><input class="in" id="na-seq" placeholder="Nome da sequência, se fizer parte de uma"></label><label class="f">Ordem<input class="in" id="na-ordem" placeholder="Único ou 2 de 4" value="Único"></label>';
     h+='<label class="f">Status'+sel('na-status',NSTAT)+'</label>';
     h+='<div class="row"><button class="btn primary" data-act="dsave"'+(sheetBusy?' disabled':'')+'>'+ic.check+(sheetBusy?'Gravando…':'Adicionar na planilha')+'</button><button class="btn" data-act="dadd" data-k="">Cancelar</button></div></div>';
     return h;
@@ -1442,13 +1510,13 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(!/^\d{4}-\d\d-\d\d$/.test(data)){ toast('Escolha o dia'); return; }
     let fields;
     if(dAdd==='feed'){ fields={data,status:v('na-status'),formato:v('na-formato'),tema:v('na-tema'),gancho:v('na-gancho'),legenda:v('na-legenda'),cta:v('na-cta'),ig:'X'}; if(!fields.gancho&&!fields.tema){ toast('Escreva o tema ou o gancho'); return; } }
-    else { fields={data,status:v('na-status'),tipo:v('na-tipo'),copy:v('na-copy'),inter:v('na-inter')}; if(!fields.copy){ toast('Escreva o conteúdo do story'); return; } }
+    else { fields={data,status:v('na-status'),tipo:v('na-tipo'),copy:v('na-copy'),inter:v('na-inter'),seq:v('na-seq'),ordem:v('na-ordem')||'Único'}; if(!fields.copy){ toast('Escreva a copy do story'); return; } }
     sheetBusy=true; renderDay();
     try{ await window.belleSheets.appendItem({sheetId:SHEET_ID,kind:dAdd,fields},parseDate); dAdd=null; toast('Adicionado na planilha'); await new Promise(r=>setTimeout(r,1500)); await load(); if(dayOpen&&data!==dayOpen){ dayOpen=data; month=data.slice(0,7); renderAll(); } }
     catch(e){ toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
     finally{ sheetBusy=false; if(dayOpen) renderDay(); }
   }
-  function rowMates(it){ return it.kind==='feed'?[it]:stories.filter(x=>x.date===it.date&&x.rowIdx===it.rowIdx); }
+  function rowMates(it){ return [it]; }
   function moveHTML(it){
     const mates=rowMates(it), split=it.kind==='story'&&mates.length>1&&it.lab, whole=it.kind!=='feed'&&mates.length>1&&!it.lab;
     let h='<div class="blk edonly"><h4>Mudar de dia</h4><div class="row"><input class="in" type="date" id="mv-to" value="'+esc(mvTo||it.date)+'" style="width:auto" aria-label="Novo dia"><button class="btn" data-act="mvask">Mover</button></div>';
@@ -1483,9 +1551,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
         await moveMeta([[it.id,newOpen]]);
       }else{
         await window.belleSheets.moveRow({sheetId:SHEET_ID,kind:'story',date:it.date,ord:it.rowIdx,to},parseDate);
-        const rows=[], seen={}; stories.forEach(x=>{ const key=x.date+'|'+x.rowIdx; if(!seen[key]){ seen[key]=1; rows.push({date:x.date,rowIdx:x.rowIdx}); } });
-        const per={}, nmap={}; rows.forEach(r=>{ const nd=(r.date===it.date&&r.rowIdx===it.rowIdx)?to:r.date; nmap[r.date+'|'+r.rowIdx]=nd+'_'+(per[nd]=(per[nd]==null?0:per[nd]+1)); });
-        const pairs=stories.map(x=>{ const nid='s_'+nmap[x.date+'|'+x.rowIdx]+'_'+(x.kind==='destaque'?'d':x.n); if(x.id===it.id) newOpen=nid; return [x.id,nid]; });
+        const sim=stAssignIds(stories.slice().sort((a,b)=>a.ri-b.ri).map(x=>({old:x.id,date:x.id===it.id?to:x.date,seqSlug:x.seqSlug,n:x.n})));
+        const pairs=sim.map(x=>{ if(x.old===it.id) newOpen=x.id; return [x.old,x.id]; });
         await moveMeta(pairs);
       }
       toast('Movido para '+shortDay(to)); mvTo=null; mvAsk=false;
@@ -1648,7 +1715,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const sy=$('#sync');
     if(lastRead){ const d=new Date(lastRead); sy.textContent='Planilha lida às '+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+feed.length+' posts, '+stories.filter(x=>x.kind==='story').length+' stories'; }
     else sy.textContent=loaded?'Não consegui ler a planilha':'Lendo a planilha…';
-    $('#banner').innerHTML=loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
+    $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
       const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Geral · Tráfego pago',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
@@ -1719,8 +1786,10 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       h+='<div class="blk"><h4>Dados</h4><p class="txt sm">'+esc([it.formato,it.pilar,(it.redes||[]).join(', ')].filter(Boolean).join(' · '))+'</p></div>';
     }else{
       h+=txtBlk(it,'copy',it.kind==='destaque'?'Texto do destaque':'Texto do story','txt',true,'Sem texto na planilha.');
-      if(it.sticker||it.rowNote){ h+='<div class="blk"><h4>Figurinha e interação</h4>'+(st0.length?'<div class="chips" style="margin:0 0 8px">'+st0.map(s=>'<span class="chip manual">'+esc(s)+'</span>').join('')+'</div>':'')+'<p class="txt sm">'+esc(it.sticker||it.rowNote)+'</p></div>'; }
-      if(it.objetivo) h+='<div class="blk"><h4>Objetivo</h4><p class="txt sm">'+esc(it.objetivo)+'</p></div>';
+      if(it.sticker){ h+='<div class="blk"><h4>Figurinha e interação</h4>'+(st0.length?'<div class="chips" style="margin:0 0 8px">'+st0.map(s=>'<span class="chip manual">'+esc(s)+'</span>').join('')+'</div>':'')+'<p class="txt sm">'+esc(it.sticker)+'</p></div>'; }
+      const dd=[it.seq?'Sequência: '+it.seq+(it.of>1?' ('+it.n+' de '+it.of+')':''):'',it.tipo,it.pilar?'Pilar: '+it.pilar:'',it.onde?'Onde postar: '+it.onde:'',it.destaque?'Destaque: '+it.destaque:'',it.planHora?'Horário na planilha: '+it.planHora:''].filter(Boolean);
+      if(dd.length) h+='<div class="blk"><h4>Dados</h4><p class="txt sm">'+esc(dd.join('\n'))+'</p></div>';
+      if(it.obs||it.seqObs) h+='<div class="blk"><h4>Observações da planilha</h4>'+(it.obs?'<p class="txt sm">'+esc(it.obs)+'</p>':'')+(it.seqObs?'<p class="hint">Da sequência: '+esc(it.seqObs)+'</p>':'')+'</div>';
     }
     // link e horário
     const WA=(window.BELLE_CONFIG&&BELLE_CONFIG.WHATSAPP)||'https://wa.me/551132305180', isSt=it.kind!=='feed', lk=m.link||(isSt?WA:'');
@@ -1815,7 +1884,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(!dls){ window.open('/_blob/'+id,'_blank'); return; }
     try{
       const r=await fetch('/_blob/'+id); const b=await r.blob(); const ext=EXT[b.type]||'png';
-      const nm='belle-'+it.date+'-'+(it.kind==='feed'?'feed':it.kind==='destaque'?'destaque':'story'+it.n)+'-'+(i+1)+'.'+ext;
+      const nm='belle-'+it.date+'-'+(it.kind==='feed'?'feed':it.kind==='destaque'?'destaque'+it.n:'story'+it.n)+'-'+(i+1)+'.'+ext;
       await dls.save({filename:nm,data:b}); return true;
     }catch(e){ if(e&&e.code==='declined') return false; toast('Não consegui baixar. Segure a imagem para salvar.'); return false; }
   }
@@ -2053,7 +2122,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       try{ db.collection('itens').onSnapshot(snap=>{
         const next=new Map(); snap.docs.forEach(d=>{ next.set(d.id,d.data()||{}); });
         queues.forEach((_,id)=>{ if(next.has(id)&&meta.has(id)&&timers.has(id)) next.set(id,meta.get(id)); });
-        meta=next; dbReady=true; renderAll();
+        meta=next; dbReady=true; renderAll(); stMigrate();
       },()=>{ toast('Não consegui sincronizar os checklists'); }); }catch(_){}
     }
     load();

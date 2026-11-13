@@ -47,6 +47,9 @@
   }
 
   /* ---------- planilha (leitura direta das abas Calendário e Stories) ---------- */
+  /* Nomes das abas vêm do config.js (ABA_FEED e ABA_STORIES). Se renomear uma aba, mude só lá. */
+  var ABA_F=(window.BELLE_CONFIG&&BELLE_CONFIG.ABA_FEED)||'Calendário', ABA_S=(window.BELLE_CONFIG&&BELLE_CONFIG.ABA_STORIES)||'Stories';
+  function rg(aba,cells){ return "'"+String(aba).replace(/'/g,"''")+"'!"+cells; }
   function parseCSV(t){
     var rows=[], row=[], f='', q=false;
     for(var i=0;i<t.length;i++){ var c=t[i];
@@ -61,7 +64,7 @@
       if(tool!=='get_values') throw err('tool_error');
       await ensureSession();
       var aba=/^([^!]+)!/.exec(input.range); aba=aba&&aba[1];
-      if(aba!=='Calendário'&&aba!=='Stories') throw err('tool_error');
+      if(aba!==ABA_F&&aba!==ABA_S&&aba!==((window.BELLE_CONFIG&&BELLE_CONFIG.ABA_STORIES_ANTIGA)||'excluir')) throw err('tool_error');
       var url='https://docs.google.com/spreadsheets/d/'+input.spreadsheetId+'/gviz/tq?tqx=out:csv&headers=0&sheet='+encodeURIComponent(aba);
       var r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw err('tool_error','Planilha '+r.status);
       var rows=parseCSV(await r.text());
@@ -208,7 +211,7 @@
     applyDates:async function(sheetId,changes,parseDate){
       var t=await gToken();
       var base='https://sheets.googleapis.com/v4/spreadsheets/'+sheetId+'/values';
-      var r=await fetch(base+'/'+encodeURIComponent('Calendário!A1:Z400')+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
+      var r=await fetch(base+'/'+encodeURIComponent(rg(ABA_F,'A1:Z400'))+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
       if(!r.ok) throw err('sheet','Não consegui ler a planilha para gravar ('+r.status+').');
       var rows=(await r.json()).values||[], hi=-1, dc=-1, wc=-1;
       for(var i=0;i<rows.length&&hi<0;i++){ var h=(rows[i]||[]).map(nrm); var k=h.indexOf('data'); if(k>=0){ hi=i; dc=k; wc=h.indexOf('dia'); } }
@@ -217,8 +220,8 @@
       for(var j=hi+1;j<rows.length;j++){ var d=parseDate((rows[j]||[])[dc]||''); if(!d) continue; var o=per[d]=(per[d]==null?0:per[d]+1); pos[d+'#'+o]=j+1; }
       var data=[], miss=[];
       changes.forEach(function(c){ var row=pos[c.from+'#'+c.ord]; if(!row){ miss.push(c.from); return; }
-        var p=c.to.split('-'); data.push({range:'Calendário!'+colL(dc)+row,values:[[p[2]+'/'+p[1]+'/'+p[0]]]});
-        if(wc>=0){ var dt=new Date(+p[0],+p[1]-1,+p[2],12); data.push({range:'Calendário!'+colL(wc)+row,values:[[WDS[dt.getDay()]]]}); } });
+        var p=c.to.split('-'); data.push({range:rg(ABA_F,colL(dc)+row),values:[[p[2]+'/'+p[1]+'/'+p[0]]]});
+        if(wc>=0){ var dt=new Date(+p[0],+p[1]-1,+p[2],12); data.push({range:rg(ABA_F,colL(wc)+row),values:[[WDS[dt.getDay()]]]}); } });
       if(miss.length) throw err('sheet','A planilha mudou desde a última leitura. Atualize e organize de novo.');
       var w=await fetch(base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'USER_ENTERED',data:data})});
       if(!w.ok) throw err('sheet','O Google recusou a gravação na planilha ('+w.status+').');
@@ -230,15 +233,15 @@
   /* ---------- Planilha: grava um texto editado no app (só quando a dona salva) ---------- */
   function norm2(v){ return String(v==null?'':v).replace(/\r\n/g,'\n').trim(); }
   window.belleSheets.updateText=async function(o,parseDate,labelled){
-    var t=await gToken(), aba=o.kind==='feed'?'Calendário':'Stories';
+    var t=await gToken(), aba=o.kind==='feed'?ABA_F:ABA_S;
     var base='https://sheets.googleapis.com/v4/spreadsheets/'+o.sheetId+'/values';
-    var r=await fetch(base+'/'+encodeURIComponent(aba+'!A1:Z400')+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
+    var r=await fetch(base+'/'+encodeURIComponent(rg(aba,'A1:Z400'))+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
     if(!r.ok) throw err('sheet','Não consegui ler a planilha ('+r.status+').');
     var rows=(await r.json()).values||[], hi=-1, h=[];
     for(var i=0;i<rows.length&&hi<0;i++){ h=(rows[i]||[]).map(nrm); if(h.indexOf('data')>=0) hi=i; }
-    if(hi<0&&aba==='Stories'){ hi=0; h=(rows[0]||[]).map(nrm); }
-    var dc=h.indexOf('data'); if(dc<0&&aba==='Stories'){ dc=0; }
-    var pick={legenda:function(x){return x.indexOf('legenda')===0;},gancho:function(x){return x.indexOf('gancho')===0;},cta:function(x){return x==='cta';},roteiro:function(x){return x.indexOf('roteiro')===0;},copy:function(x){return x.indexOf('conteudo')===0;}}[o.field];
+    if(hi<0&&aba===ABA_S){ hi=0; h=(rows[0]||[]).map(nrm); }
+    var dc=h.indexOf('data'); if(dc<0&&aba===ABA_S){ dc=0; }
+    var pick={legenda:function(x){return x.indexOf('legenda')===0;},gancho:function(x){return x.indexOf('gancho')===0;},cta:function(x){return x==='cta';},roteiro:function(x){return x.indexOf('roteiro')===0;},copy:function(x){return x==='copy'||x.indexOf('conteudo')===0;}}[o.field];
     var cc=-1; for(var k=0;k<h.length;k++){ if(pick&&pick(h[k])){ cc=k; break; } }
     if(dc<0||cc<0) throw err('sheet','Não achei a coluna na aba '+aba+'.');
     var per={}, row=-1;
@@ -255,7 +258,7 @@
       if(norm2(cur)!==norm2(o.old)) throw err('conflito','Esse texto mudou na planilha. Atualize antes de editar.');
       next=o.value;
     }
-    var w=await fetch(base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'RAW',data:[{range:aba+'!'+colL(cc)+(row+1),values:[[next]]}]})});
+    var w=await fetch(base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'RAW',data:[{range:rg(aba,colL(cc)+(row+1)),values:[[next]]}]})});
     if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').');
     return true;
   };
@@ -264,11 +267,11 @@
   /* ---------- Planilha: novo item, mudar de dia, separar story ---------- */
   async function readTab(sheetId,aba){
     var t=await gToken(), base='https://sheets.googleapis.com/v4/spreadsheets/'+sheetId+'/values';
-    var r=await fetch(base+'/'+encodeURIComponent(aba+'!A1:Z400')+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
+    var r=await fetch(base+'/'+encodeURIComponent(rg(aba,'A1:Z400'))+'?valueRenderOption=FORMATTED_VALUE',{headers:{Authorization:'Bearer '+t}});
     if(!r.ok) throw err('sheet','Não consegui ler a planilha ('+r.status+').');
     var rows=(await r.json()).values||[], hi=-1, h=[];
     for(var i=0;i<rows.length&&hi<0;i++){ h=(rows[i]||[]).map(nrm); if(h.indexOf('data')>=0) hi=i; }
-    if(hi<0&&aba==='Stories'){ hi=0; h=(rows[0]||[]).map(nrm); }
+    if(hi<0&&aba===ABA_S){ hi=0; h=(rows[0]||[]).map(nrm); }
     if(hi<0) throw err('sheet','Não achei a coluna Data na aba '+aba+'.');
     return {t:t,base:base,rows:rows,hi:hi,h:h,dc:h.indexOf('data')};
   }
@@ -278,10 +281,10 @@
   function safe(v){ v=String(v==null?'':v); return /^[=+\-@]/.test(v)?"'"+v:v; }
   var COLS={
     feed:{data:function(x){return x==='data';},dia:function(x){return x==='dia';},status:function(x){return x==='status';},formato:function(x){return x==='formato';},tema:function(x){return x==='tema';},gancho:function(x){return x.indexOf('gancho')===0;},legenda:function(x){return x.indexOf('legenda')===0;},cta:function(x){return x==='cta';},ig:function(x){return x==='ig';}},
-    story:{data:function(x){return x==='data';},tipo:function(x){return x==='tipo';},copy:function(x){return x.indexOf('conteudo')===0;},inter:function(x){return x.indexOf('interacao')===0;},objetivo:function(x){return x==='objetivo';},status:function(x){return x==='status';},dest:function(x){return x.indexOf('salvar')===0;}}
+    story:{data:function(x){return x==='data';},tipo:function(x){return x==='o que e'||x==='tipo';},copy:function(x){return x==='copy'||x.indexOf('conteudo')===0;},inter:function(x){return x.indexOf('interacao')===0;},seq:function(x){return x.indexOf('sequencia')===0;},ordem:function(x){return x==='ordem';},pilar:function(x){return x==='pilar';},status:function(x){return x==='status';},dest:function(x){return x.indexOf('salvar')===0;},obs:function(x){return x.indexOf('observ')===0;}}
   };
   async function writeAppend(T,aba,arr){
-    var w=await fetch(T.base+'/'+encodeURIComponent(aba+'!A'+(T.hi+1))+':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',{method:'POST',headers:{Authorization:'Bearer '+T.t,'Content-Type':'application/json'},body:JSON.stringify({values:[arr]})});
+    var w=await fetch(T.base+'/'+encodeURIComponent(rg(aba,'A'+(T.hi+1)))+':append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS',{method:'POST',headers:{Authorization:'Bearer '+T.t,'Content-Type':'application/json'},body:JSON.stringify({values:[arr]})});
     if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').');
   }
   function rowFrom(T,kind,f){ var arr=[], map=COLS[kind]; for(var k=0;k<T.h.length;k++) arr.push('');
@@ -289,14 +292,14 @@
     if(kind==='feed'){ var dc=colOf(T.h,map.dia); if(dc>=0){ var p=f.data.split('-'); arr[dc]=WDS[new Date(+p[0],+p[1]-1,+p[2],12).getDay()]; } }
     while(arr.length&&arr[arr.length-1]==='') arr.pop(); return arr; }
   window.belleSheets.appendItem=async function(o,parseDate){
-    var aba=o.kind==='feed'?'Calendário':'Stories', T=await readTab(o.sheetId,aba);
+    var aba=o.kind==='feed'?ABA_F:ABA_S, T=await readTab(o.sheetId,aba);
     await writeAppend(T,aba,rowFrom(T,o.kind,o.fields)); return true;
   };
   window.belleSheets.moveRow=async function(o,parseDate){
-    var aba=o.kind==='feed'?'Calendário':'Stories', T=await readTab(o.sheetId,aba), row=findRow(T,parseDate,o.date,o.ord);
+    var aba=o.kind==='feed'?ABA_F:ABA_S, T=await readTab(o.sheetId,aba), row=findRow(T,parseDate,o.date,o.ord);
     if(row<0) throw err('sheet','Não achei a linha deste item. Atualize e tente de novo.');
-    var data=[{range:aba+'!'+colL(T.dc)+(row+1),values:[[br(o.to)]]}], wc=colOf(T.h,COLS.feed.dia);
-    if(o.kind==='feed'&&wc>=0){ var p=o.to.split('-'); data.push({range:aba+'!'+colL(wc)+(row+1),values:[[WDS[new Date(+p[0],+p[1]-1,+p[2],12).getDay()]]]}); }
+    var data=[{range:rg(aba,colL(T.dc)+(row+1)),values:[[br(o.to)]]}], wc=colOf(T.h,COLS.feed.dia);
+    if(o.kind==='feed'&&wc>=0){ var p=o.to.split('-'); data.push({range:rg(aba,colL(wc)+(row+1)),values:[[WDS[new Date(+p[0],+p[1]-1,+p[2],12).getDay()]]]}); }
     var w=await fetch(T.base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+T.t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'USER_ENTERED',data:data})});
     if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').'); return true;
   };
@@ -306,16 +309,16 @@
     return null;
   }
   window.belleSheets.splitStory=async function(o,parseDate,labelled){
-    var T=await readTab(o.sheetId,'Stories'), row=findRow(T,parseDate,o.date,o.ord);
+    var T=await readTab(o.sheetId,ABA_S), row=findRow(T,parseDate,o.date,o.ord);
     if(row<0) throw err('sheet','Não achei a linha deste story. Atualize e tente de novo.');
     var map=COLS.story, cc=colOf(T.h,map.copy), ic=colOf(T.h,map.inter), r=T.rows[row]||[];
     var cur=String(r[cc]||''), lab=labelled(cur,'STORY'); if(!lab||norm2(lab[o.n])!==norm2(o.old)) throw err('conflito','Esse story mudou na planilha. Atualize antes de mover.');
     var c=cutSeg(cur,'STORY',o.n), inter=String(ic>=0?(r[ic]||''):''), ci=inter&&labelled(inter,'Story')?cutSeg(inter,'Story',o.n):null;
     var f={data:o.to,tipo:r[colOf(T.h,map.tipo)]||'',copy:'STORY 1: '+c.seg,inter:ci?'Story 1: '+ci.seg:'',objetivo:r[colOf(T.h,map.objetivo)]||'',status:r[colOf(T.h,map.status)]||''};
-    var data=[{range:'Stories!'+colL(cc)+(row+1),values:[[c.rest]]}]; if(ci) data.push({range:'Stories!'+colL(ic)+(row+1),values:[[ci.rest]]});
+    var data=[{range:rg(ABA_S,colL(cc)+(row+1)),values:[[c.rest]]}]; if(ci) data.push({range:rg(ABA_S,colL(ic)+(row+1)),values:[[ci.rest]]});
     var w=await fetch(T.base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+T.t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'RAW',data:data})});
     if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').');
-    await writeAppend(T,'Stories',rowFrom(T,'story',f)); return true;
+    await writeAppend(T,ABA_S,rowFrom(T,'story',f)); return true;
   };
   window.claude={use:async function(n){ return n==='mcp'?mcp:n==='db'?db:n==='assets'?assets:n==='downloads'?downloads:null; }};
   window.addEventListener('belle-msg',function(e){ var t=document.getElementById('toast'); if(t){ t.textContent=e.detail; t.hidden=false; clearTimeout(window.__bt); window.__bt=setTimeout(function(){ t.hidden=true; },3500); } });

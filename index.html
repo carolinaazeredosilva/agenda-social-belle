@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261111101016">
+<meta name="belle-ver" content="20261113194805">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -556,6 +556,40 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 .iconbtn.sm{width:32px;height:32px}
 .ct.ev{background:var(--accent);color:var(--accent-ink)}
 @media (max-width:640px){.evt{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}.evt .evtx{grid-column:1/-1;order:-1}.evnew,.evadd{grid-template-columns:1fr}}
+
+/* Tráfego pago */
+.trhero{margin-bottom:12px;padding:20px 20px 16px}
+.trh-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.trh-k{display:block;font:700 13px/1.3 var(--font-display);color:var(--muted)}
+.trh-v{display:block;font:800 44px/1.05 var(--font-display);letter-spacing:-.03em;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:4px}
+.trh-s{text-align:right;display:flex;flex-direction:column;gap:2px}.trh-s span{font:700 15px/1.2 var(--font-display);color:var(--tc,var(--ink))}.trh-s em{font-style:normal;font-size:13px;color:var(--muted)}
+.trhero.ok{--tc:var(--s-green)}.trhero.wa{--tc:var(--s-prod)}.trhero.bd{--tc:var(--danger)}
+.trg{position:relative;height:14px;border-radius:99px;background:var(--bg);margin:22px 0 26px}
+.trg i{display:block;height:100%;border-radius:99px;background:var(--tc,var(--accent))}
+.trg s{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--ink);text-decoration:none}
+.trg s span{position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:600;color:var(--ink)}
+.trk{margin-bottom:14px}.trk .ik b{font-size:26px}
+.trnext{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.trd{--dc:var(--muted);display:inline-flex;align-items:center;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;color:var(--dc);background:color-mix(in srgb,var(--dc) 12%,transparent);white-space:nowrap}
+.trd.sc{--dc:var(--s-green)}.trd.kp{--dc:var(--s-agend)}.trd.kl{--dc:var(--danger)}.trd.lo{--dc:var(--muted)}
+.trc{margin-bottom:12px;padding:16px 18px}
+.trc-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.trc-t{min-width:0}.trc-m{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.trc-m small{font-size:12px;color:var(--muted)}
+.trc h3{font-size:16px;margin:0;overflow-wrap:anywhere}
+.trc-sp{text-align:right;flex:none}.trc-sp b{display:block;font:800 18px/1.2 var(--font-display);color:var(--ink);font-variant-numeric:tabular-nums}.trc-sp small{font-size:12px;color:var(--muted)}
+.trbar{height:4px;border-radius:99px;background:var(--bg);margin:12px 0;overflow:hidden}.trbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.trc-n{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.trc-n span{display:flex;flex-direction:column;font-size:12px;color:var(--muted)}.trc-n b{font:700 16px/1.3 var(--font-display);color:var(--ink);font-variant-numeric:tabular-nums}
+.trc .trx{margin-top:8px;padding:6px 0;cursor:pointer}
+.tras{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}
+.tras-h{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.trad{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}.trad:last-child{border-bottom:0}
+.trad-t{min-width:0}.trad-t b{font:600 14px/1.35 var(--font-body);color:var(--ink);overflow-wrap:anywhere}.trad-t b small{font-weight:400;color:var(--muted)}
+.trad-t span{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px}.trad-t span i{font-style:normal;font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 8px}
+.trad-t p{margin:4px 0 0;font-size:12.5px;color:var(--body)}
+.trad-n{flex:none;text-align:right;display:flex;flex-direction:column;gap:1px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}.trad-n span:first-child{font-weight:700;color:var(--ink)}
+.trad.low{opacity:.62}
+@media (max-width:640px){.trh-v{font-size:36px}.trh-s{text-align:left}.trc-hd{flex-direction:column;gap:8px}.trc-sp{text-align:left}.trc-sp b{display:inline;margin-right:6px}.trk .ik b{font-size:20px}}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -564,6 +598,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <div class="grp">Geral</div>
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>
     <button class="tab" role="tab" data-act="tab" data-v="hoje" id="tab-hoje"></button>
+    <button class="tab" role="tab" data-act="tab" data-v="trafego" id="tab-trafego"></button>
     <div class="grp">Conteúdo</div>
     <button class="tab" role="tab" data-act="tab" data-v="cal" id="tab-cal"></button>
     <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
@@ -576,7 +611,6 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   </div>
   <div class="links">
     <h4>Atalhos</h4>
-    <a class="meta" title="Tráfego Pago" href="trafego.html"><svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a2 2 0 0 0 2 2h2l5 4V5L7 9H5a2 2 0 0 0-2 2zM17 8a5 5 0 0 1 0 8M20 5a9 9 0 0 1 0 14"/></svg><span class="lb">Tráfego Pago</span></a>
     <a class="meta" title="Meta Business" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg><span class="lb">Meta Business</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
     <a title="Planilha" href="https://docs.google.com/spreadsheets/d/1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4/edit" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg><span class="lb">Planilha</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
     <a title="Google Agenda" href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="lb">Google Agenda</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
@@ -618,6 +652,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const longDay=s=>fromIso(s).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
   const shortDay=s=>{const d=fromIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
   const ic={
+    mega:'<svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a2 2 0 0 0 2 2h2l5 4V5L7 9H5a2 2 0 0 0-2 2zM17 8a5 5 0 0 1 0 8M20 5a9 9 0 0 1 0 14"/></svg>',
     chart:'<svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     bulb:'<svg class="i" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
     star:'<svg class="i" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>',
@@ -650,7 +685,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
   let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null, editF=null, editBusy=false;
-  let view='painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
+  let view=location.hash==='#trafego'?'trafego':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
 
@@ -1528,6 +1563,86 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       +'<div class="vcard"><h3>Países</h3>'+insBars(pb.paises,pf,100)+'<h3 style="margin-top:16px">Idiomas</h3>'+insBars(pb.idiomas,pf,100)+'<h3 style="margin-top:16px">Quando estão mais ativos</h3><p class="txt">'+esc(pb.mais_ativos)+'</p><p class="txt">'+esc(pb.horario_obs)+'</p></div></div>';
     return h;
   }
+
+  /* ---------- tráfego pago (JSONs da Meta gerados pelo fetcher) ---------- */
+  const TR_WINS=[4,7,14,30]; let trWin=7; const TR={}, trBusy={}, trOpen={};
+  function trLoad(w){ if(w in TR||trBusy[w]) return; trBusy[w]=true;
+    fetch('trafego/paid-traffic-'+w+'d.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ TR[w]=j; }).catch(()=>{ TR[w]=null; }).finally(()=>{ trBusy[w]=false; if(view==='trafego') renderAll(); }); }
+  const brl=v=>v==null||isNaN(v)?'—':'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const trN=v=>Math.round(+v||0).toLocaleString('pt-BR');
+  const trP=(v,d)=>v==null||!isFinite(v)?'—':Number(v).toFixed(d==null?1:d).replace('.',',')+'%';
+  const TR_UP={LP:1,IA:1,IG:1,ABO:1,CBO:1,WPP:1,HOF:1,CPL:1,UTM:1};
+  const TR_W={BELLE:'Belle',CHAT:'Chat',TRAFEGO:'Tráfego',GRATIS:'grátis',CLINICAS:'clínicas',CLINICA:'clínica',ESTETICA:'estética',GESTAO:'gestão',AUTOMACAO:'automação',COMISSOES:'comissões',QTO:'quanto'};
+  function trCase(t){ const out=String(t).split(/\s+/).map(w=>{ const core=w.toUpperCase().normalize('NFD').replace(/[^A-Z+]/g,'');
+      if(TR_UP[core]) return w.toUpperCase(); if(TR_W[core]) return w.replace(/[A-Za-zÀ-ÿ]+/,TR_W[core]); return w.toLowerCase(); }).join(' ');
+    return out.charAt(0).toUpperCase()+out.slice(1); }
+  const TR_TYPE={ESTATICO:'Estático',VIDEO:'Vídeo',CARROSSEL:'Carrossel',REEL:'Reel'};
+  const TR_TAG={IG:'Instagram',ABERTO:'público aberto',ADV:'Advantage+',ABO:'ABO',CBO:'CBO'};
+  function trName(n){ const segs=[]; let rest=String(n||'').replace(/\[([^\]]*)\]+/g,(m,x)=>{ segs.push(x.trim()); return ' '; }).replace(/\s+/g,' ').trim();
+    const o={title:'',type:'',since:'',tags:[],copy:/c[oó]pia/i.test(rest)}; const free=[];
+    segs.forEach(x=>{ const u=x.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''), w1=u.split(/\s+/)[0];
+      if(/^\d{2}\/\d{2}$/.test(x)) o.since=x; else if(/^\d+$/.test(x)) {} else if(TR_TYPE[w1]) o.type=TR_TYPE[w1]; else if(TR_TAG[u]) o.tags.push(TR_TAG[u]); else free.push(x); });
+    let t=free.sort((a,b)=>b.length-a.length)[0]||'';
+    if(/^LEADS\s*-\s*/i.test(t)){ t=t.replace(/^LEADS\s*-\s*/i,''); }
+    o.title=t?trCase(t):(o.tags.length?o.tags.join(', ').replace(/^./,c=>c.toUpperCase()):(rest||String(n||'')));
+    if(!t) o.tags=[];
+    return o; }
+  const TR_DEC={SCALE:['Escalar','sc'],KEEP:['Manter','kp'],KILL:['Pausar','kl'],'KEEP-amostra':['Pouco dado','lo']};
+  const trDec=d=>{ const x=TR_DEC[d]; return x?'<span class="trd '+x[1]+'">'+x[0]+'</span>':''; };
+  function trWhy(r){ if(!r) return ''; const num=x=>brl(parseFloat(x)); let m;
+    if(m=r.match(/^cpl ([\d.]+) ≤ [\d.]+ \((\d+)% abaixo/)) return 'Custo por lead de '+num(m[1])+', '+m[2]+'% abaixo do limite';
+    if(m=r.match(/^cpl ([\d.]+) dentro/)) return 'Custo por lead de '+num(m[1])+', dentro da faixa aceitável';
+    if(m=r.match(/^cpl ([\d.]+) >/)) return 'Custo por lead de '+num(m[1])+', acima do limite';
+    if(m=r.match(/^spend R\$([\d.]+) < min R\$([\d.]+)/)) return 'Investiu '+num(m[1])+'; precisa de '+num(m[2])+' para avaliar';
+    if(m=r.match(/sem conversões após R\$([\d.]+)/)) return 'Nenhum lead depois de '+num(m[1])+' investidos';
+    if(/amostra insuficiente/.test(r)) return 'Ainda sem dados suficientes para avaliar';
+    return esc(r); }
+  const trCpl=x=>{ const r=x.raws||{}; return r.leads?(+x.spend||0)/r.leads:null; };
+  function trWhen(g){ if(!g) return ''; const d=new Date(g); return pad(d.getDate())+'/'+pad(d.getMonth()+1)+' às '+pad(d.getHours())+':'+pad(d.getMinutes()); }
+  function renderTrafego(){
+    TR_WINS.forEach(trLoad);
+    let h='<div class="iwsel" role="group" aria-label="Período">'+TR_WINS.map(w=>'<button class="chip'+(w===trWin?' on':'')+'" data-act="trw" data-w="'+w+'" aria-pressed="'+(w===trWin)+'">'+w+' dias</button>').join('')+'</div>';
+    if(!(trWin in TR)) return h+'<p class="empty">Carregando os números da Meta…</p>';
+    const d=TR[trWin];
+    if(!d) return h+'<div class="note">Ainda não há dados de '+trWin+' dias. No Claude Code, rode <b>/meta-metrics-fetcher</b> para gerar.</div>';
+    const camps=(d.campaigns||[]).slice().sort((a,b)=>(b.spend||0)-(a.spend||0));
+    const T=d.raws_total||camps.reduce((t,c)=>{ Object.entries(c.raws||{}).forEach(([k,v])=>t[k]=(t[k]||0)+(+v||0)); return t; },{});
+    const spend=+d.spend_total||0, ctr=T.impressions?T.clicks/T.impressions*100:null, cpc=T.clicks?spend/T.clicks:null, cpm=T.impressions?spend/T.impressions*1000:null;
+    const pk=d.primary_kpi||'cpl', K=(d.kpis_summary||{})[pk];
+    h+='<p class="ihd">Últimos '+trWin+' dias, atualizado em '+trWhen(d.generated_at)+'<br><small>Os números chegam da Meta três vezes por dia.</small></p>';
+    // destaque: custo por lead contra a meta
+    if(K&&K.value!=null){ const tg=+K.target||0, v=+K.value, mx=Math.max(tg*2,v*1.15,1), st=K.status==='green'?'ok':K.status==='yellow'?'wa':K.status==='red'?'bd':'', dp=K.delta_pct;
+      const msg=dp==null?'':dp<=0?Math.abs(dp).toFixed(0)+'% abaixo da meta':dp.toFixed(0)+'% acima da meta';
+      h+='<div class="vcard trhero '+st+'"><div class="trh-top"><div><span class="trh-k">Custo por lead</span><b class="trh-v">'+brl(v)+'</b></div><div class="trh-s"><span>'+(st==='ok'?'Dentro da meta':st==='wa'?'Perto do limite':st==='bd'?'Fora da meta':'')+'</span><em>'+msg+'</em></div></div>'
+        +'<div class="trg" role="img" aria-label="Custo por lead de '+brl(v)+' para uma meta de '+brl(tg)+'"><i style="width:'+Math.min(100,v/mx*100).toFixed(1)+'%"></i><s style="left:'+(tg/mx*100).toFixed(1)+'%"><span>meta '+brl(tg)+'</span></s></div>'
+        +'<p class="hint">Quanto menor, melhor. A barra mostra o custo atual; a marca é a meta.</p></div>'; }
+    h+='<div class="ikpis trk">'
+      +'<div class="vcard ik"><span>Investido</span><b>'+brl(spend)+'</b><em>'+camps.length+(camps.length===1?' campanha':' campanhas')+'</em></div>'
+      +'<div class="vcard ik"><span>Leads</span><b>'+trN(T.leads)+'</b><em>'+(T.messages?trN(T.messages)+(T.messages===1?' conversa':' conversas')+' no WhatsApp':'formulários e páginas')+'</em></div>'
+      +'<div class="vcard ik"><span>Cliques</span><b>'+trN(T.clicks)+'</b><em>taxa de clique '+trP(ctr,2)+'</em></div>'
+      +'<div class="vcard ik"><span>Alcance</span><b>'+trN(T.reach)+'</b><em>CPM '+brl(cpm)+', CPC '+brl(cpc)+'</em></div></div>';
+    // o que fazer
+    const cnt={}; camps.forEach(c=>{ if(c.decide) cnt[c.decide]=(cnt[c.decide]||0)+1; });
+    const acts=['SCALE','KEEP','KILL'].filter(k=>cnt[k]);
+    if(acts.length) h+='<div class="trnext"><span>Sugestão para as campanhas:</span>'+acts.map(k=>'<span class="trd '+TR_DEC[k][1]+'">'+TR_DEC[k][0]+' '+cnt[k]+'</span>').join('')+'</div>';
+    h+='<h2 class="ish">Campanhas</h2>';
+    camps.forEach(c=>{ const nm=trName(c.name), r=c.raws||{}, cpl=trCpl(c), share=spend?(c.spend||0)/spend*100:0, k='c'+c.campaign_id, open=!!trOpen[k];
+      const ads=(c.adsets||[]).reduce((n,a)=>n+(a.ads||[]).length,0), paused=c.effective_status&&c.effective_status!=='ACTIVE';
+      h+='<div class="vcard trc'+(open?' open':'')+'">'
+        +'<div class="trc-hd"><div class="trc-t"><div class="trc-m">'+trDec(c.decide)+(paused?'<span class="trd lo">Pausada</span>':'')+(nm.since?'<small>desde '+esc(nm.since)+'</small>':'')+'</div><h3>'+esc(nm.title)+'</h3></div><div class="trc-sp"><b>'+brl(c.spend)+'</b><small>'+trP(share,0)+' do investimento</small></div></div>'
+        +'<div class="trbar"><i style="width:'+share.toFixed(1)+'%"></i></div>'
+        +'<div class="trc-n"><span><b>'+trN(r.leads)+'</b>leads</span><span><b>'+brl(cpl)+'</b>por lead</span><span><b>'+trP(r.impressions?r.clicks/r.impressions*100:null,2)+'</b>taxa de clique</span></div>'
+        +(ads?'<button class="linkbtn trx" data-act="trx" data-k="'+esc(k)+'" aria-expanded="'+open+'">'+(open?'Esconder anúncios':'Ver '+ads+(ads===1?' anúncio':' anúncios'))+'</button>':'');
+      if(open){ (c.adsets||[]).forEach(a=>{ const an=trName(a.name);
+          h+='<div class="tras"><div class="tras-h"><span>Conjunto: '+esc(an.title)+'</span><span>'+brl(a.spend)+'</span></div>';
+          (a.ads||[]).slice().sort((x,y)=>(y.spend||0)-(x.spend||0)).forEach(ad=>{ const n=trName(ad.ad_name), ar=ad.raws||{}, low=ad.decide==='KEEP-amostra';
+            h+='<div class="trad'+(low?' low':'')+'"><div class="trad-t"><b>'+esc(n.title)+(n.copy?' <small>(cópia)</small>':'')+'</b><span>'+(n.type?'<i>'+n.type+'</i>':'')+trDec(ad.decide)+'</span><p>'+trWhy(ad.decide_reason)+'</p></div>'
+              +'<div class="trad-n"><span>'+brl(ad.spend)+'</span><span>'+trN(ar.leads)+' leads</span><span>'+(ar.leads?brl(trCpl(ad))+'/lead':'')+'</span></div></div>'; });
+          h+='</div>'; }); }
+      h+='</div>'; });
+    h+='<p class="hint" style="margin-top:16px">Criar, pausar ou escalar campanhas continua sendo pelo Claude Code, com <b>/agente-trafego-pago</b>. Aqui você acompanha os resultados.</p>';
+    return h;
+  }
   function renderAll(){
     insLoad();
     const sy=$('#sync');
@@ -1536,16 +1651,16 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     $('#banner').innerHTML=loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Geral · Tráfego pago',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['insights','Insights',ic.chart],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Tráfego pago',ic.mega],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['insights','Insights',ic.chart],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
-    if(!loaded&&!feed.length){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
+    if(!loaded&&!feed.length&&view!=='trafego'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }
-    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():renderFeed();
+    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():renderFeed();
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();
@@ -1734,6 +1849,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='dadd'){ dAdd=el.dataset.k||null; renderDay(); if(dAdd){ const f=$('#dpanel .addf'); if(f) f.scrollIntoView({block:'nearest'}); } return; }
     if(act==='hsug'){ e.preventDefault(); const f=$('#f-hora'); if(f){ f.value=el.dataset.h; f.dispatchEvent(new Event('change',{bubbles:true})); } toast('Horário '+el.dataset.h); setTimeout(()=>renderSheet(),300); return; }
     if(act==='insw'){ insWk=+el.dataset.i; renderAll(); return; }
+    if(act==='trw'){ trWin=+el.dataset.w; renderAll(); return; }
+    if(act==='trx'){ const k=el.dataset.k; trOpen[k]=!trOpen[k]; renderAll(); return; }
     if(act==='dsave'){ saveNew(); return; }
     if(act==='mvask'){ const f=$('#mv-to'); mvTo=f&&f.value||null; if(!mvTo||mvTo===(itemById(openId)||{}).date){ toast('Escolha outro dia'); return; } mvAsk=true; renderSheet(); return; }
     if(act==='mvno'){ mvAsk=false; mvTo=null; renderSheet(); return; }

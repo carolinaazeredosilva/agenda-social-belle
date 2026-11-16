@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261113200132">
+<meta name="belle-ver" content="20261116074619">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1376,8 +1376,10 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     setTimeout(renderAll,0);
   }
   function evPend(ev){ return (ev.tarefas||[]).filter(t=>t.st!=='Feito'); }
+  /* Evento já passou: o último dia (Fim, ou Início se não houver Fim) ficou para trás. Sem data continua em destaque. */
+  const evPast=ev=>{ const last=ev.dataFim||ev.data; return !!last&&dleft(last)<0; };
   function evStrip(){
-    const L=evList(); if(!L.length) return '';
+    const L=evList().filter(ev=>!evPast(ev)); if(!L.length) return '';
     return '<div class="daytitle" style="margin-top:4px"><h2>Eventos em destaque</h2><button class="linkbtn" data-act="tab" data-v="eventos">ver eventos</button></div><div class="evstrip">'
       +L.map(ev=>{ const p=evPend(ev), tot=(ev.tarefas||[]).length, ok=tot-p.length;
         return '<button class="evmini" data-act="evgo" data-id="'+esc(ev.id)+'"><span class="evk">Evento · '+esc(ev.cidade||'')+'</span><b>'+esc(ev.nome)+'</b><span class="evw">'+esc(evWhen(ev))+(ev.cortesias?' · '+esc(ev.cortesias):'')+'</span>'

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261116075442">
+<meta name="belle-ver" content="20261116075836">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -827,7 +827,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   }
   let migBusy=false;
   async function stMigrate(){
-    const sa=meta.get('sys_alias'); if(sa&&sa.map){ ALIAS=sa.map; return; }
+    const sa=meta.get('sys_alias'); if(sa&&sa.map){ const was=ALIAS; ALIAS=sa.map; if(was!==sa.map) renderAll(); return; }
     if(migBusy||!dbReady||!loaded||!stories.length||!mcp||RO()) return; migBusy=true;
     try{
       const oldIds=[]; meta.forEach((v,id)=>{ if(/^s_\d{4}-\d\d-\d\d_\d+_(\d+|d)$/.test(id)&&v&&Object.keys(v).length) oldIds.push(id); });
@@ -877,7 +877,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 
   /* ---------- dados do app (db) ---------- */
   let ALIAS={};
-  const M=id=>meta.get(id)||(ALIAS[id]&&meta.get(ALIAS[id]))||{};
+  /* Dados do story: os do id antigo (ligação feita na migração) com os do id novo por cima */
+  const M=id=>{ const own=meta.get(id), old=ALIAS[id]&&meta.get(ALIAS[id]); return old?(own?Object.assign({},old,own):old):(own||{}); };
   const statusOf=it=>M(it.id).status||it.sheetStatus;
   const RO=()=>document.body.classList.contains('ro');
   function saveItem(id,patch,immediate){

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261116074619">
+<meta name="belle-ver" content="20261116075442">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -557,6 +557,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 .ct.ev{background:var(--accent);color:var(--accent-ink)}
 @media (max-width:640px){.evt{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}.evt .evtx{grid-column:1/-1;order:-1}.evnew,.evadd{grid-template-columns:1fr}}
 
+.dfoot{justify-content:space-between;flex-wrap:nowrap;gap:8px}.dfoot .btn{white-space:nowrap}
+@media (max-width:420px){.dfoot .btn[data-act=dtoday]{font-size:13px;padding-left:10px;padding-right:10px}}
 /* Tráfego pago */
 .trhero{margin-bottom:12px;padding:20px 20px 16px}
 .trh-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
@@ -1861,7 +1863,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }
     const hid=hiddenOn(d);
     if(hid.length) h+='<section class="sec"><h3><span>Removidos do app</span></h3>'+hid.map(x=>'<div class="card" style="align-items:center"><div class="main"><div class="t">'+esc(itemLabel(x))+'</div><div class="x">'+esc(x.copy||x.sticker||'')+'</div></div><button class="btn" data-act="unhide" data-id="'+esc(x.id)+'">Restaurar</button></div>').join('')+'<p class="hint">Só saíram do app. Na planilha continuam como estão.</p></section>';
-    h+='<div class="row" style="margin-top:18px"><button class="btn" data-act="dtoday">'+ic.today+'Abrir na tela Hoje</button></div>';
+    h+='<div class="row dfoot" style="margin-top:18px"><button class="btn" data-act="dnav" data-n="-1" aria-label="Dia anterior">'+ic.left+esc(shortDay(addDays(d,-1)))+'</button><button class="btn" data-act="dtoday">'+ic.today+'Abrir na tela Hoje</button><button class="btn" data-act="dnav" data-n="1" aria-label="Próximo dia">'+esc(shortDay(addDays(d,1)))+ic.right+'</button></div>';
     p.innerHTML=h; sh.hidden=false; p.scrollTop=top;
   }
 

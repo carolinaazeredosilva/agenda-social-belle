@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261117153544">
+<meta name="belle-ver" content="20261117161851">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -558,6 +558,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 @media (max-width:640px){.evt{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}.evt .evtx{grid-column:1/-1;order:-1}.evnew,.evadd{grid-template-columns:1fr}}
 
 .dfoot{justify-content:space-between;flex-wrap:nowrap;gap:8px}.dfoot .btn{white-space:nowrap}
+.dfoot .btn{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.inavbar{position:sticky;bottom:0;z-index:3;margin:14px -4px 0;padding:10px 4px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line);align-items:center}
 @media (max-width:420px){.dfoot .btn[data-act=dtoday]{font-size:13px;padding-left:10px;padding-right:10px}}
 #tab-impart.warn,#tab-stsync{color:var(--danger)}
 #tab-stsync[hidden]{display:none}
@@ -1923,6 +1925,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     // checklist
     const cl=checklistFor(it), ck=m.checks||{};
     h+='<div class="blk"><h4>Checklist</h4><div class="cl">'+cl.map((l,i)=>'<button data-act="chk" data-i="'+i+'" aria-pressed="'+(!!ck[l])+'"><span class="bx">'+ic.check+'</span><span class="l">'+esc(l)+'</span></button>').join('')+'</div></div>';
+    if(sb.length>1){ const pv=sb[si-1], nx=sb[si+1], lb=x=>esc(itemLabel(x).replace(/^Story /,'Story '));
+      h+='<div class="row dfoot inavbar"><button class="btn" data-act="inav" data-n="-1" aria-label="Item anterior"'+(pv?'':' disabled style="opacity:.35"')+'>'+ic.left+(pv?lb(pv):'Anterior')+'</button><span class="hint" style="margin:0;white-space:nowrap">'+(si+1)+' de '+sb.length+'</span><button class="btn" data-act="inav" data-n="1" aria-label="Próximo item"'+(nx?'':' disabled style="opacity:.35"')+'>'+(nx?lb(nx):'Próximo')+ic.right+'</button></div>'; }
     p.innerHTML=h; sh.hidden=false;
   }
   function lock(){ document.body.style.overflow=(openId||dayOpen)?'hidden':''; }

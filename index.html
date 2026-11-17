@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261117130234">
+<meta name="belle-ver" content="20261117153107">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -559,7 +559,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 
 .dfoot{justify-content:space-between;flex-wrap:nowrap;gap:8px}.dfoot .btn{white-space:nowrap}
 @media (max-width:420px){.dfoot .btn[data-act=dtoday]{font-size:13px;padding-left:10px;padding-right:10px}}
-#tab-impart.warn{color:var(--danger)}
+#tab-impart.warn,#tab-stsync{color:var(--danger)}
+#tab-stsync[hidden]{display:none}
 /* Tráfego pago */
 .trhero{margin-bottom:12px;padding:20px 20px 16px}
 .trh-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
@@ -613,6 +614,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
     <button class="tab" data-act="impart" id="tab-impart" title="Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Conectar pasta de artes</span></button>
     <input type="file" id="imp-dir" webkitdirectory multiple hidden>
+    <button class="tab warn" data-act="stsync" id="tab-stsync" hidden title="Status que você mudou no app e ainda não foram para a planilha"><svg class="i" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg><span class="lb">Atualizar planilha</span></button>
   </div>
   <div class="links">
     <h4>Atalhos</h4>
@@ -874,7 +876,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }catch(e){
       loadErr=e&&e.code?e:{code:'upstream_error',message:String(e&&e.message||e)};
     }
-    loaded=true; setBusy(false); renderAll(); stMigrate(); impKick();
+    loaded=true; setBusy(false); renderAll(); stMigrate(); impKick(); stCatchUp();
   }
   function setBusy(on){ const b=$('#btn-refresh'); b.classList.toggle('spin',!!on); }
 
@@ -883,10 +885,27 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   /* Dados do story: os do id antigo (ligação feita na migração) com os do id novo por cima */
   const M=id=>{ const own=meta.get(id), old=ALIAS[id]&&meta.get(ALIAS[id]); return old?(own?Object.assign({},old,own):old):(own||{}); };
   const statusOf=it=>M(it.id).status||it.sheetStatus;
+  /* Planilha acompanha o app: status escolhido no app; "pronto" vira Publicado (dia de hoje ou antes) ou Agendado (dia futuro) */
+  const wantSheet=it=>{ const m=M(it.id); if(m.status) return m.status; if(m.feito) return it.date<=todayIso()?'Publicado':'Agendado'; return ''; };
+  let stQ=new Map(), stT=null, stBusy=false;
+  function stQueue(its,auto){ its.forEach(it=>{ if(it&&it.date&&wantSheet(it)&&wantSheet(it)!==it.sheetStatus) stQ.set(it.id,it); }); stSide(); clearTimeout(stT); if(!auto||(window.belleSheets&&window.belleSheets.hasToken&&window.belleSheets.hasToken())) stT=setTimeout(stFlush,800); }
+  function stSide(){ const b=$('#tab-stsync'); if(!b) return; b.hidden=!stQ.size||RO(); const lb=b.querySelector('.lb'); if(lb) lb.textContent='Atualizar planilha ('+stQ.size+')'; }
+  async function stFlush(){
+    if(stBusy||!stQ.size||RO()||!window.belleSheets||!window.belleSheets.setStatuses) return; stBusy=true;
+    const its=[...stQ.values()]; stQ=new Map();
+    const list=its.map(it=>({id:it.id,kind:it.kind==='feed'?'feed':'story',date:it.date,ord:it.kind==='feed'?+it.id.split('_')[2]:it.rowIdx,status:wantSheet(it),check:it.kind==='feed'?'':it.copy}));
+    try{ const done=await window.belleSheets.setStatuses(SHEET_ID,list,parseDate); const ok=new Set(done.map(x=>x.id)); its.forEach(it=>{ const l=list.find(x=>x.id===it.id); if(ok.has(it.id)) it.sheetStatus=l.status; }); }
+    catch(e){ its.forEach(it=>stQ.set(it.id,it)); }
+    finally{ stBusy=false; stSide(); }
+  }
+  window.__belleSt=()=>[...stQ.values()].map(i=>[i.id,i.sheetStatus,wantSheet(i)]);
+  let stSynced=false;
+  function stCatchUp(){ if(stSynced||!loaded||!dbReady||RO()) return; stSynced=true; stQueue(feed.concat(stories.filter(x=>x.kind==='story')),true); }
   const RO=()=>document.body.classList.contains('ro');
   function saveItem(id,patch,immediate){
     if(RO()){ toast('Somente visualização: você não pode alterar.'); return Promise.resolve(); }
     const cur=Object.assign({},M(id),patch); meta.set(id,cur);
+    if(patch&&('status' in patch||'feito' in patch)&&typeof itemById==='function'){ const it=itemById(id); if(it) stQueue([it]); }
     if(!db) return Promise.resolve();
     const run=()=>{ const prev=queues.get(id)||Promise.resolve(); const body=JSON.parse(JSON.stringify(M(id)));
       const p=prev.then(()=>db.doc('itens/'+id).set(body)).catch(e=>toast('Não foi possível salvar'+(e&&e.code==='quota_exceeded'?': limite de dados cheio':'. Tente de novo.')));
@@ -2073,6 +2092,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='mon'){ const y=+month.slice(0,4), mo=+month.slice(5,7)-1+Number(el.dataset.n); const d=new Date(y,mo,1,12); month=d.getFullYear()+'-'+pad(d.getMonth()+1); renderAll(); return; }
     if(act==='hz'){ hz=+el.dataset.n||14; renderAll(); return; }
     if(act==='ff'){ fFilter=el.dataset.s; renderAll(); return; }
+    if(act==='stsync'){ toast('Atualizando a planilha…'); await stFlush(); toast(stQ.size?'Não consegui atualizar tudo. Tente de novo.':'Planilha atualizada'); return; }
     if(act==='impart'){ if(RO()){ toast('Somente visualização: você não pode alterar.'); return; } impConnect(); return; }
     if(act==='refresh'){ if(window.claude&&mcp) { try{ await mcp.invalidate(); }catch(_){} } load(); return; }
     const it=itemById(openId); if(!it) return;
@@ -2209,7 +2229,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       try{ db.collection('itens').onSnapshot(snap=>{
         const next=new Map(); snap.docs.forEach(d=>{ next.set(d.id,d.data()||{}); });
         queues.forEach((_,id)=>{ if(next.has(id)&&meta.has(id)&&timers.has(id)) next.set(id,meta.get(id)); });
-        meta=next; dbReady=true; renderAll(); stMigrate(); impKick();
+        meta=next; dbReady=true; renderAll(); stMigrate(); impKick(); stCatchUp();
       },()=>{ toast('Não consegui sincronizar os checklists'); }); }catch(_){}
     }
     load();

@@ -308,6 +308,21 @@
     for(var q=0;q<hits.length;q++){ if(hits[q].n===n){ var end=q+1<hits.length?hits[q+1].start:text.length; return {seg:text.slice(hits[q].end,end).trim(),rest:(text.slice(0,hits[q].start)+text.slice(end)).replace(/\n{3,}/g,'\n\n').trim()}; } }
     return null;
   }
+  /* Status: grava na coluna Status da planilha o status que o app mostra. list: [{kind,date,ord,status,check}] */
+  window.belleSheets.hasToken=function(){ return !!(gTok&&gExp>Date.now()+60000); };
+  window.belleSheets.setStatuses=async function(sheetId,list,parseDate){
+    var done=[], tabs={};
+    for(var i=0;i<list.length;i++){ var o=list[i], aba=o.kind==='feed'?ABA_F:ABA_S;
+      var T=tabs[aba]||(tabs[aba]=await readTab(sheetId,aba)), sc=colOf(T.h,COLS[o.kind==='feed'?'feed':'story'].status); if(sc<0) continue;
+      var row=findRow(T,parseDate,o.date,o.ord); if(row<0) continue;
+      if(o.check&&o.kind!=='feed'){ var cc=colOf(T.h,COLS.story.copy), cur=nrm((T.rows[row]||[])[cc]||'').slice(0,40); if(cur!==nrm(o.check).slice(0,40)) continue; }
+      if(String((T.rows[row]||[])[sc]||'').trim()===o.status){ done.push(o); continue; }
+      (T.data=T.data||[]).push({range:rg(aba,colL(sc)+(row+1)),values:[[o.status]]}); done.push(o); }
+    for(var a in tabs){ var T2=tabs[a]; if(!T2.data||!T2.data.length) continue;
+      var w=await fetch(T2.base+':batchUpdate',{method:'POST',headers:{Authorization:'Bearer '+T2.t,'Content-Type':'application/json'},body:JSON.stringify({valueInputOption:'RAW',data:T2.data})});
+      if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').'); }
+    return done;
+  };
   window.belleSheets.splitStory=async function(o,parseDate,labelled){
     var T=await readTab(o.sheetId,ABA_S), row=findRow(T,parseDate,o.date,o.ord);
     if(row<0) throw err('sheet','Não achei a linha deste story. Atualize e tente de novo.');

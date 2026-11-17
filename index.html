@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261117113038">
+<meta name="belle-ver" content="20261117113400">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1960,7 +1960,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='close'){ closeItem(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='dadd'){ dAdd=el.dataset.k||null; renderDay(); if(dAdd){ const f=$('#dpanel .addf'); if(f) f.scrollIntoView({block:'nearest'}); } return; }
-    if(act==='hsug'){ e.preventDefault(); const f=$('#f-hora'); if(f){ f.value=el.dataset.h; f.dispatchEvent(new Event('change',{bubbles:true})); } toast('Horário '+el.dataset.h); setTimeout(()=>renderSheet(),300); return; }
+    if(act==='hsug'){ e.preventDefault(); const f=$('#f-hora'); if(f){ f.value=el.dataset.h; f.dataset.commit='1'; f.dispatchEvent(new Event('change',{bubbles:true})); } toast('Horário '+el.dataset.h); setTimeout(()=>renderSheet(),300); return; }
     if(act==='insw'){ insWk=+el.dataset.i; renderAll(); return; }
     if(act==='trw'){ trWin=+el.dataset.w; renderAll(); return; }
     if(act==='trx'){ const k=el.dataset.k; trOpen[k]=!trOpen[k]; renderAll(); return; }
@@ -2107,8 +2107,14 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(t.id==='f-link') saveItem(openId,{link:t.value.trim()});
     if(t.id==='f-note') saveItem(openId,{nota:t.value});
   });
+  /* Horário: enquanto digita (13:3 vira 13:03) não salva; salva ao sair do campo ou com Enter */
+  const tmField=t=>t&&t.type==='time'&&(t.classList.contains('tchip')||t.id==='f-hora');
+  const tmCommit=t=>{ if(!t.dataset.pend) return; delete t.dataset.pend; clearTimeout(t._tm); if(t.value===t.dataset.saved) return; t.dataset.saved=t.value; t.dataset.commit='1'; t.dispatchEvent(new Event('change',{bubbles:true})); };
+  document.addEventListener('focusout',e=>{ if(tmField(e.target)) tmCommit(e.target); },true);
+  document.addEventListener('keydown',e=>{ const t=e.target; if(e.key==='Enter'&&tmField(t)){ e.preventDefault(); tmCommit(t); t.blur(); } },true);
   document.addEventListener('change',e=>{
     const t=e.target;
+    if(tmField(t)){ if(t.dataset.commit) delete t.dataset.commit; else { t.dataset.pend='1'; clearTimeout(t._tm); t._tm=setTimeout(()=>tmCommit(t),4000); return; } }
     if(t.classList&&t.classList.contains('tchip')){ const id=t.dataset.id, v=t.value; saveItem(id,{hora:v},true).then(()=>{ renderAll(); toast(v?'Horário: '+v:'Horário removido'); }); return; }
     if(t.classList&&t.classList.contains('evst')){ evPatchT(t.dataset.ev,t.dataset.t,{st:t.value}).then(()=>{ renderAll(); toast(t.value); }); return; }
     if(t.classList&&t.classList.contains('evin')&&t.type==='date'){ saveItem(t.dataset.ev,{[t.dataset.k]:t.value},true).then(()=>renderAll()); return; }

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261117153107">
+<meta name="belle-ver" content="20261117153544">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -885,8 +885,11 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   /* Dados do story: os do id antigo (ligação feita na migração) com os do id novo por cima */
   const M=id=>{ const own=meta.get(id), old=ALIAS[id]&&meta.get(ALIAS[id]); return old?(own?Object.assign({},old,own):old):(own||{}); };
   const statusOf=it=>M(it.id).status||it.sheetStatus;
-  /* Planilha acompanha o app: status escolhido no app; "pronto" vira Publicado (dia de hoje ou antes) ou Agendado (dia futuro) */
-  const wantSheet=it=>{ const m=M(it.id); if(m.status) return m.status; if(m.feito) return it.date<=todayIso()?'Publicado':'Agendado'; return ''; };
+  /* Planilha acompanha o app: status escolhido no app; "pronto" vira Agendado (hoje ou depois) e Publicado depois que o dia passa */
+  /* Só avança o status na planilha (nunca volta, ex.: Aprovado não vira Ideia) */
+  const ST_RANK={'Ideia':0,'Em produção':1,'Aprovado':2,'Agendado':3,'Publicado':4};
+  const wantSheet=it=>{ const m=M(it.id); let w=m.status||''; if(m.feito){ const f=it.date<todayIso()?'Publicado':'Agendado'; if(!w||ST_RANK[f]>ST_RANK[w]) w=f; }
+    return w&&(ST_RANK[w]||0)>(ST_RANK[it.sheetStatus]==null?-1:ST_RANK[it.sheetStatus])?w:''; };
   let stQ=new Map(), stT=null, stBusy=false;
   function stQueue(its,auto){ its.forEach(it=>{ if(it&&it.date&&wantSheet(it)&&wantSheet(it)!==it.sheetStatus) stQ.set(it.id,it); }); stSide(); clearTimeout(stT); if(!auto||(window.belleSheets&&window.belleSheets.hasToken&&window.belleSheets.hasToken())) stT=setTimeout(stFlush,800); }
   function stSide(){ const b=$('#tab-stsync'); if(!b) return; b.hidden=!stQ.size||RO(); const lb=b.querySelector('.lb'); if(lb) lb.textContent='Atualizar planilha ('+stQ.size+')'; }

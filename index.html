@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261116075836">
+<meta name="belle-ver" content="20261117113038">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -610,6 +610,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <button class="tab" role="tab" data-act="tab" data-v="insights" id="tab-insights"></button>
     <div class="grp">Ações</div>
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
+    <button class="tab" data-act="impart" id="tab-impart" title="Escolha a pasta Instagram: cada arte vai para o post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Importar artes</span></button>
+    <input type="file" id="imp-dir" webkitdirectory multiple hidden>
   </div>
   <div class="links">
     <h4>Atalhos</h4>
@@ -1715,6 +1717,42 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     h+='<p class="hint" style="margin-top:16px">Criar, pausar ou escalar campanhas continua sendo pelo Claude Code, com <b>/agente-trafego-pago</b>. Aqui você acompanha os resultados.</p>';
     return h;
   }
+
+  /* ---------- importar artes da pasta Instagram ----------
+     Pastas "AAAA-MM-DD - Stories <Sequência> - DD-MM-AAAA": arquivo "... - 03.png" vai para o story 3 da sequência daquele dia.
+     Pastas "AAAA-MM-DD - Post|Carrossel|Reels ... - DD-MM-AAAA": todos os arquivos, em ordem, vão para o post do feed do dia.
+     Pasta "Black Friday": Story_BlackFriday_0N vai para todo story cuja copy começa com "Arte 0N".
+     Só preenche itens que ainda não têm arte. Nada é apagado. */
+  const IMP_EXT=/\.(png|jpe?g|webp|mp4|mov)$/i;
+  const impNum=n=>{ const m=n.replace(IMP_EXT,'').match(/-\s*(\d{1,2})(?:\s+[^-]*)?$/); return m?+m[1]:null; };
+  const impSort=(a,b)=>(impNum(a.name)||0)-(impNum(b.name)||0)||(/\d\.\w+$/.test(b.name)-/\d\.\w+$/.test(a.name))||a.name.localeCompare(b.name);
+  function impPlan(files){
+    const dirs={}; files.forEach(f=>{ if(!IMP_EXT.test(f.name)) return; const parts=(f.webkitRelativePath||f.name).split('/'); const dir=parts.length>2?parts[parts.length-2]:''; (dirs[dir]=dirs[dir]||[]).push(f); });
+    const jobs=new Map(), add=(it,fs)=>{ if(!it||artIds(it).length||jobs.has(it.id)) return; jobs.set(it.id,{it,fs:fs.slice().sort(impSort)}); };
+    Object.keys(dirs).forEach(dir=>{ const fs=dirs[dir];
+      let m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Stories|Story)\s+(.+?)\s*-\s*\d{2}-\d{2}-\d{4}$/i);
+      if(m){ const d=m[1], sl=stSlug(m[3]); const cands=storiesOn(d).filter(x=>x.seqSlug&&(x.seqSlug===sl||x.seqSlug.startsWith(sl)||sl.startsWith(x.seqSlug)));
+        const byN={}; fs.forEach(f=>{ const n=impNum(f.name); if(n!=null) (byN[n]=byN[n]||[]).push(f); });
+        Object.keys(byN).forEach(n=>add(cands.find(x=>x.n===+n),byN[n])); return; }
+      m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Post|Carrossel|Reels?|Arte)\b/i);
+      if(m){ const f0=feedOn(m[1]); if(f0.length===1) add(f0[0],fs); return; }
+      if(/black\s*friday/i.test(dir)&&!/^\d{4}/.test(dir)){ fs.forEach(f=>{ const k=f.name.match(/BlackFriday_0?(\d+)/i); if(!k) return; const re=new RegExp('^Arte 0?'+k[1]+'\\b','i');
+        stories.filter(x=>re.test(x.copy||'')&&!M(x.id).oculto).forEach(x=>add(x,[f])); }); }
+    });
+    return [...jobs.values()].sort((a,b)=>a.it.date<b.it.date?-1:a.it.date>b.it.date?1:0);
+  }
+  async function impRun(files){
+    if(!loaded){ toast('Espere a planilha carregar e tente de novo.'); return; }
+    const jobs=impPlan(files); if(!jobs.length){ toast('Nenhuma arte nova: os itens com arte na pasta já estão com arte no app.'); return; }
+    const total=jobs.reduce((s,j)=>s+j.fs.length,0); let n=0, ok=0, fail=0;
+    for(const j of jobs){ const ids=[];
+      try{ for(const f of j.fs){ toast('Enviando '+(++n)+' de '+total+'…'); ids.push((await assets.upload(f)).id); }
+        await saveItem(j.it.id,{art:ids},true); ok++; }
+      catch(e){ fail++; } }
+    renderAll();
+    const days=[...new Set(jobs.map(j=>shortDay(j.it.date)))];
+    toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro, tente de novo.':''));
+  }
   function renderAll(){
     insLoad();
     const sy=$('#sync');
@@ -1900,6 +1938,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
+  $('#imp-dir').addEventListener('change',e=>{ const fs=[...e.target.files]; if(fs.length) impRun(fs); });
   document.addEventListener('click',async e=>{
     { const qm=$('#qmenu'); if(qm&&!qm.hidden&&!(e.target.closest&&e.target.closest('.qidea'))){ qm.hidden=true; $('[data-act="qmenu"]').setAttribute('aria-expanded','false'); } }
     if(e.target.closest&&e.target.closest('select.st-sel')) return;
@@ -1998,6 +2037,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='mon'){ const y=+month.slice(0,4), mo=+month.slice(5,7)-1+Number(el.dataset.n); const d=new Date(y,mo,1,12); month=d.getFullYear()+'-'+pad(d.getMonth()+1); renderAll(); return; }
     if(act==='hz'){ hz=+el.dataset.n||14; renderAll(); return; }
     if(act==='ff'){ fFilter=el.dataset.s; renderAll(); return; }
+    if(act==='impart'){ if(RO()){ toast('Somente visualização: você não pode alterar.'); return; } $('#imp-dir').value=''; $('#imp-dir').click(); return; }
     if(act==='refresh'){ if(window.claude&&mcp) { try{ await mcp.invalidate(); }catch(_){} } load(); return; }
     const it=itemById(openId); if(!it) return;
     if(act==='status'){ await saveItem(it.id,{status:el.dataset.s},true); renderAll(); renderSheet(); return; }

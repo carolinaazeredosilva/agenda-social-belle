@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261117113400">
+<meta name="belle-ver" content="20261117130234">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -559,6 +559,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 
 .dfoot{justify-content:space-between;flex-wrap:nowrap;gap:8px}.dfoot .btn{white-space:nowrap}
 @media (max-width:420px){.dfoot .btn[data-act=dtoday]{font-size:13px;padding-left:10px;padding-right:10px}}
+#tab-impart.warn{color:var(--danger)}
 /* Tráfego pago */
 .trhero{margin-bottom:12px;padding:20px 20px 16px}
 .trh-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
@@ -610,7 +611,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <button class="tab" role="tab" data-act="tab" data-v="insights" id="tab-insights"></button>
     <div class="grp">Ações</div>
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
-    <button class="tab" data-act="impart" id="tab-impart" title="Escolha a pasta Instagram: cada arte vai para o post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Importar artes</span></button>
+    <button class="tab" data-act="impart" id="tab-impart" title="Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Conectar pasta de artes</span></button>
     <input type="file" id="imp-dir" webkitdirectory multiple hidden>
   </div>
   <div class="links">
@@ -873,7 +874,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }catch(e){
       loadErr=e&&e.code?e:{code:'upstream_error',message:String(e&&e.message||e)};
     }
-    loaded=true; setBusy(false); renderAll(); stMigrate();
+    loaded=true; setBusy(false); renderAll(); stMigrate(); impKick();
   }
   function setBusy(on){ const b=$('#btn-refresh'); b.classList.toggle('spin',!!on); }
 
@@ -1726,9 +1727,9 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const IMP_EXT=/\.(png|jpe?g|webp|mp4|mov)$/i;
   const impNum=n=>{ const m=n.replace(IMP_EXT,'').match(/-\s*(\d{1,2})(?:\s+[^-]*)?$/); return m?+m[1]:null; };
   const impSort=(a,b)=>(impNum(a.name)||0)-(impNum(b.name)||0)||(/\d\.\w+$/.test(b.name)-/\d\.\w+$/.test(a.name))||a.name.localeCompare(b.name);
-  function impPlan(files){
-    const dirs={}; files.forEach(f=>{ if(!IMP_EXT.test(f.name)) return; const parts=(f.webkitRelativePath||f.name).split('/'); const dir=parts.length>2?parts[parts.length-2]:''; (dirs[dir]=dirs[dir]||[]).push(f); });
-    const jobs=new Map(), add=(it,fs)=>{ if(!it||artIds(it).length||jobs.has(it.id)) return; jobs.set(it.id,{it,fs:fs.slice().sort(impSort)}); };
+  function impPlan(entries){
+    const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/^1 - J/i.test(f.dir||'')) return; (dirs[f.dir]=dirs[f.dir]||[]).push(f); });
+    const jobs=new Map(), add=(it,fs)=>{ if(!it||artIds(it).length||jobs.has(it.id)||M(it.id).oculto) return; jobs.set(it.id,{it,fs:fs.slice().sort(impSort)}); };
     Object.keys(dirs).forEach(dir=>{ const fs=dirs[dir];
       let m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Stories|Story)\s+(.+?)\s*-\s*\d{2}-\d{2}-\d{4}$/i);
       if(m){ const d=m[1], sl=stSlug(m[3]); const cands=storiesOn(d).filter(x=>x.seqSlug&&(x.seqSlug===sl||x.seqSlug.startsWith(sl)||sl.startsWith(x.seqSlug)));
@@ -1737,22 +1738,57 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Post|Carrossel|Reels?|Arte)\b/i);
       if(m){ const f0=feedOn(m[1]); if(f0.length===1) add(f0[0],fs); return; }
       if(/black\s*friday/i.test(dir)&&!/^\d{4}/.test(dir)){ fs.forEach(f=>{ const k=f.name.match(/BlackFriday_0?(\d+)/i); if(!k) return; const re=new RegExp('^Arte 0?'+k[1]+'\\b','i');
-        stories.filter(x=>re.test(x.copy||'')&&!M(x.id).oculto).forEach(x=>add(x,[f])); }); }
+        stories.filter(x=>re.test(x.copy||'')).forEach(x=>add(x,[f])); }); }
     });
     return [...jobs.values()].sort((a,b)=>a.it.date<b.it.date?-1:a.it.date>b.it.date?1:0);
   }
-  async function impRun(files){
-    if(!loaded){ toast('Espere a planilha carregar e tente de novo.'); return; }
-    const jobs=impPlan(files); if(!jobs.length){ toast('Nenhuma arte nova: os itens com arte na pasta já estão com arte no app.'); return; }
-    const total=jobs.reduce((s,j)=>s+j.fs.length,0); let n=0, ok=0, fail=0;
-    for(const j of jobs){ const ids=[];
-      try{ for(const f of j.fs){ toast('Enviando '+(++n)+' de '+total+'…'); ids.push((await assets.upload(f)).id); }
-        await saveItem(j.it.id,{art:ids},true); ok++; }
-      catch(e){ fail++; } }
+  let impBusy=false, impBooted=false;
+  function impKick(){ if(loaded&&dbReady&&!impBooted){ impBooted=true; impBoot(); } }
+  async function impRun(entries,quiet){
+    if(!loaded||!dbReady||impBusy||RO()) return 0;
+    const jobs=impPlan(entries); if(!jobs.length){ if(!quiet) toast('Tudo em dia: nenhuma arte nova na pasta.'); return 0; }
+    impBusy=true; const total=jobs.reduce((s,j)=>s+j.fs.length,0); let n=0, ok=0, fail=0;
+    try{ for(const j of jobs){ const ids=[];
+        try{ for(const f of j.fs){ toast('Importando arte '+(++n)+' de '+total+'…'); const file=await f.get(); ids.push((await assets.upload(file)).id); }
+          await saveItem(j.it.id,{art:ids},true); ok++; }
+        catch(e){ fail++; } } }
+    finally{ impBusy=false; }
     renderAll();
     const days=[...new Set(jobs.map(j=>shortDay(j.it.date)))];
-    toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro, tente de novo.':''));
+    toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro.':''));
+    return ok;
   }
+  /* Pasta conectada (Chrome/Edge no computador): escolhida uma vez, lida sozinha ao abrir o app, ao voltar para a aba e a cada 10 min */
+  const idb=(mode,fn)=>new Promise((res,rej)=>{ const o=indexedDB.open('belle-imp',1); o.onupgradeneeded=()=>o.result.createObjectStore('kv'); o.onerror=()=>rej(o.error);
+    o.onsuccess=()=>{ const tx=o.result.transaction('kv',mode), r=fn(tx.objectStore('kv')); tx.oncomplete=()=>res(r&&r.result); tx.onerror=()=>rej(tx.error); }; });
+  const impGetDir=()=>idb('readonly',st=>st.get('dir')).catch(()=>null);
+  const impSetDir=h=>idb('readwrite',st=>st.put(h,'dir'));
+  let impDir=null, impState='';
+  async function impWalk(dir){ const out=[];
+    for await (const [name,h] of dir.entries()){ if(h.kind!=='directory') continue;
+      for await (const [fn,fh] of h.entries()){ if(fh.kind==='file'&&IMP_EXT.test(fn)) out.push({name:fn,dir:name,get:()=>fh.getFile()}); } }
+    return out; }
+  async function impScan(quiet){
+    if(!impDir) return; let p; try{ p=await impDir.queryPermission({mode:'read'}); }catch(_){ p='denied'; }
+    if(p!=='granted'){ impState='perm'; renderSide(); return; }
+    impState='on'; renderSide();
+    try{ await impRun(await impWalk(impDir),quiet); }catch(e){ if(!quiet) toast('Não consegui ler a pasta: '+(e&&e.message||e)); }
+  }
+  async function impConnect(){
+    if(!window.showDirectoryPicker){ $('#imp-dir').value=''; $('#imp-dir').click(); return; }
+    try{
+      if(impDir){ const p=await impDir.requestPermission({mode:'read'}); if(p==='granted'){ impScan(false); return; } }
+      const h=await window.showDirectoryPicker({id:'belle-instagram',mode:'read'}); impDir=h; await impSetDir(h).catch(()=>{});
+      toast('Pasta "'+h.name+'" conectada. Daqui em diante as artes entram sozinhas.'); impScan(false);
+    }catch(e){ if(e&&e.name!=='AbortError') toast('Não consegui conectar a pasta.'); }
+  }
+  function renderSide(){ const b=$('#tab-impart'); if(!b) return; const lb=b.querySelector('.lb');
+    if(lb) lb.textContent=impDir?(impState==='perm'?'Liberar pasta de artes':'Artes: pasta conectada'):'Conectar pasta de artes';
+    b.classList.toggle('warn',impState==='perm'); }
+  async function impBoot(){ if(!window.showDirectoryPicker) return; impDir=await impGetDir(); renderSide(); if(impDir) impScan(true); }
+  setInterval(()=>{ if(impDir&&document.visibilityState==='visible') impScan(true); },10*60*1000);
+  document.addEventListener('visibilitychange',()=>{ if(impDir&&document.visibilityState==='visible') impScan(true); });
+  window.__belleImp={plan:e=>impPlan(e).map(j=>[j.it.id,j.fs.map(f=>f.name)])};
   function renderAll(){
     insLoad();
     const sy=$('#sync');
@@ -1938,7 +1974,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
-  $('#imp-dir').addEventListener('change',e=>{ const fs=[...e.target.files]; if(fs.length) impRun(fs); });
+  $('#imp-dir').addEventListener('change',e=>{ const fs=[...e.target.files].map(f=>{ const p=(f.webkitRelativePath||f.name).split('/'); return {name:f.name,dir:p.length>2?p[p.length-2]:'',get:async()=>f}; }); if(fs.length) impRun(fs,false); });
   document.addEventListener('click',async e=>{
     { const qm=$('#qmenu'); if(qm&&!qm.hidden&&!(e.target.closest&&e.target.closest('.qidea'))){ qm.hidden=true; $('[data-act="qmenu"]').setAttribute('aria-expanded','false'); } }
     if(e.target.closest&&e.target.closest('select.st-sel')) return;
@@ -2037,7 +2073,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='mon'){ const y=+month.slice(0,4), mo=+month.slice(5,7)-1+Number(el.dataset.n); const d=new Date(y,mo,1,12); month=d.getFullYear()+'-'+pad(d.getMonth()+1); renderAll(); return; }
     if(act==='hz'){ hz=+el.dataset.n||14; renderAll(); return; }
     if(act==='ff'){ fFilter=el.dataset.s; renderAll(); return; }
-    if(act==='impart'){ if(RO()){ toast('Somente visualização: você não pode alterar.'); return; } $('#imp-dir').value=''; $('#imp-dir').click(); return; }
+    if(act==='impart'){ if(RO()){ toast('Somente visualização: você não pode alterar.'); return; } impConnect(); return; }
     if(act==='refresh'){ if(window.claude&&mcp) { try{ await mcp.invalidate(); }catch(_){} } load(); return; }
     const it=itemById(openId); if(!it) return;
     if(act==='status'){ await saveItem(it.id,{status:el.dataset.s},true); renderAll(); renderSheet(); return; }
@@ -2173,7 +2209,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       try{ db.collection('itens').onSnapshot(snap=>{
         const next=new Map(); snap.docs.forEach(d=>{ next.set(d.id,d.data()||{}); });
         queues.forEach((_,id)=>{ if(next.has(id)&&meta.has(id)&&timers.has(id)) next.set(id,meta.get(id)); });
-        meta=next; dbReady=true; renderAll(); stMigrate();
+        meta=next; dbReady=true; renderAll(); stMigrate(); impKick();
       },()=>{ toast('Não consegui sincronizar os checklists'); }); }catch(_){}
     }
     load();

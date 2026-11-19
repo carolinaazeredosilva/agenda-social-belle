@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261117161851">
+<meta name="belle-ver" content="20261119175159">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1747,20 +1747,44 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
      Pastas "AAAA-MM-DD - Stories <Sequência> - DD-MM-AAAA": arquivo "... - 03.png" vai para o story 3 da sequência daquele dia.
      Pastas "AAAA-MM-DD - Post|Carrossel|Reels ... - DD-MM-AAAA": todos os arquivos, em ordem, vão para o post do feed do dia.
      Pasta "Black Friday": Story_BlackFriday_0N vai para todo story cuja copy começa com "Arte 0N".
+     As pastas podem estar dentro de subpastas (ex.: Instagram/INSTAGRAM NOVEMBRO/...). "1 - Já postados" é ignorada.
+     Nome da sequência parecido também vale ("Black Friday" = "BF"); se a sequência mudou de dia na planilha, procura até 7 dias antes ou depois.
      Só preenche itens que ainda não têm arte. Nada é apagado. */
   const IMP_EXT=/\.(png|jpe?g|webp|mp4|mov)$/i;
   const impNum=n=>{ const m=n.replace(IMP_EXT,'').match(/-\s*(\d{1,2})(?:\s+[^-]*)?$/); return m?+m[1]:null; };
   const impSort=(a,b)=>(impNum(a.name)||0)-(impNum(b.name)||0)||(/\d\.\w+$/.test(b.name)-/\d\.\w+$/.test(a.name))||a.name.localeCompare(b.name);
+  /* Nome de sequência para comparar pasta e planilha: sem acento, "BF" vira "black friday", sem palavras curtas. */
+  const IMP_STOP=new Set(['de','da','do','das','dos','na','no','nas','nos','e','a','o','em','para','com']);
+  const impWords=t=>norm(t).replace(/\bbf\b/g,'black friday').replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(w=>w&&!IMP_STOP.has(w));
+  const impSim=(a,b)=>{ const A=new Set(impWords(a)), B=new Set(impWords(b)); if(!A.size||!B.size) return 0; let n=0; A.forEach(w=>{ if(B.has(w)) n++; }); return n/(A.size+B.size-n); };
+  const impSame=(x,sl)=>x.seqSlug===sl||x.seqSlug.startsWith(sl)||sl.startsWith(x.seqSlug);
+  const impAddDays=(d,k)=>{ const p=d.split('-'), t=new Date(+p[0],+p[1]-1,+p[2]+k,12); return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate()); };
+  /* Acha os stories de uma pasta: 1) mesmo nome no mesmo dia; 2) nome parecido no mesmo dia (ex.: "Black Friday" e "BF");
+     3) mesmo nome em outro dia, até 7 dias antes ou depois, quando a sequência foi mudada de dia na planilha e só existe em um dia. */
+  function impStoryCands(d,name){
+    const sl=stSlug(name), onDay=storiesOn(d).filter(x=>x.seqSlug);
+    let c=onDay.filter(x=>impSame(x,sl)); if(c.length) return {cands:c,date:d};
+    const seqs={}; onDay.forEach(x=>{ (seqs[x.seqSlug]=seqs[x.seqSlug]||[]).push(x); });
+    const sc=Object.keys(seqs).map(k=>({k,s:impSim(seqs[k][0].seq,name)})).sort((a,b)=>b.s-a.s);
+    if(sc.length&&sc[0].s>=0.6&&(sc.length<2||sc[1].s<sc[0].s)) return {cands:seqs[sc[0].k],date:d};
+    const near={}; for(let k=-7;k<=7;k++){ if(!k) continue; const d2=impAddDays(d,k), c2=storiesOn(d2).filter(x=>x.seqSlug&&impSame(x,sl)); if(c2.length) near[d2]=c2; }
+    const ds=Object.keys(near); if(ds.length===1) return {cands:near[ds[0]],date:ds[0]};
+    return {cands:[],date:d};
+  }
+  let impMiss=[], impMoved=[];
   function impPlan(entries){
-    const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/^1 - J/i.test(f.dir||'')) return; (dirs[f.dir]=dirs[f.dir]||[]).push(f); });
+    const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/(^|\/)1 - J/i.test(f.path||f.dir||'')) return; const key=f.path||f.dir; (dirs[key]=dirs[key]||{dir:f.dir,fs:[]}).fs.push(f); });
     const jobs=new Map(), add=(it,fs)=>{ if(!it||artIds(it).length||jobs.has(it.id)||M(it.id).oculto) return; jobs.set(it.id,{it,fs:fs.slice().sort(impSort)}); };
-    Object.keys(dirs).forEach(dir=>{ const fs=dirs[dir];
+    impMiss=[]; impMoved=[];
+    Object.keys(dirs).forEach(key=>{ const dir=dirs[key].dir, fs=dirs[key].fs;
       let m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Stories|Story)\s+(.+?)\s*-\s*\d{2}-\d{2}-\d{4}$/i);
-      if(m){ const d=m[1], sl=stSlug(m[3]); const cands=storiesOn(d).filter(x=>x.seqSlug&&(x.seqSlug===sl||x.seqSlug.startsWith(sl)||sl.startsWith(x.seqSlug)));
+      if(m){ const r=impStoryCands(m[1],m[3]), cands=r.cands;
+        if(!cands.length){ impMiss.push(dir); return; }
+        if(r.date!==m[1]) impMoved.push(dir+' → '+shortDay(r.date));
         const byN={}; fs.forEach(f=>{ const n=impNum(f.name); if(n!=null) (byN[n]=byN[n]||[]).push(f); });
         Object.keys(byN).forEach(n=>add(cands.find(x=>x.n===+n),byN[n])); return; }
       m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Post|Carrossel|Reels?|Arte)\b/i);
-      if(m){ const f0=feedOn(m[1]); if(f0.length===1) add(f0[0],fs); return; }
+      if(m){ const f0=feedOn(m[1]); if(f0.length===1) add(f0[0],fs); else impMiss.push(dir); return; }
       if(/black\s*friday/i.test(dir)&&!/^\d{4}/.test(dir)){ fs.forEach(f=>{ const k=f.name.match(/BlackFriday_0?(\d+)/i); if(!k) return; const re=new RegExp('^Arte 0?'+k[1]+'\\b','i');
         stories.filter(x=>re.test(x.copy||'')).forEach(x=>add(x,[f])); }); }
     });
@@ -1770,7 +1794,9 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   function impKick(){ if(loaded&&dbReady&&!impBooted){ impBooted=true; impBoot(); } }
   async function impRun(entries,quiet){
     if(!loaded||!dbReady||impBusy||RO()) return 0;
-    const jobs=impPlan(entries); if(!jobs.length){ if(!quiet) toast('Tudo em dia: nenhuma arte nova na pasta.'); return 0; }
+    const jobs=impPlan(entries), missTxt=impMiss.length?' Pastas sem item na planilha: '+impMiss.join('; ')+'.':'';
+    if(impMiss.length) console.warn('[artes] pastas sem item na planilha:',impMiss); if(impMoved.length) console.info('[artes] pastas ligadas a outro dia:',impMoved);
+    if(!jobs.length){ if(!quiet) toast('Tudo em dia: nenhuma arte nova na pasta.'+missTxt); return 0; }
     impBusy=true; const total=jobs.reduce((s,j)=>s+j.fs.length,0); let n=0, ok=0, fail=0;
     try{ for(const j of jobs){ const ids=[];
         try{ for(const f of j.fs){ toast('Importando arte '+(++n)+' de '+total+'…'); const file=await f.get(); ids.push((await assets.upload(file)).id); }
@@ -1779,7 +1805,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     finally{ impBusy=false; }
     renderAll();
     const days=[...new Set(jobs.map(j=>shortDay(j.it.date)))];
-    toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro.':''));
+    toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro.':'')+(quiet?'':missTxt));
     return ok;
   }
   /* Pasta conectada (Chrome/Edge no computador): escolhida uma vez, lida sozinha ao abrir o app, ao voltar para a aba e a cada 10 min */
@@ -1788,9 +1814,11 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const impGetDir=()=>idb('readonly',st=>st.get('dir')).catch(()=>null);
   const impSetDir=h=>idb('readwrite',st=>st.put(h,'dir'));
   let impDir=null, impState='';
-  async function impWalk(dir){ const out=[];
-    for await (const [name,h] of dir.entries()){ if(h.kind!=='directory') continue;
-      for await (const [fn,fh] of h.entries()){ if(fh.kind==='file'&&IMP_EXT.test(fn)) out.push({name:fn,dir:name,get:()=>fh.getFile()}); } }
+  /* Lê a pasta conectada e as subpastas (até 4 níveis), para funcionar tanto com "Instagram" quanto com "INSTAGRAM NOVEMBRO" conectada. */
+  async function impWalk(dir,path,depth){ const out=[]; path=path||''; depth=depth||0;
+    for await (const [name,h] of dir.entries()){
+      if(h.kind==='directory'){ if(depth<4&&!/^1 - J/i.test(name)) out.push(...await impWalk(h,path?path+'/'+name:name,depth+1)); continue; }
+      if(depth>0&&IMP_EXT.test(name)){ const fh=h; out.push({name,dir:path.split('/').pop(),path,get:()=>fh.getFile()}); } }
     return out; }
   async function impScan(quiet){
     if(!impDir) return; let p; try{ p=await impDir.queryPermission({mode:'read'}); }catch(_){ p='denied'; }
@@ -2000,7 +2028,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   document.addEventListener('click',e=>{ if(!RO()) return; const el=e.target.closest&&e.target.closest('[data-act]'); if(el&&EDIT.has(el.dataset.act)){ e.preventDefault(); e.stopImmediatePropagation(); toast('Somente visualização'); } },true);
   document.addEventListener('pointerdown',e=>{ if(RO()&&e.target.closest&&e.target.closest('.grip')) e.stopImmediatePropagation(); },true);
   window.addEventListener('belle-role',()=>renderAll());
-  $('#imp-dir').addEventListener('change',e=>{ const fs=[...e.target.files].map(f=>{ const p=(f.webkitRelativePath||f.name).split('/'); return {name:f.name,dir:p.length>2?p[p.length-2]:'',get:async()=>f}; }); if(fs.length) impRun(fs,false); });
+  $('#imp-dir').addEventListener('change',e=>{ const fs=[...e.target.files].map(f=>{ const p=(f.webkitRelativePath||f.name).split('/'); return {name:f.name,dir:p.length>2?p[p.length-2]:'',path:p.slice(1,-1).join('/'),get:async()=>f}; }); if(fs.length) impRun(fs,false); });
   document.addEventListener('click',async e=>{
     { const qm=$('#qmenu'); if(qm&&!qm.hidden&&!(e.target.closest&&e.target.closest('.qidea'))){ qm.hidden=true; $('[data-act="qmenu"]').setAttribute('aria-expanded','false'); } }
     if(e.target.closest&&e.target.closest('select.st-sel')) return;

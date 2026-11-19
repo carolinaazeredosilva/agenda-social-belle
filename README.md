@@ -6,7 +6,7 @@ Agenda de redes sociais da Belle Software, para usar no celular.
 - `shim.js`: login Google, leitura da planilha e armazenamento no Drive do app.
 - `config.js`: ID do cliente Google (preencher).
 - `seed.json` e `artmap.json`: dados de partida e mapa das artes (não contêm imagens).
-- Importação das artes: abrir `./#importar` no computador.
+- Importação das artes: no computador, "Conectar pasta de artes" (pode ser a pasta Instagram ou uma subpasta como INSTAGRAM NOVEMBRO; subpastas são lidas e "1 - Já postados" é ignorada). Pastas sem item correspondente na planilha aparecem no aviso ao importar.
 
 ## Aba Stories (formato desde 13/11/2026)
 

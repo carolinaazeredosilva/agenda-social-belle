@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261123193224">
+<meta name="belle-ver" content="20261124202337">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -90,6 +90,10 @@ svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .chip{border:1px solid var(--line);border-radius:999px;padding:1px 9px;font-size:12px;font-weight:600;color:var(--body);display:inline-flex;gap:5px;align-items:center;background:transparent;min-height:24px;font-variant-numeric:tabular-nums}
 .chip.manual{border-color:var(--accent);color:var(--accent)}
+.chip.upd{border-color:var(--s-prod);color:var(--ink);background:color-mix(in srgb,var(--s-prod) 18%,transparent)}
+.chip.upd .i{width:13px;height:13px}
+#tab-impart.upd{color:var(--s-prod)}
+.impu .go .i{width:13px;height:13px;vertical-align:-2px}
 .chip.time{color:var(--ink)}
 .chip.add{border-style:dashed;color:var(--muted)}
 .pill{font-size:11px;font-weight:700;letter-spacing:.02em;border-radius:999px;padding:1px 9px;color:var(--pc,var(--muted));border:1px solid var(--pc,var(--line));white-space:nowrap}
@@ -460,7 +464,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .prog{padding:28px}.prog h2{font-size:24px;margin:12px 0 8px}.prog p{margin:0 0 12px}.prog ul{margin:0 0 14px;padding-left:18px}.prog li{margin-bottom:6px}
 .soonb{display:inline-block;font:700 11px var(--font-display);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);border-radius:999px;padding:4px 12px}
 /* somente visualização */
-.ro [data-act="done"],.ro [data-act="aadd"],.ro [data-act="arep"],.ro [data-act="adel"],.ro .mvb,.ro [data-act="shide"],.ro [data-act="unhide"],.ro .grip,.ro [data-act="org"],.ro [data-act="galarm"],.ro [data-act="gday"],.ro [data-act="gtoday"],.ro [data-act="unalarm"],.ro [data-act="sugg"],.ro [data-act="dsched"],.ro [data-act="sreset"],.ro #gcal{display:none!important}
+.ro [data-act="done"],.ro [data-act="aadd"],.ro [data-act="arep"],.ro [data-act="impre"],.ro [data-act="impig"],.ro [data-act="adel"],.ro .mvb,.ro [data-act="shide"],.ro [data-act="unhide"],.ro .grip,.ro [data-act="org"],.ro [data-act="galarm"],.ro [data-act="gday"],.ro [data-act="gtoday"],.ro [data-act="unalarm"],.ro [data-act="sugg"],.ro [data-act="dsched"],.ro [data-act="sreset"],.ro #gcal{display:none!important}
 .ro .st-sel,.ro .tchip,.ro .tin,.ro #panel input,.ro #panel textarea,.ro #panel select,.ro #dpanel input,.ro [data-act="status"],.ro [data-act="chk"]{pointer-events:none}
 .ro #panel input,.ro #panel textarea,.ro #panel select{opacity:.75}
 .ro .crumb{color:var(--accent)}
@@ -933,6 +937,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   function reg(text){ const k='c'+Object.keys(copyReg).length; copyReg[k]=text; return k; }
   const pill=s=>'<span class="pill" data-s="'+esc(s)+'">'+esc(s)+'</span>';
   const artIds=it=>(M(it.id).art||[]);
+  let impUpd=new Map(); /* artes que mudaram na pasta de artes (ver importar artes) */
   const isVid=id=>/\.(mp4|webm|mov|m4v|qt)$/i.test(String(id||''));
   const artTag=(id,alt,lazy)=>isVid(id)?'<video class="vtap" data-vblob="'+esc(id)+'" muted playsinline loop preload="metadata" aria-label="'+esc(alt||'Vídeo')+'"></video><span class="vplay" aria-hidden="true">▶</span>':'<img src="'+PX+'" data-blob="'+esc(id)+'" alt="'+esc(alt||'')+'"'+(lazy?' loading="lazy"':'')+'>';
   const thumbHTML=it=>{ const a=artIds(it)[0]; return a?'<div class="thumb">'+artTag(a,'',1)+'</div>':'<div class="thumb">'+ic.img+'</div>'; };
@@ -1018,6 +1023,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const chips=[];
     stk.forEach(s=>chips.push('<span class="chip manual">'+esc(s)+'</span>'));
     chips.push('<label class="chip time tin'+(m.hora?'':' add')+'" title="Alterar horário">'+ic.clock+'<input type="time" class="tchip" data-id="'+esc(it.id)+'" value="'+esc(m.hora||'')+'" aria-label="Horário de '+esc(it.kind==='feed'?'post':itemLabel(it))+'"></label>');
+    if(impUpd.has(it.id)) chips.push('<span class="chip upd" title="A arte mudou na pasta. Abra para recarregar.">'+ic.refresh+'arte nova</span>');
     if(artIds(it).length) chips.push('<span class="chip">'+ic.img+artIds(it).length+'</span>'); else if(m.semArte) chips.push('<span class="chip">'+ic.swap+'repost</span>');
     return '<div class="card'+(it.kind==='story'?' st':'')+'" style="cursor:pointer" role="button" tabindex="0" data-act="open" data-id="'+esc(it.id)+'">'
       +'<button class="ck" data-act="done" data-id="'+esc(it.id)+'" aria-pressed="'+(!!m.feito)+'" aria-label="'+(m.feito?'Desmarcar como pronto':'Marcar como pronto')+'" title="'+(m.feito?'Pronto ✓ (toque para desmarcar)':'Marcar como pronto')+'">'+ic.check+'</button>'
@@ -1752,7 +1758,9 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
      Pasta "Black Friday": Story_BlackFriday_0N vai para todo story cuja copy começa com "Arte 0N".
      As pastas podem estar dentro de subpastas (ex.: Instagram/INSTAGRAM NOVEMBRO/...). "1 - Já postados" é ignorada.
      Nome da sequência parecido também vale ("Black Friday" = "BF"); se a sequência mudou de dia na planilha, procura até 7 dias antes ou depois.
-     Só preenche itens que ainda não têm arte. Nada é apagado. */
+     Itens sem arte recebem a arte sozinhos. Itens que já têm arte não são trocados sozinhos: se o arquivo mudou na pasta
+     (outro tamanho, data de modificação ou número de arquivos), o item ganha o aviso "Arte nova na pasta" com o botão "Recarregar da pasta".
+     Nada é apagado. */
   const IMP_EXT=/\.(png|jpe?g|webp|mp4|mov)$/i;
   const impNum=n=>{ const m=n.replace(IMP_EXT,'').match(/-\s*(\d{1,2})(?:\s+[^-]*)?$/); return m?+m[1]:null; };
   const impSort=(a,b)=>(impNum(a.name)||0)-(impNum(b.name)||0)||(/\d\.\w+$/.test(b.name)-/\d\.\w+$/.test(a.name))||a.name.localeCompare(b.name);
@@ -1774,11 +1782,40 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const ds=Object.keys(near); if(ds.length===1) return {cands:near[ds[0]],date:ds[0]};
     return {cands:[],date:d};
   }
-  let impMiss=[], impMoved=[];
+  let impMiss=[], impMoved=[], impHave=[];
+  /* Itens que já têm arte e cuja arte na pasta mudou: id -> {fs, sig, when}. Vira o aviso "Arte nova na pasta" no item. */
+  let impUpdSeen='';
+  const impSig=fl=>fl.map(f=>(f.name||'')+'|'+f.size+'|'+f.lastModified).join('\n');
+  /* Compara a arte da pasta com a do app. Com assinatura salva (artSrc), compara nome, tamanho e data do arquivo.
+     Itens importados antes desta versão não têm assinatura: compara o número de arquivos e o tamanho de cada um com a arte salva,
+     e se for igual guarda a assinatura para as próximas vezes. */
+  async function impCheck(have){
+    const out=new Map();
+    for(const h of have){ const it=h.it, m=M(it.id); let files;
+      try{ files=await Promise.all(h.fs.map(f=>f.get())); }catch(_){ continue; }
+      const sig=impSig(files), when=Math.max(...files.map(f=>+f.lastModified||0));
+      if(m.artSrc){ if(m.artSrc!==sig&&m.artSkip!==sig) out.set(it.id,{fs:h.fs,sig,when}); continue; }
+      if(m.artSkip===sig) continue;
+      const arts=artIds(it); let same=arts.length===files.length;
+      if(same){ try{ for(let i=0;i<arts.length&&same;i++){ const b=await (await fetch('/_blob/'+arts[i])).blob(); if(b.size!==files[i].size) same=false; } }catch(_){ continue; } }
+      if(same) saveItem(it.id,{artSrc:sig}); else out.set(it.id,{fs:h.fs,sig,when});
+    }
+    return out;
+  }
+  async function impReload(id){
+    const u=impUpd.get(id), it=itemById(id); if(!u||!it||!assets||impBusy) return; impBusy=true;
+    try{ const files=[], ids=[]; for(const f of u.fs) files.push(await f.get());
+      let n=0; for(const file of files){ toast('Recarregando arte '+(++n)+' de '+files.length+'…'); ids.push((await assets.upload(file)).id); }
+      await saveItem(id,{art:ids,artSrc:impSig(files),artSkip:null},true); impUpd.delete(id); toast('Arte recarregada da pasta');
+    }catch(e){ toast('Não consegui recarregar a arte. Tente de novo.'); }
+    finally{ impBusy=false; }
+    renderAll(); renderSide(); if(openId) renderSheet();
+  }
+  function impIgnore(id){ const u=impUpd.get(id); if(!u) return; saveItem(id,{artSkip:u.sig},true); impUpd.delete(id); renderAll(); renderSide(); if(openId) renderSheet(); toast('Ok, mantive a arte que já estava aqui'); }
   function impPlan(entries){
     const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/(^|\/)1 - J/i.test(f.path||f.dir||'')) return; const key=f.path||f.dir; (dirs[key]=dirs[key]||{dir:f.dir,fs:[]}).fs.push(f); });
-    const jobs=new Map(), add=(it,fs)=>{ if(!it||artIds(it).length||jobs.has(it.id)||M(it.id).oculto) return; jobs.set(it.id,{it,fs:fs.slice().sort(impSort)}); };
-    impMiss=[]; impMoved=[];
+    const jobs=new Map(), have=new Map(), add=(it,fs)=>{ if(!it||jobs.has(it.id)||have.has(it.id)||M(it.id).oculto) return; (artIds(it).length?have:jobs).set(it.id,{it,fs:fs.slice().sort(impSort)}); };
+    impMiss=[]; impMoved=[]; impHave=[...have.values()];
     Object.keys(dirs).forEach(key=>{ const dir=dirs[key].dir, fs=dirs[key].fs;
       let m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Stories|Story)\s+(.+?)\s*-\s*\d{2}-\d{2}-\d{4}$/i);
       if(m){ const r=impStoryCands(m[1],m[3]), cands=r.cands;
@@ -1802,18 +1839,22 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   function impKick(){ if(loaded&&dbReady&&!impBooted){ impBooted=true; impBoot(); } }
   async function impRun(entries,quiet){
     if(!loaded||!dbReady||impBusy||RO()) return 0;
-    const jobs=impPlan(entries), missTxt=impMiss.length?' Pastas sem item na planilha: '+impMiss.join('; ')+'.':'';
+    const jobs=impPlan(entries), have=impHave, missTxt=impMiss.length?' Pastas sem item na planilha: '+impMiss.join('; ')+'.':'';
     if(impMiss.length) console.warn('[artes] pastas sem item na planilha:',impMiss); if(impMoved.length) console.info('[artes] pastas ligadas a outro dia:',impMoved);
-    if(!jobs.length){ if(!quiet) toast('Tudo em dia: nenhuma arte nova na pasta.'+missTxt); return 0; }
     impBusy=true; const total=jobs.reduce((s,j)=>s+j.fs.length,0); let n=0, ok=0, fail=0;
-    try{ for(const j of jobs){ const ids=[];
-        try{ for(const f of j.fs){ toast('Importando arte '+(++n)+' de '+total+'…'); const file=await f.get(); ids.push((await assets.upload(file)).id); }
-          await saveItem(j.it.id,{art:ids},true); ok++; }
-        catch(e){ fail++; } } }
+    try{ for(const j of jobs){ const ids=[], files=[];
+        try{ for(const f of j.fs){ toast('Importando arte '+(++n)+' de '+total+'…'); const file=await f.get(); files.push(file); ids.push((await assets.upload(file)).id); }
+          await saveItem(j.it.id,{art:ids,artSrc:impSig(files)},true); ok++; }
+        catch(e){ fail++; } }
+      impUpd=await impCheck(have); }
     finally{ impBusy=false; }
-    renderAll();
-    const days=[...new Set(jobs.map(j=>shortDay(j.it.date)))];
-    toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro.':'')+(quiet?'':missTxt));
+    renderAll(); renderSide(); if(openId) renderSheet();
+    const nu=impUpd.size, key=[...impUpd.keys()].sort().join(','), fresh=key&&key!==impUpdSeen; impUpdSeen=key;
+    const updTxt=nu?' '+nu+(nu===1?' item tem arte nova':' itens têm arte nova')+' na pasta: abra e toque em "Recarregar da pasta".':'';
+    if(jobs.length){ const days=[...new Set(jobs.map(j=>shortDay(j.it.date)))];
+      toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro.':'')+updTxt+(quiet?'':missTxt)); }
+    else if(nu&&(fresh||!quiet)) toast(updTxt.trim());
+    else if(!quiet) toast('Tudo em dia: nenhuma arte nova na pasta.'+missTxt);
     return ok;
   }
   /* Pasta conectada (Chrome/Edge no computador): escolhida uma vez, lida sozinha ao abrir o app, ao voltar para a aba e a cada 10 min */
@@ -1843,8 +1884,9 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }catch(e){ if(e&&e.name!=='AbortError') toast('Não consegui conectar a pasta.'); }
   }
   function renderSide(){ const b=$('#tab-impart'); if(!b) return; const lb=b.querySelector('.lb');
-    if(lb) lb.textContent=impDir?(impState==='perm'?'Liberar pasta de artes':'Artes: pasta conectada'):'Conectar pasta de artes';
-    b.classList.toggle('warn',impState==='perm'); }
+    const nu=impUpd.size;
+    if(lb) lb.textContent=impDir?(impState==='perm'?'Liberar pasta de artes':nu?'Artes: '+nu+(nu===1?' atualizada':' atualizadas')+' na pasta':'Artes: pasta conectada'):'Conectar pasta de artes';
+    b.classList.toggle('warn',impState==='perm'); b.classList.toggle('upd',!!nu&&impState!=='perm'); }
   async function impBoot(){ if(!window.showDirectoryPicker) return; impDir=await impGetDir(); renderSide(); if(impDir) impScan(true); }
   setInterval(()=>{ if(impDir&&document.visibilityState==='visible') impScan(true); },10*60*1000);
   document.addEventListener('visibilitychange',()=>{ if(impDir&&document.visibilityState==='visible') impScan(true); });
@@ -1908,6 +1950,9 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
         +'<p class="hint">Fica no topo da grade do Feed, como no Instagram (até 3 fixados).</p></div>'; }
     // artes
     h+='<div class="blk"><h4>Artes</h4>';
+    { const u=impUpd.get(it.id); if(u&&!RO()){ const d=new Date(u.when), nf=u.fs.length;
+      h+='<div class="ur impu"><i class="dot warm"></i><span class="tx">Arte nova na pasta<small>'+nf+(nf===1?' arquivo':' arquivos')+(u.when?', alterado em '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+' às '+pad(d.getHours())+':'+pad(d.getMinutes()):'')+'. A arte aqui está diferente da que está na pasta.</small></span>'
+        +'<button class="go" data-act="impre">'+ic.refresh+' Recarregar da pasta</button><button class="linkbtn" data-act="impig" style="padding:0 4px">Manter a atual</button></div>'; } }
     if(arts.length){ h+='<div class="arts">'+arts.map((a,i)=>'<div class="art">'+artTag(a,'Arte '+(i+1))
       +'<span class="no">'+(i+1)+'</span>'+(arts.length>1?'<span class="mvb"><button data-act="amove" data-i="'+i+'" data-n="-1" aria-label="Mover arte '+(i+1)+' para antes"'+(i===0?' disabled':'')+'>'+ic.left+'</button><button data-act="amove" data-i="'+i+'" data-n="1" aria-label="Mover arte '+(i+1)+' para depois"'+(i===arts.length-1?' disabled':'')+'>'+ic.right+'</button></span>':'')+'<div class="acts"><button data-act="dl" data-i="'+i+'" aria-label="Baixar arte '+(i+1)+'">'+ic.dl+'</button>'+(assets?'<button data-act="arep" data-i="'+i+'" aria-label="Substituir arte '+(i+1)+'">'+ic.swap+'</button>':'')+'<button data-act="adel" data-i="'+i+'" aria-label="Remover arte '+(i+1)+'">'+ic.trash+'</button></div></div>').join('')+'</div>'; }
     else h+=m.semArte?'<div class="ur"><i class="dot ok"></i><span class="tx">Sem arte: repost<small>Este item não precisa de arte (por exemplo, repostar o post do feed nos stories).</small></span><button class="go" data-act="noart">Desfazer</button></div>'
@@ -2173,6 +2218,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       return; }
     if(act==='noart'){ const on=!M(it.id).semArte; await saveItem(it.id,{semArte:on},true); renderAll(); renderSheet(); toast(on?'Marcado como sem arte (repost)':'Volta a precisar de arte'); return; }
     if(act==='amove'){ const a=artIds(it).slice(), i=+el.dataset.i, k=i+Number(el.dataset.n); if(k<0||k>=a.length) return; const tmp=a[i]; a[i]=a[k]; a[k]=tmp; await saveItem(it.id,{art:a},true); renderAll(); renderSheet(); return; }
+    if(act==='impre'){ impReload(it.id); return; }
+    if(act==='impig'){ impIgnore(it.id); return; }
     if(act==='arep'){ replaceIdx=+el.dataset.i; uploadFor=it.id; $('#file-in').click(); return; }
     if(act==='shide'){
       if(el.dataset.armed!=='1'){ el.dataset.armed='1'; el.classList.add('armed'); toast('Toque de novo para excluir do app'); setTimeout(()=>{ if(el.isConnected){ el.dataset.armed='0'; el.classList.remove('armed'); } },3500); return; }

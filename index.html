@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261124204051">
+<meta name="belle-ver" content="20261124204338">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -94,6 +94,9 @@ svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke
 .chip.upd .i{width:13px;height:13px}
 #tab-impart.upd{color:var(--s-prod)}
 .impu .go .i{width:13px;height:13px;vertical-align:-2px}
+.btn.imph{flex:none;min-height:34px;padding:6px 12px;font-size:12px}.btn.imph .i{width:14px;height:14px}
+.btn.imph.on{border-color:var(--s-prod);background:color-mix(in srgb,var(--s-prod) 18%,var(--panel))}
+@media (max-width:520px){.btn.imph span{display:none}}
 .chip.time{color:var(--ink)}
 .chip.add{border-style:dashed;color:var(--muted)}
 .pill{font-size:11px;font-weight:700;letter-spacing:.02em;border-radius:999px;padding:1px 9px;color:var(--pc,var(--muted));border:1px solid var(--pc,var(--line));white-space:nowrap}
@@ -464,7 +467,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .prog{padding:28px}.prog h2{font-size:24px;margin:12px 0 8px}.prog p{margin:0 0 12px}.prog ul{margin:0 0 14px;padding-left:18px}.prog li{margin-bottom:6px}
 .soonb{display:inline-block;font:700 11px var(--font-display);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);border-radius:999px;padding:4px 12px}
 /* somente visualização */
-.ro [data-act="done"],.ro [data-act="aadd"],.ro [data-act="arep"],.ro [data-act="impre"],.ro [data-act="impig"],.ro [data-act="adel"],.ro .mvb,.ro [data-act="shide"],.ro [data-act="unhide"],.ro .grip,.ro [data-act="org"],.ro [data-act="galarm"],.ro [data-act="gday"],.ro [data-act="gtoday"],.ro [data-act="unalarm"],.ro [data-act="sugg"],.ro [data-act="dsched"],.ro [data-act="sreset"],.ro #gcal{display:none!important}
+.ro [data-act="done"],.ro [data-act="aadd"],.ro [data-act="arep"],.ro [data-act="impre"],.ro [data-act="impitem"],.ro [data-act="impig"],.ro [data-act="adel"],.ro .mvb,.ro [data-act="shide"],.ro [data-act="unhide"],.ro .grip,.ro [data-act="org"],.ro [data-act="galarm"],.ro [data-act="gday"],.ro [data-act="gtoday"],.ro [data-act="unalarm"],.ro [data-act="sugg"],.ro [data-act="dsched"],.ro [data-act="sreset"],.ro #gcal{display:none!important}
 .ro .st-sel,.ro .tchip,.ro .tin,.ro #panel input,.ro #panel textarea,.ro #panel select,.ro #dpanel input,.ro [data-act="status"],.ro [data-act="chk"]{pointer-events:none}
 .ro #panel input,.ro #panel textarea,.ro #panel select{opacity:.75}
 .ro .crumb{color:var(--accent)}
@@ -1811,6 +1814,21 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     finally{ impBusy=false; }
     renderAll(); renderSide(); if(openId) renderSheet();
   }
+  /* Botão "Atualizar artes" no topo do item: lê a pasta na hora e, se a arte deste item mudou, já recarrega. */
+  async function impItem(id){
+    if(!window.showDirectoryPicker||!impDir){ impConnect(); return; }
+    if(impBusy){ toast('Já estou lendo a pasta, um instante…'); return; }
+    let p; try{ p=await impDir.queryPermission({mode:'read'}); if(p!=='granted') p=await impDir.requestPermission({mode:'read'}); }catch(_){ p='denied'; }
+    if(p!=='granted'){ impState='perm'; renderSide(); toast('Libere o acesso à pasta de artes para atualizar.'); return; }
+    impState='on'; renderSide(); toast('Lendo a pasta de artes…');
+    const had=artIds(itemById(id)||{id}).length; let entries;
+    try{ entries=await impWalk(impDir); }catch(e){ toast('Não consegui ler a pasta: '+(e&&e.message||e)); return; }
+    await impRun(entries,true);
+    if(impUpd.has(id)){ await impReload(id); return; }
+    const it=itemById(id); if(!it) return;
+    if(!had&&artIds(it).length){ toast('Arte trazida da pasta'); return; }
+    toast(impHave.some(h=>h.it.id===id)?'Já está tudo igual à pasta.':'Não achei a pasta deste item na pasta de artes.');
+  }
   function impIgnore(id){ const u=impUpd.get(id); if(!u) return; saveItem(id,{artSkip:u.sig},true); impUpd.delete(id); renderAll(); renderSide(); if(openId) renderSheet(); toast('Ok, mantive a arte que já estava aqui'); }
   function impPlan(entries){
     const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/(^|\/)1 - J/i.test(f.path||f.dir||'')) return; const key=f.path||f.dir; (dirs[key]=dirs[key]||{dir:f.dir,fs:[]}).fs.push(f); });
@@ -1936,6 +1954,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const st0=stickersOf(it.sticker);
     const sb=sibsOf(it), si=sb.findIndex(x=>x.id===it.id);
     let h='<div class="ph-head"><button class="iconbtn" data-act="close" aria-label="Fechar">'+ic.x+'</button><h2>'+esc(itemLabel(it))+' · '+shortDay(it.date)+(sb.length>1?' <span style="color:var(--muted);font-weight:600;font-size:13px">('+(si+1)+' de '+sb.length+')</span>':'')+'</h2>'
+      +(assets?'<button class="btn imph'+(impUpd.has(it.id)?' on':'')+'" data-act="impitem" title="Lê a pasta de artes de novo e traz a versão mais nova deste item">'+ic.refresh+'<span>Atualizar artes</span></button>':'')
       +(sb.length>1?'<button class="iconbtn" data-act="inav" data-n="-1" aria-label="Item anterior"'+(si<=0?' disabled style="opacity:.35"':'')+'>'+ic.left+'</button><button class="iconbtn" data-act="inav" data-n="1" aria-label="Próximo item"'+(si>=sb.length-1?' disabled style="opacity:.35"':'')+'>'+ic.right+'</button>':'')+'</div>';
     { const na=arts.length, rp=!!m.semArte&&!arts.length, pub=st==='Publicado', ag=st==='Agendado', al=alarmOk(it);
       const na2=needAlarm(it), lv=pub?'ok':(ag&&(!na2||al||!m.hora)?'ok':ag||m.hora?'warm':'hot');
@@ -2220,6 +2239,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='noart'){ const on=!M(it.id).semArte; await saveItem(it.id,{semArte:on},true); renderAll(); renderSheet(); toast(on?'Marcado como sem arte (repost)':'Volta a precisar de arte'); return; }
     if(act==='amove'){ const a=artIds(it).slice(), i=+el.dataset.i, k=i+Number(el.dataset.n); if(k<0||k>=a.length) return; const tmp=a[i]; a[i]=a[k]; a[k]=tmp; await saveItem(it.id,{art:a},true); renderAll(); renderSheet(); return; }
     if(act==='impre'){ impReload(it.id); return; }
+    if(act==='impitem'){ impItem(it.id); return; }
     if(act==='impig'){ impIgnore(it.id); return; }
     if(act==='arep'){ replaceIdx=+el.dataset.i; uploadFor=it.id; $('#file-in').click(); return; }
     if(act==='shide'){

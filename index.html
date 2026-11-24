@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261124204338">
+<meta name="belle-ver" content="20261124204637">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1810,25 +1810,28 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     try{ const files=[], ids=[]; for(const f of u.fs) files.push(await f.get());
       let n=0; for(const file of files){ toast('Recarregando arte '+(++n)+' de '+files.length+'…'); ids.push((await assets.upload(file)).id); }
       await saveItem(id,{art:ids,artSrc:impSig(files),artSkip:null},true); impUpd.delete(id); toast('Arte recarregada da pasta');
-    }catch(e){ toast('Não consegui recarregar a arte. Tente de novo.'); }
+    }catch(e){ console.error('[artes] recarregar',e); toast('Não consegui recarregar a arte: '+(e&&(e.message||e.code)||e)); }
     finally{ impBusy=false; }
     renderAll(); renderSide(); if(openId) renderSheet();
   }
   /* Botão "Atualizar artes" no topo do item: lê a pasta na hora e, se a arte deste item mudou, já recarrega. */
-  async function impItem(id){
+  async function impItem(id){ try{ await impItem1(id); }catch(e){ console.error('[artes] atualizar item',e); toast('Erro ao atualizar artes: '+(e&&e.message||e)); } }
+  async function impItem1(id){
     if(!window.showDirectoryPicker||!impDir){ impConnect(); return; }
-    if(impBusy){ toast('Já estou lendo a pasta, um instante…'); return; }
     let p; try{ p=await impDir.queryPermission({mode:'read'}); if(p!=='granted') p=await impDir.requestPermission({mode:'read'}); }catch(_){ p='denied'; }
     if(p!=='granted'){ impState='perm'; renderSide(); toast('Libere o acesso à pasta de artes para atualizar.'); return; }
     impState='on'; renderSide(); toast('Lendo a pasta de artes…');
-    const had=artIds(itemById(id)||{id}).length; let entries;
-    try{ entries=await impWalk(impDir); }catch(e){ toast('Não consegui ler a pasta: '+(e&&e.message||e)); return; }
-    await impRun(entries,true);
-    if(impUpd.has(id)){ await impReload(id); return; }
-    const it=itemById(id); if(!it) return;
-    if(!had&&artIds(it).length){ toast('Arte trazida da pasta'); return; }
-    toast(impHave.some(h=>h.it.id===id)?'Já está tudo igual à pasta.':'Não achei a pasta deste item na pasta de artes.');
+    let entries; try{ entries=await impWalk(impDir); }catch(e){ toast('Não consegui ler a pasta: '+(e&&e.message||e)); return; }
+    /* Olha só este item, sem esperar a leitura completa da pasta (que pode estar rodando em segundo plano). */
+    const jobs=impPlan(entries), job=jobs.find(j=>j.it.id===id), h=impHave.find(x=>x.it.id===id);
+    if(job){ await impIdle(); await impRun(entries,false); return; }
+    if(!h){ toast('Não achei a pasta deste item na pasta de artes.'); return; }
+    toast('Comparando com a pasta…');
+    const r=await impCheck([h]), u=r.get(id);
+    if(!u){ impUpd.delete(id); renderAll(); renderSide(); if(openId) renderSheet(); toast('Já está tudo igual à pasta.'); return; }
+    impUpd.set(id,u); await impIdle(); await impReload(id);
   }
+  const impIdle=()=>new Promise(res=>{ if(!impBusy) return res(); toast('Terminando a leitura da pasta…'); const t=setInterval(()=>{ if(!impBusy){ clearInterval(t); res(); } },300); });
   function impIgnore(id){ const u=impUpd.get(id); if(!u) return; saveItem(id,{artSkip:u.sig},true); impUpd.delete(id); renderAll(); renderSide(); if(openId) renderSheet(); toast('Ok, mantive a arte que já estava aqui'); }
   function impPlan(entries){
     const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/(^|\/)1 - J/i.test(f.path||f.dir||'')) return; const key=f.path||f.dir; (dirs[key]=dirs[key]||{dir:f.dir,fs:[]}).fs.push(f); });

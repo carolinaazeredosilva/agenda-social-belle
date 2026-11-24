@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261124202337">
+<meta name="belle-ver" content="20261124204051">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1815,7 +1815,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   function impPlan(entries){
     const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/(^|\/)1 - J/i.test(f.path||f.dir||'')) return; const key=f.path||f.dir; (dirs[key]=dirs[key]||{dir:f.dir,fs:[]}).fs.push(f); });
     const jobs=new Map(), have=new Map(), add=(it,fs)=>{ if(!it||jobs.has(it.id)||have.has(it.id)||M(it.id).oculto) return; (artIds(it).length?have:jobs).set(it.id,{it,fs:fs.slice().sort(impSort)}); };
-    impMiss=[]; impMoved=[]; impHave=[...have.values()];
+    impMiss=[]; impMoved=[];
     Object.keys(dirs).forEach(key=>{ const dir=dirs[key].dir, fs=dirs[key].fs;
       let m=dir.match(/^(\d{4}-\d{2}-\d{2})\s*-\s*(Stories|Story)\s+(.+?)\s*-\s*\d{2}-\d{2}-\d{4}$/i);
       if(m){ const r=impStoryCands(m[1],m[3]), cands=r.cands;
@@ -1833,6 +1833,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       if(/black\s*friday/i.test(dir)&&!/^\d{4}/.test(dir)){ fs.forEach(f=>{ const k=f.name.match(/BlackFriday_0?(\d+)/i); if(!k) return; const re=new RegExp('^Arte 0?'+k[1]+'\\b','i');
         stories.filter(x=>re.test(x.copy||'')).forEach(x=>add(x,[f])); }); }
     });
+    impHave=[...have.values()];
     return [...jobs.values()].sort((a,b)=>a.it.date<b.it.date?-1:a.it.date>b.it.date?1:0);
   }
   let impBusy=false, impBooted=false;

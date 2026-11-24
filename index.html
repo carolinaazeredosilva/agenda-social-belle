@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261124204637">
+<meta name="belle-ver" content="20261124205408">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1816,12 +1816,23 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   }
   /* Botão "Atualizar artes" no topo do item: lê a pasta na hora e, se a arte deste item mudou, já recarrega. */
   async function impItem(id){ try{ await impItem1(id); }catch(e){ console.error('[artes] atualizar item',e); toast('Erro ao atualizar artes: '+(e&&e.message||e)); } }
+  /* O acesso guardado à pasta às vezes trava no Chrome (as chamadas nunca respondem). Por isso tudo tem tempo limite,
+     e quando trava o app pede para escolher a pasta de novo (impStuck). */
+  const impT=(pr,ms)=>Promise.race([pr,new Promise((_,rej)=>setTimeout(()=>rej(Object.assign(new Error('timeout'),{name:'Timeout'})),ms))]);
+  let impStuck=false;
+  async function impPick(){
+    const h=await window.showDirectoryPicker({id:'belle-instagram',mode:'read'}); impDir=h; impStuck=false; await impSetDir(h).catch(()=>{}); return h; }
   async function impItem1(id){
     if(!window.showDirectoryPicker||!impDir){ impConnect(); return; }
-    let p; try{ p=await impDir.queryPermission({mode:'read'}); if(p!=='granted') p=await impDir.requestPermission({mode:'read'}); }catch(_){ p='denied'; }
+    let p='stuck';
+    if(!impStuck){ try{ p=await impT(impDir.queryPermission({mode:'read'}),2000); if(p!=='granted') p=await impT(impDir.requestPermission({mode:'read'}),60000); }catch(e){ p=e&&e.name==='Timeout'?'stuck':'denied'; } }
+    if(p==='stuck'){ impStuck=true;
+      try{ toast('Escolha a pasta Instagram para eu ler as artes de novo.'); await impPick(); p='granted'; }
+      catch(e){ if(e&&e.name==='AbortError'){ toast('Nenhuma pasta escolhida.'); return; } toast('A pasta de artes travou. Clique em "Atualizar artes" de novo e escolha a pasta Instagram.'); return; } }
     if(p!=='granted'){ impState='perm'; renderSide(); toast('Libere o acesso à pasta de artes para atualizar.'); return; }
     impState='on'; renderSide(); toast('Lendo a pasta de artes…');
-    let entries; try{ entries=await impWalk(impDir); }catch(e){ toast('Não consegui ler a pasta: '+(e&&e.message||e)); return; }
+    let entries; try{ entries=await impT(impWalk(impDir),60000); }
+    catch(e){ if(e&&e.name==='Timeout'){ impStuck=true; toast('A pasta de artes não respondeu. Clique em "Atualizar artes" de novo e escolha a pasta Instagram.'); } else toast('Não consegui ler a pasta: '+(e&&e.message||e)); return; }
     /* Olha só este item, sem esperar a leitura completa da pasta (que pode estar rodando em segundo plano). */
     const jobs=impPlan(entries), job=jobs.find(j=>j.it.id===id), h=impHave.find(x=>x.it.id===id);
     if(job){ await impIdle(); await impRun(entries,false); return; }
@@ -1892,16 +1903,18 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       if(depth>0&&IMP_EXT.test(name)){ const fh=h; out.push({name,dir:path.split('/').pop(),path,get:()=>fh.getFile()}); } }
     return out; }
   async function impScan(quiet){
-    if(!impDir) return; let p; try{ p=await impDir.queryPermission({mode:'read'}); }catch(_){ p='denied'; }
+    if(!impDir||impStuck) { if(impStuck){ impState='perm'; renderSide(); } return; }
+    let p; try{ p=await impT(impDir.queryPermission({mode:'read'}),4000); }catch(e){ p='denied'; if(e&&e.name==='Timeout') impStuck=true; }
     if(p!=='granted'){ impState='perm'; renderSide(); return; }
     impState='on'; renderSide();
-    try{ await impRun(await impWalk(impDir),quiet); }catch(e){ if(!quiet) toast('Não consegui ler a pasta: '+(e&&e.message||e)); }
+    try{ await impRun(await impT(impWalk(impDir),60000),quiet); }catch(e){ if(e&&e.name==='Timeout'){ impStuck=true; impState='perm'; renderSide(); } if(!quiet) toast(e&&e.name==='Timeout'?'A pasta de artes não respondeu. Clique em "Liberar pasta de artes" e escolha a pasta Instagram.':'Não consegui ler a pasta: '+(e&&e.message||e)); }
   }
   async function impConnect(){
     if(!window.showDirectoryPicker){ $('#imp-dir').value=''; $('#imp-dir').click(); return; }
     try{
-      if(impDir){ const p=await impDir.requestPermission({mode:'read'}); if(p==='granted'){ impScan(false); return; } }
-      const h=await window.showDirectoryPicker({id:'belle-instagram',mode:'read'}); impDir=h; await impSetDir(h).catch(()=>{});
+      if(impDir&&!impStuck){ let p; try{ p=await impT(impDir.requestPermission({mode:'read'}),60000); }catch(e){ if(e&&e.name==='Timeout') impStuck=true; else throw e; }
+        if(p==='granted'){ impScan(false); return; } if(impStuck){ toast('A pasta de artes travou. Clique de novo e escolha a pasta Instagram.'); return; } }
+      const h=await impPick();
       toast('Pasta "'+h.name+'" conectada. Daqui em diante as artes entram sozinhas.'); impScan(false);
     }catch(e){ if(e&&e.name!=='AbortError') toast('Não consegui conectar a pasta.'); }
   }

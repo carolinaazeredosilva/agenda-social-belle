@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261124205408">
+<meta name="belle-ver" content="20261125110530">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1760,6 +1760,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
      Pastas "AAAA-MM-DD - Arte <Nome> - DD-MM-AAAA" sem post de feed no dia: vão para o story "Único" da sequência <Nome> (só o arquivo 9x16).
      Pasta "Black Friday": Story_BlackFriday_0N vai para todo story cuja copy começa com "Arte 0N".
      As pastas podem estar dentro de subpastas (ex.: Instagram/INSTAGRAM NOVEMBRO/...). "1 - Já postados" é ignorada.
+     Com a pasta Instagram conectada, só as pastas de mês ("INSTAGRAM DEZEMBRO" etc.) e a Black Friday são lidas; cada mês novo entra sozinho.
      Nome da sequência parecido também vale ("Black Friday" = "BF"); se a sequência mudou de dia na planilha, procura até 7 dias antes ou depois.
      Itens sem arte recebem a arte sozinhos. Itens que já têm arte não são trocados sozinhos: se o arquivo mudou na pasta
      (outro tamanho, data de modificação ou número de arquivos), o item ganha o aviso "Arte nova na pasta" com o botão "Recarregar da pasta".
@@ -1897,9 +1898,14 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const impSetDir=h=>idb('readwrite',st=>st.put(h,'dir'));
   let impDir=null, impState='';
   /* Lê a pasta conectada e as subpastas (até 4 níveis), para funcionar tanto com "Instagram" quanto com "INSTAGRAM NOVEMBRO" conectada. */
+  /* Pastas do mês: "INSTAGRAM NOVEMBRO", "INSTAGRAM DEZEMBRO"... Conectando a pasta Instagram, cada mês novo entra sozinho. */
+  const IMP_MES=/^instagram\s+(janeiro|fevereiro|mar[cç]o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro)\b/i;
   async function impWalk(dir,path,depth){ const out=[]; path=path||''; depth=depth||0;
-    for await (const [name,h] of dir.entries()){
-      if(h.kind==='directory'){ if(depth<4&&!/^1 - J/i.test(name)) out.push(...await impWalk(h,path?path+'/'+name:name,depth+1)); continue; }
+    const kids=[]; for await (const [name,h] of dir.entries()) kids.push([name,h]);
+    /* Na pasta Instagram, se já existem pastas de mês, lê só elas (e a Black Friday); OUTROS, Capas, Ideias etc. ficam de fora. */
+    const meses=depth===0&&kids.some(([n,h])=>h.kind==='directory'&&IMP_MES.test(n));
+    for(const [name,h] of kids){
+      if(h.kind==='directory'){ if(depth<4&&!/^1 - J/i.test(name)&&(!meses||IMP_MES.test(name)||/black\s*friday/i.test(name))) out.push(...await impWalk(h,path?path+'/'+name:name,depth+1)); continue; }
       if(depth>0&&IMP_EXT.test(name)){ const fh=h; out.push({name,dir:path.split('/').pop(),path,get:()=>fh.getFile()}); } }
     return out; }
   async function impScan(quiet){
@@ -1915,7 +1921,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       if(impDir&&!impStuck){ let p; try{ p=await impT(impDir.requestPermission({mode:'read'}),60000); }catch(e){ if(e&&e.name==='Timeout') impStuck=true; else throw e; }
         if(p==='granted'){ impScan(false); return; } if(impStuck){ toast('A pasta de artes travou. Clique de novo e escolha a pasta Instagram.'); return; } }
       const h=await impPick();
-      toast('Pasta "'+h.name+'" conectada. Daqui em diante as artes entram sozinhas.'); impScan(false);
+      toast(IMP_MES.test(h.name)?'Você conectou só a pasta "'+h.name+'". Para os próximos meses entrarem sozinhos, conecte a pasta Instagram (a que tem as pastas de cada mês).':'Pasta "'+h.name+'" conectada. Daqui em diante as artes entram sozinhas, inclusive as dos próximos meses.'); impScan(false);
     }catch(e){ if(e&&e.name!=='AbortError') toast('Não consegui conectar a pasta.'); }
   }
   function renderSide(){ const b=$('#tab-impart'); if(!b) return; const lb=b.querySelector('.lb');

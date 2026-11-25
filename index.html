@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125155058">
+<meta name="belle-ver" content="20261125191110">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -15,6 +15,7 @@
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="shim.js"></script>
+<script src="respostas.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600&display=swap">
 <style>
@@ -821,6 +822,20 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
 #dpanel>.dfoot{margin-top:22px}
 #dpanel .dsum .chip{padding:4px 10px}
 @media (max-width:560px){.vcard{padding:16px}.ovg,.g2c,.cwrap{gap:14px}}
+/* Aba Respostas (respostas.js) */
+.rsp-list{display:grid;gap:12px;margin-top:14px}
+.rsp.urg{border-color:var(--danger)}
+.rsp-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--ink)}
+.rsp-q{color:var(--muted);font-size:12px}
+.rsp-urg{border-color:var(--danger);color:var(--danger)}
+.rsp-txt{margin:10px 0 6px;font-size:15px;line-height:1.45;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+.rsp-lb{display:block;margin:10px 0 6px;font-size:12px;font-weight:700;color:var(--muted)}
+.rsp-ta{display:block;width:100%;box-sizing:border-box;min-height:84px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:15px/1.45 var(--font-body);resize:vertical}
+.rsp .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.rsp-env{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bg);font-size:13px;color:var(--muted)}
+.rsp-env p{margin:4px 0 0;color:var(--ink);font-size:14px;white-space:pre-wrap}
+.rsp-err{margin:8px 0 0;color:var(--danger);font-size:13px}
+.ro .rsp .row,.ro .rsp-ta{display:none}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -830,6 +845,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>
     <button class="tab" role="tab" data-act="tab" data-v="metricas" id="tab-metricas"></button>
     <button class="tab" role="tab" data-act="tab" data-v="posts" id="tab-posts"></button>
+    <button class="tab" role="tab" data-act="tab" data-v="respostas" id="tab-respostas"></button>
     <div class="grp">Estratégia</div>
     <button class="tab fold" data-act="fold" aria-expanded="true" id="tab-fold"><svg class="i" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><span class="lb">Planejador de conteúdo</span><svg class="i chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="tree" id="tree">
@@ -933,7 +949,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
   let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null, editF=null, editBusy=false;
-  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#ga4'?'ga4':/^#(metricas|plataformas)$/.test(location.hash)?'metricas':location.hash==='#posts'?'posts':location.hash==='#trends'?'trends':location.hash==='#config'?'config':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
+  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#ga4'?'ga4':/^#(metricas|plataformas)$/.test(location.hash)?'metricas':location.hash==='#posts'?'posts':location.hash==='#respostas'?'respostas':location.hash==='#trends'?'trends':location.hash==='#config'?'config':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
 
@@ -2632,17 +2648,17 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Análise · Visão geral',hoje:'Planejador · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Planejador · Calendário',feed:'Planejador · Prévia do feed',prog:'Planejador · Programar posts',eventos:'Estratégia · Eventos',config:'Configurações',ideias:'Planejador · Ideias',metricas:'Análise · Plataformas',posts:'Análise · Posts',trends:'Estratégia · Trending topics',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Análise · Visão geral',hoje:'Planejador · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Planejador · Calendário',feed:'Planejador · Prévia do feed',prog:'Planejador · Programar posts',eventos:'Estratégia · Eventos',config:'Configurações',ideias:'Planejador · Ideias',metricas:'Análise · Plataformas',respostas:'Análise · Respostas do Instagram',posts:'Análise · Posts',trends:'Estratégia · Trending topics',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
     const nLate=loaded?feed.filter(x=>x.date>=todayIso()&&x.date<=addDays(todayIso(),6)&&statusOf(x)!=='Agendado'&&statusOf(x)!=='Publicado').length:0, nIdeas=(()=>{ try{ return idList().filter(x=>!x.usada).length; }catch(_){ return 0; } })();
-    [['painel','Visão geral',ic.dash],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['ga4','GA4',ic.ga4],['cal','Calendário',ic.month,nLate,'Posts dos próximos 7 dias ainda sem agendar'],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Ideias',ic.bulb,nIdeas,'Ideias guardadas ainda não usadas'],['metricas','Plataformas',ic.ig],['posts','Posts',ic.img],['trends','Trending topics',ic.trend],['eventos','Eventos',ic.star,evList().length,'Eventos ativos'],['config','Configurações',ic.gear]].forEach(t=>{ const b=$('#tab-'+t[0]); if(!b) return; b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[3]?'<span class="ct" title="'+t[4]+'">'+t[3]+'</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['ga4','GA4',ic.ga4],['cal','Calendário',ic.month,nLate,'Posts dos próximos 7 dias ainda sem agendar'],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Ideias',ic.bulb,nIdeas,'Ideias guardadas ainda não usadas'],['metricas','Plataformas',ic.ig],['posts','Posts',ic.img],['respostas','Respostas',ic.ig,(window.belleRespostas?belleRespostas.count():0),'Comentários e DMs esperando resposta'],['trends','Trending topics',ic.trend],['eventos','Eventos',ic.star,evList().length,'Eventos ativos'],['config','Configurações',ic.gear]].forEach(t=>{ const b=$('#tab-'+t[0]); if(!b) return; b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[3]?'<span class="ct" title="'+t[4]+'">'+t[3]+'</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
-    if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='ga4'&&view!=='metricas'&&view!=='config'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
-    else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }
-    else v.innerHTML=view==='config'?renderConfig():view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='ga4'?renderGa4():view==='metricas'?renderMetricas():view==='posts'?renderPosts():view==='trends'?renderTrends():renderFeed();
+    if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='ga4'&&view!=='metricas'&&view!=='respostas'&&view!=='config'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
+    else if((view==='eventos'||view==='ideias'||view==='respostas')&&v.dataset.v===view&&evTyping()){ }
+    else v.innerHTML=view==='config'?renderConfig():view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='ga4'?renderGa4():view==='metricas'?renderMetricas():view==='posts'?renderPosts():view==='respostas'?belleRespostas.render(renderAll):view==='trends'?renderTrends():renderFeed();
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();

@@ -1,0 +1,10 @@
+# Configuração do Supabase usada pela publicação automática (.github/workflows/agente-instagram.yml).
+project_id = "agenda-social-belle"
+
+# A Meta chama o webhook sem login do Supabase; a segurança é a assinatura da Meta (META_APP_SECRET).
+[functions.ig-webhook]
+verify_jwt = false
+
+# O app chama com o login da Kaká; a função confere o e-mail da dona.
+[functions.ig-enviar]
+verify_jwt = true

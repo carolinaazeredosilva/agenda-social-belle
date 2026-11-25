@@ -335,6 +335,8 @@
     if(!w.ok) throw err('sheet','O Google recusou a gravação ('+w.status+').');
     await writeAppend(T,ABA_S,rowFrom(T,'story',f)); return true;
   };
+  /* Acesso ao Supabase para a aba Respostas (respostas.js). */
+  window.belleSb={client:client, ensureSession:ensureSession};
   window.claude={use:async function(n){ return n==='mcp'?mcp:n==='db'?db:n==='assets'?assets:n==='downloads'?downloads:null; }};
   window.addEventListener('belle-msg',function(e){ var t=document.getElementById('toast'); if(t){ t.textContent=e.detail; t.hidden=false; clearTimeout(window.__bt); window.__bt=setTimeout(function(){ t.hidden=true; },3500); } });
 

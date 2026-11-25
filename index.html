@@ -605,6 +605,19 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 .trad-t p{margin:4px 0 0;font-size:12.5px;color:var(--body)}
 .trad-n{flex:none;text-align:right;display:flex;flex-direction:column;gap:1px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}.trad-n span:first-child{font-weight:700;color:var(--ink)}
 .trad.low{opacity:.62}
+/* GA4 */
+.g4cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.g4cmp h3{margin:0 0 10px;font-size:15px}
+.g4cmp dl{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin:0;font-size:13.5px}
+.g4cmp dt{color:var(--muted)}.g4cmp dd{margin:0;font-weight:600;text-align:right}
+.g4cmp dd.big{font-size:20px}
+.g4t{width:100%;border-collapse:collapse;font-size:13px}
+.g4t th,.g4t td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+.g4t th:first-child,.g4t td:first-child{text-align:left}
+.g4t th{font-weight:600;color:var(--muted);font-size:12px}
+.g4t td small{display:block;color:var(--muted)}
+.g4wrap{overflow-x:auto}
+@media (max-width:640px){.g4cmp{grid-template-columns:1fr}.g4t .hm{display:none}}
 /* Google Ads */
 .gag{position:relative;height:14px;border-radius:99px;background:linear-gradient(90deg,color-mix(in srgb,var(--s-green) 18%,var(--bg)) var(--a),color-mix(in srgb,var(--s-prod) 18%,var(--bg)) var(--a) var(--b),color-mix(in srgb,var(--danger) 18%,var(--bg)) var(--b));margin:22px 0 26px}
 .gag i{position:absolute;top:-4px;width:14px;height:22px;margin-left:-7px;border-radius:99px;background:var(--tc,var(--accent));border:3px solid var(--panel)}
@@ -624,6 +637,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <div class="grp">Mídia paga</div>
     <button class="tab" role="tab" data-act="tab" data-v="trafego" id="tab-trafego"></button>
     <button class="tab" role="tab" data-act="tab" data-v="google" id="tab-google"></button>
+    <button class="tab" role="tab" data-act="tab" data-v="ga4" id="tab-ga4"></button>
     <div class="grp">Conteúdo</div>
     <button class="tab" role="tab" data-act="tab" data-v="cal" id="tab-cal"></button>
     <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
@@ -682,6 +696,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const shortDay=s=>{const d=fromIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
   const ic={
     metaads:'<svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg>',
+    ga4:'<svg class="i" viewBox="0 0 24 24"><path d="M5 20V13M12 20V8M19 20V4"/></svg>',
     gads:'<svg class="i" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>',
     mega:'<svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a2 2 0 0 0 2 2h2l5 4V5L7 9H5a2 2 0 0 0-2 2zM17 8a5 5 0 0 1 0 8M20 5a9 9 0 0 1 0 14"/></svg>',
     ig:'<svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>',
@@ -717,7 +732,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
   let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null, editF=null, editBusy=false;
-  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#metricas'?'metricas':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
+  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#ga4'?'ga4':location.hash==='#metricas'?'metricas':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
 
@@ -1692,7 +1707,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   /* ---------- tráfego pago (JSONs da Meta gerados pelo fetcher) ---------- */
   const TR_WINS=[4,7,14,30]; let trWin=7; const TR={}, trBusy={}, trOpen={};
   function trLoad(w){ if(w in TR||trBusy[w]) return; trBusy[w]=true;
-    fetch('trafego/paid-traffic-'+w+'d.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ TR[w]=j; }).catch(()=>{ TR[w]=null; }).finally(()=>{ trBusy[w]=false; if(view==='trafego') renderAll(); }); }
+    fetch('trafego/paid-traffic-'+w+'d.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ TR[w]=j; }).catch(()=>{ TR[w]=null; }).finally(()=>{ trBusy[w]=false; if(view==='trafego'||view==='ga4') renderAll(); }); }
   const brl=v=>v==null||isNaN(v)?'—':'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
   const trN=v=>Math.round(+v||0).toLocaleString('pt-BR');
   const trP=(v,d)=>v==null||!isFinite(v)?'—':Number(v).toFixed(d==null?1:d).replace('.',',')+'%';
@@ -1772,7 +1787,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   /* ---------- Google Ads (JSONs gerados por scripts/publicar_app.py no projeto trafego-pago-google-ads) ---------- */
   const GA_WINS=[4,7,14,30]; let gaWin=7; const GA={}, gaBusy={};
   function gaLoad(w){ if(w in GA||gaBusy[w]) return; gaBusy[w]=true;
-    fetch('trafego-google/paid-traffic-'+w+'d.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ GA[w]=j; }).catch(()=>{ GA[w]=null; }).finally(()=>{ gaBusy[w]=false; if(view==='google') renderAll(); }); }
+    fetch('trafego-google/paid-traffic-'+w+'d.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ GA[w]=j; }).catch(()=>{ GA[w]=null; }).finally(()=>{ gaBusy[w]=false; if(view==='google'||view==='ga4') renderAll(); }); }
   const GA_CH={SEARCH:'Pesquisa',PERFORMANCE_MAX:'Performance Max',DISPLAY:'Display',VIDEO:'YouTube',DEMAND_GEN:'Demand Gen',SHOPPING:'Shopping',MULTI_CHANNEL:'App'};
   function gaWhy(c){ const r=c.decide_reason||'', th=GA[gaWin].kpi||{}; let m;
     if(/sem gasto/.test(r)) return 'Sem investimento no período';
@@ -1898,6 +1913,53 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     else h+='<div class="vcard"><div class="itab"><div class="itr ith"><span>Dia</span><span>Post</span><span>Visualiz.</span><span>Curtidas</span><span>Coment.</span><span>Salvos</span></div>'
       +P.map(x=>'<div class="itr"><span>'+shortDay(x.data)+'</span><span class="itt">'+(x.link?'<a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.legenda||'(sem legenda)')+'</a>':esc(x.legenda||'(sem legenda)'))+(x.tipo!=='post'?' <i class="itag">'+x.tipo+'</i>':'')+'</span><span><b>'+mtN(x.visualizacoes)+'</b></span><span>'+mtN(x.curtidas)+'</span><span>'+mtN(x.comentarios)+'</span><span>'+mtN(x.salvamentos)+'</span></div>').join('')+'</div></div>';
     h+='<p class="hint" style="margin-top:16px">Relatório antigo, montado com os prints (25/10 a 10/11): <button class="linkbtn" data-act="tab" data-v="insights">abrir</button></p>';
+    return h;
+  }
+
+  /* ---------- GA4 (JSONs gerados por scripts/publicar_app.py no projeto trafego-pago-google-ads) ---------- */
+  const G4_WINS=[4,7,14,30]; let g4Win=7, g4Evt=null; const G4={}, g4Busy={};
+  function g4Load(w){ if(w in G4||g4Busy[w]) return; g4Busy[w]=true;
+    fetch('trafego-ga4/ga4-'+w+'d.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ G4[w]=j; }).catch(()=>{ G4[w]=null; }).finally(()=>{ g4Busy[w]=false; if(view==='ga4') renderAll(); }); }
+  const G4_GRP={google_pago:'Google Ads',meta_pago:'Meta Ads',meta_organico:'Meta orgânico',busca_organica:'Busca orgânica',direto:'Direto',outros_pagos:'Outras mídias pagas',outros:'Outros'};
+  function g4EvtDefault(evs){ return evs.find(e=>/teste_gratis|trial|cadastro|sign_?up/i.test(e))||evs.find(e=>/lead/i.test(e))||evs[0]||null; }
+  function g4Ev(r){ return g4Evt?(r.eventos&&r.eventos[g4Evt])||0:(r.key_events||0); }
+  function renderGa4(){
+    G4_WINS.forEach(g4Load); trLoad(g4Win); gaLoad(g4Win);
+    let h='<div class="iwsel" role="group" aria-label="Período">'+G4_WINS.map(w=>'<button class="chip'+(w===g4Win?' on':'')+'" data-act="g4w" data-w="'+w+'" aria-pressed="'+(w===g4Win)+'">'+w+' dias</button>').join('')+'</div>';
+    if(!(g4Win in G4)) return h+'<p class="empty">Carregando os números do GA4…</p>';
+    const d=G4[g4Win];
+    if(!d) return h+'<div class="note">Ainda não há dados de '+g4Win+' dias do GA4. No Claude Code, peça <b>atualizar métricas google</b> para gerar.</div>';
+    const evs=d.key_events||[]; if(g4Evt==null||(g4Evt&&evs.indexOf(g4Evt)<0)) g4Evt=g4EvtDefault(evs);
+    const rows=d.rows||[], g={};
+    rows.forEach(r=>{ const k=r.grupo||'outros'; const x=g[k]||(g[k]={s:0,e:0,ev:0}); x.s+=r.sessions||0; x.e+=r.engaged_sessions||0; x.ev+=g4Ev(r); });
+    const totS=rows.reduce((a,r)=>a+(r.sessions||0),0), totEv=rows.reduce((a,r)=>a+g4Ev(r),0);
+    h+='<p class="ihd">Últimos '+g4Win+' dias ('+d.period.start.split('-').reverse().slice(0,2).join('/')+' a '+d.period.end.split('-').reverse().slice(0,2).join('/')+'), atualizado em '+trWhen(d.generated_at)+'<br><small>Visitas e eventos medidos pelo Google Analytics, pela origem da sessão (UTM). Os números das plataformas ficam nas abas Meta Ads e Google Ads.</small></p>';
+    if(evs.length>1) h+='<div class="iwsel" role="group" aria-label="Evento">'+evs.map(e=>'<button class="chip'+(e===g4Evt?' on':'')+'" data-act="g4e" data-e="'+esc(e)+'" aria-pressed="'+(e===g4Evt)+'">'+esc(e)+'</button>').join('')+'</div>';
+    const EV=g4Evt?esc(g4Evt):'eventos-chave';
+    const M=TR[g4Win], A=GA[g4Win];
+    const card=(nome,k,spend,plat,platLbl)=>{ const x=g[k]||{s:0,e:0,ev:0};
+      return '<div class="vcard"><h3>'+nome+'</h3><dl>'
+        +'<dt>Investido</dt><dd>'+(spend==null?'—':brl(spend))+'</dd>'
+        +'<dt>Sessões no site</dt><dd>'+trN(x.s)+'</dd>'
+        +'<dt>Sessões engajadas</dt><dd>'+trP(x.s?x.e/x.s*100:null,0)+'</dd>'
+        +'<dt>'+EV+' (GA4)</dt><dd class="big">'+trN(x.ev)+'</dd>'
+        +'<dt>Custo por '+EV+' (GA4)</dt><dd>'+(spend&&x.ev?brl(spend/x.ev):'—')+'</dd>'
+        +'<dt>Custo por sessão</dt><dd>'+(spend&&x.s?brl(spend/x.s):'—')+'</dd>'
+        +'<dt>'+platLbl+' (plataforma)</dt><dd>'+(plat==null?'—':trN(plat))+'</dd>'
+        +'</dl></div>'; };
+    h+='<div class="g4cmp">'
+      +card('Google Ads','google_pago',A?A.totals&&A.totals.spend:null,A?A.totals&&A.totals.conversions:null,'Cadastros')
+      +card('Meta Ads','meta_pago',M?M.spend_total:null,M?M.raws_total&&M.raws_total.leads:null,'Leads')
+      +'</div>';
+    h+='<div class="note">Os cadastros no trial ainda não carregam a UTM até o fim do formulário, então o GA4 pode atribuir parte deles a "Direto" ou "Outros". Compare as duas colunas com cuidado até essa correção entrar no site.</div>';
+    h+='<h2 class="ish">Por canal</h2><div class="vcard g4wrap"><table class="g4t"><thead><tr><th>Canal</th><th>Sessões</th><th class="hm">% das sessões</th><th>'+EV+'</th><th class="hm">Conversão</th></tr></thead><tbody>'
+      +Object.keys(g).sort((a,b)=>g[b].s-g[a].s).map(k=>{ const x=g[k]; return '<tr><td>'+esc(G4_GRP[k]||k)+'</td><td>'+trN(x.s)+'</td><td class="hm">'+trP(totS?x.s/totS*100:null,0)+'</td><td>'+trN(x.ev)+'</td><td class="hm">'+trP(x.s?x.ev/x.s*100:null,1)+'</td></tr>'; }).join('')
+      +'<tr><td><b>Total</b></td><td><b>'+trN(totS)+'</b></td><td class="hm"></td><td><b>'+trN(totEv)+'</b></td><td class="hm">'+trP(totS?totEv/totS*100:null,1)+'</td></tr></tbody></table></div>';
+    const top=rows.filter(r=>r.sessions||g4Ev(r)).slice().sort((a,b)=>g4Ev(b)-g4Ev(a)||b.sessions-a.sessions).slice(0,40);
+    h+='<h2 class="ish">Por origem / mídia / campanha</h2><div class="vcard g4wrap"><table class="g4t"><thead><tr><th>Origem / mídia<small>campanha</small></th><th>Sessões</th><th class="hm">Engajadas</th><th>'+EV+'</th></tr></thead><tbody>'
+      +top.map(r=>'<tr><td>'+esc(r.source)+' / '+esc(r.medium)+'<small>'+esc(r.campaign)+'</small></td><td>'+trN(r.sessions)+'</td><td class="hm">'+trP(r.sessions?r.engaged_sessions/r.sessions*100:null,0)+'</td><td>'+trN(g4Ev(r))+'</td></tr>').join('')
+      +'</tbody></table></div>';
+    h+='<p class="hint" style="margin-top:16px">Mostrando as 40 combinações com mais '+EV+'. Atualiza junto com o Google Ads, três vezes por dia.</p>';
     return h;
   }
 
@@ -2095,16 +2157,16 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',metricas:'Resultados · Métricas do Instagram',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',metricas:'Resultados · Métricas do Instagram',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['metricas','Métricas',ic.ig],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['ga4','GA4',ic.ga4],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['metricas','Métricas',ic.ig],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
-    if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='metricas'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
+    if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='ga4'&&view!=='metricas'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }
-    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='metricas'?renderMetricas():renderFeed();
+    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='ga4'?renderGa4():view==='metricas'?renderMetricas():renderFeed();
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();
@@ -2303,6 +2365,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='hsug'){ e.preventDefault(); const f=$('#f-hora'); if(f){ f.value=el.dataset.h; f.dataset.commit='1'; f.dispatchEvent(new Event('change',{bubbles:true})); } toast('Horário '+el.dataset.h); setTimeout(()=>renderSheet(),300); return; }
     if(act==='insw'){ insWk=+el.dataset.i; renderAll(); return; }
     if(act==='trw'){ trWin=+el.dataset.w; renderAll(); return; }
+    if(act==='g4w'){ g4Win=+el.dataset.w; renderAll(); return; }
+    if(act==='g4e'){ g4Evt=el.dataset.e; renderAll(); return; }
     if(act==='gaw'){ gaWin=+el.dataset.w; renderAll(); return; }
     if(act==='mtw'){ mtWin=+el.dataset.w; renderAll(); return; }
     if(act==='trx'){ const k=el.dataset.k; trOpen[k]=!trOpen[k]; renderAll(); return; }

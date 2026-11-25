@@ -54,7 +54,13 @@ def main():
         sys.exit('A chave não enxerga nenhuma página do Facebook com Instagram profissional ligado.')
     pag = next((p for p in pags if p['instagram_business_account']['id'] == IG_ID), None) \
         or next((p for p in pags if 'belle' in (p['instagram_business_account'].get('username') or '').lower()), pags[0])
-    r = chamar('POST', pag['id'] + '/subscribed_apps', pag['access_token'], subscribed_fields='feed,messages')
+    # Os avisos do Instagram (comentários e DMs) chegam pelo objeto "instagram" do app; a página só precisa
+    # estar ligada ao app. O campo "messages" da página pede pages_messaging, que a chave pode não ter.
+    try:
+        r = chamar('POST', pag['id'] + '/subscribed_apps', pag['access_token'], subscribed_fields='feed,messages')
+    except SystemExit as e:
+        print('::notice::Sem o campo messages da página (%s). Ligando só com feed.' % e)
+        r = chamar('POST', pag['id'] + '/subscribed_apps', pag['access_token'], subscribed_fields='feed')
     if not r.get('success'):
         sys.exit('A Meta não confirmou a ligação da página: %s' % r)
     print('Página "%s" ligada. Instagram @%s (id %s).' % (pag['name'], pag['instagram_business_account'].get('username'),

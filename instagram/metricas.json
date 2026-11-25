@@ -1,14 +1,14 @@
 {
- "generated_at": "2026-11-25T16:43:42-03:00",
+ "generated_at": "2026-11-25T18:51:32-03:00",
  "fonte": "API do Instagram (Meta)",
  "conta": {
   "id": "17841405518250126",
   "usuario": "bellesoftware",
   "nome": "Belle Software",
-  "seguidores": 11680,
+  "seguidores": 11682,
   "seguindo": 6900,
   "publicacoes": 549,
-  "foto": "https://scontent-sjc3-1.xx.fbcdn.net/v/t51.82787-15/858002831_18439911613183942_1113106820975028003_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=7d201b&_nc_ohc=d68oWfGSgrQQ7kNvwFIom_m&_nc_oc=AdpqPxL7UxCUovgT919FxuOwLEshrtCXoVatMqgyHWXd8Hx66L--H-1g084qSApCc6c&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&edm=AJ-jyNUEAAAA&_nc_gid=C9D-ftpIGId4-IUjY1uThw&oh=00_AQQvDCogi2cFXyS-r_hqfVFeEcXvYxdSn-mLUDut7DeYaQ&oe=6B0D116D"
+  "foto": "https://scontent-ord5-1.xx.fbcdn.net/v/t51.82787-15/858002831_18439911613183942_1113106820975028003_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=7d201b&_nc_ohc=d68oWfGSgrQQ7kNvwETLXBv&_nc_oc=AdqawAtV5WlfRe9x1RUFWwR_qbUz_ei8oezGH5cXnUJ-zMsoYb3dc4oeZcclgBYvqRI&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&edm=AJ-jyNUEAAAA&_nc_gid=4XtvaMj-ue2EZ5aCfT16ow&oh=00_AQRF5B5DkH08iPdaTtsEyICcE9_36BouqMEUXskaWeY5QA&oe=6B0D116D"
  },
  "janelas": {
   "7": {
@@ -258,7 +258,7 @@
    "novos_seguidores": 8
   }
  ],
- "stories_no_ar": 8,
+ "stories_no_ar": 6,
  "stories": [
   {
    "id": "18106549664029286",
@@ -304,8 +304,8 @@
    "hora": "20:01",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4037782970379375993",
-   "alcance": 20,
-   "visualizacoes": 27,
+   "alcance": 27,
+   "visualizacoes": 35,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -315,7 +315,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T16:43-03:00"
+   "visto_em": "2026-11-25T18:51-03:00"
   },
   {
    "id": "17908592412671036",
@@ -323,8 +323,8 @@
    "hora": "09:00",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038175280257976019",
-   "alcance": 14,
-   "visualizacoes": 16,
+   "alcance": 20,
+   "visualizacoes": 24,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -334,7 +334,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T16:43-03:00"
+   "visto_em": "2026-11-25T18:51-03:00"
   },
   {
    "id": "18121264558983445",
@@ -342,8 +342,8 @@
    "hora": "12:00",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038266117651309635",
-   "alcance": 13,
-   "visualizacoes": 13,
+   "alcance": 19,
+   "visualizacoes": 21,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -353,7 +353,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T16:43-03:00"
+   "visto_em": "2026-11-25T18:51-03:00"
   },
   {
    "id": "18183563581429481",
@@ -361,8 +361,8 @@
    "hora": "12:30",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038281113336487944",
-   "alcance": 12,
-   "visualizacoes": 13,
+   "alcance": 17,
+   "visualizacoes": 19,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -372,7 +372,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T16:43-03:00"
+   "visto_em": "2026-11-25T18:51-03:00"
   },
   {
    "id": "18089106014322421",
@@ -380,8 +380,8 @@
    "hora": "13:00",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038296209642992745",
-   "alcance": 10,
-   "visualizacoes": 10,
+   "alcance": 15,
+   "visualizacoes": 17,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -391,7 +391,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T16:43-03:00"
+   "visto_em": "2026-11-25T18:51-03:00"
   },
   {
    "id": "18419531140087397",
@@ -399,8 +399,8 @@
    "hora": "13:30",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038311303255775108",
-   "alcance": 8,
-   "visualizacoes": 9,
+   "alcance": 14,
+   "visualizacoes": 17,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -410,7 +410,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T16:43-03:00"
+   "visto_em": "2026-11-25T18:51-03:00"
   }
  ],
  "posts": [
@@ -423,8 +423,8 @@
    "legenda": "Que mensagem sua clínica vai mandar na Black Friday?",
    "curtidas": 2,
    "comentarios": 0,
-   "alcance": 19,
-   "visualizacoes": 57,
+   "alcance": 20,
+   "visualizacoes": 60,
    "salvamentos": 0,
    "compartilhamentos": 0,
    "interacoes": 2
@@ -439,7 +439,7 @@
    "curtidas": 5,
    "comentarios": 0,
    "alcance": 49,
-   "visualizacoes": 133,
+   "visualizacoes": 141,
    "salvamentos": 1,
    "compartilhamentos": 1,
    "interacoes": 7
@@ -483,7 +483,7 @@
    "legenda": "O que acontece com o paciente depois que ele chama no WhatsApp da sua clínica?",
    "curtidas": 5,
    "comentarios": 0,
-   "alcance": 196,
+   "alcance": 197,
    "visualizacoes": 244,
    "salvamentos": 0,
    "compartilhamentos": 0,
@@ -498,7 +498,7 @@
    "legenda": "O WhatsApp da sua clínica é só um canal de conversa ou de receita?",
    "curtidas": 6,
    "comentarios": 0,
-   "alcance": 158,
+   "alcance": 159,
    "visualizacoes": 290,
    "salvamentos": 0,
    "compartilhamentos": 0,
@@ -528,7 +528,7 @@
    "legenda": "Qual procedimento da sua clínica você mais vende com desconto?",
    "curtidas": 4,
    "comentarios": 0,
-   "alcance": 113,
+   "alcance": 114,
    "visualizacoes": 271,
    "salvamentos": 1,
    "compartilhamentos": 0,
@@ -543,7 +543,7 @@
    "legenda": "A integração entre o Belle Software e a Memed chegou para quem prescreve na clínica.",
    "curtidas": 4,
    "comentarios": 0,
-   "alcance": 95,
+   "alcance": 96,
    "visualizacoes": 210,
    "salvamentos": 2,
    "compartilhamentos": 0,
@@ -573,7 +573,7 @@
    "legenda": "Quantos pacientes sumiram depois da primeira aplicação na sua clínica? 👀",
    "curtidas": 4,
    "comentarios": 0,
-   "alcance": 147,
+   "alcance": 148,
    "visualizacoes": 345,
    "salvamentos": 1,
    "compartilhamentos": 0,

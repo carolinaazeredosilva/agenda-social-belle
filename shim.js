@@ -25,6 +25,7 @@
         '.lg-brand{position:relative;z-index:1;display:flex;align-items:center;gap:12px;font:700 15px var(--font-display,system-ui);letter-spacing:.01em}'+
         '.lg-brand img{width:40px;height:40px;border-radius:12px;box-shadow:0 6px 18px rgba(56,27,73,.25)}'+
         '.lg-brand small{display:block;font:600 12px var(--font-body,system-ui);opacity:.8}'+
+        '.lg-b{position:relative;z-index:1;display:block;width:min(400px,72%);height:auto;margin:32px auto;filter:drop-shadow(0 10px 30px rgba(56,27,73,.3))}'+
         '.lg-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:min(300px,62%);margin:40px auto;transform:rotate(-6deg)}'+
         '.lg-grid i{display:block;aspect-ratio:4/5;border-radius:16px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(2px)}'+
         '.lg-grid i:nth-child(3){background:#81D8E5;border-color:#81D8E5}'+
@@ -53,12 +54,12 @@
         '#lg-btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(161,17,118,.34)}'+
         '#lg-btn:disabled{opacity:.7;cursor:wait;transform:none}'+
         '.lg-foot{margin:28px 0 0;text-align:center;font-size:13px;color:var(--muted,#9A8BA6)}'+
-        '@media (max-width:860px){#lg-ov{flex-direction:column}.lg-belle{height:54px}#lg-art{flex:0 0 auto;padding:28px 24px 48px}.lg-grid{display:none}#lg-art:before{width:320px;height:320px;right:-120px;top:-140px}.lg-pitch{margin-top:22px}.lg-pitch h2{font-size:22px;margin-bottom:6px}.lg-pitch p{font-size:14px}#lg-side{flex:1 0 auto;align-items:flex-start;margin-top:-26px;padding:0 16px 32px}#lg-form{padding:26px 22px;border-radius:22px;background:var(--panel,#fff);box-shadow:0 12px 34px rgba(56,27,73,.12)}#lg-form h1{font-size:25px}}';
+        '@media (max-width:860px){#lg-ov{flex-direction:column}.lg-belle{height:54px}#lg-art{flex:0 0 auto;padding:28px 24px 48px}.lg-grid,.lg-b{display:none}#lg-art:before{width:320px;height:320px;right:-120px;top:-140px}.lg-pitch{margin-top:22px}.lg-pitch h2{font-size:22px;margin-bottom:6px}.lg-pitch p{font-size:14px}#lg-side{flex:1 0 auto;align-items:flex-start;margin-top:-26px;padding:0 16px 32px}#lg-form{padding:26px 22px;border-radius:22px;background:var(--panel,#fff);box-shadow:0 12px 34px rgba(56,27,73,.12)}#lg-form h1{font-size:25px}}';
       overlay=document.createElement('div'); overlay.id='lg-ov';
       overlay.innerHTML='<style>'+css+'</style>'+
         '<aside id="lg-art"><div class="lg-top"><div class="lg-brand"><img src="logo.svg" alt=""><div>Agenda Social<small>Belle Software</small></div></div><img class="lg-belle" src="belle-logo-branco.png" alt="Belle Software"></div>'+
-        '<div class="lg-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i><svg width="34" height="34" viewBox="0 0 76 76"><defs><linearGradient id="lg-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A11176"/><stop offset="1" stop-color="#8461F4"/></linearGradient></defs><path d="M38 0C41 26 50 35 76 38 50 41 41 50 38 76 35 50 26 41 0 38 26 35 35 26 38 0Z" fill="url(#lg-g)"/></svg></i><i></i><i></i><i></i><i></i></div>'+
-        '<div class="lg-pitch"><h2>Seu feed organizado, do planejamento ao post.</h2><p>Calendário, artes e métricas da Belle em um lugar só.</p></div></aside>'+
+        '<img class="lg-b" src="belle-b-branco.png" alt="" aria-hidden="true">'+
+        '<div class="lg-pitch"><h2>Gestão e crescimento para clínicas.</h2><p>Calendário, artes e métricas da Belle em um lugar só.</p></div></aside>'+
         '<main id="lg-side"><form id="lg-form" novalidate>'+
         '<div class="lg-hi">'+oi+(mail?', que bom te ver de novo':'')+' ✨</div>'+
         '<h1>Entrar na Agenda</h1>'+

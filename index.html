@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125195737">
+<meta name="belle-ver" content="20261125200157">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -2623,7 +2623,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     const P=(window.BELLE_CONFIG&&BELLE_CONFIG.PLANILHA)||'', th=document.documentElement.dataset.theme||'', em=window.belleEmail||'', dona=!RO();
     const hid=feed.concat(stories).filter(x=>M(x.id).oculto).sort(byDate);
     let h='<div class="cfg">';
-    h+='<section class="vcard"><h3><span>Conta</span></h3>'+'<div class="cfx"><span class="ci2"><span class="av sm">'+esc((em[0]||'B').toUpperCase())+'</span></span><span><b>'+esc(em||'Conta conectada')+'</b><small>'+(dona?'Dona da Agenda: edita, muda status e conecta pastas':'Somente visualização: vê tudo, sem editar')+'</small></span><span></span></div></section>';
+    h+='<section class="vcard"><h3><span>Conta</span></h3>'+'<div class="cfx"><span class="ci2"><span class="av sm">'+esc((em[0]||'B').toUpperCase())+'</span></span><span><b>'+esc(em||'Conta conectada')+'</b><small>'+(dona?'Dona da Agenda: edita, muda status e conecta pastas':'Somente visualização: vê tudo, sem editar')+'</small></span><button class="btn" data-act="logout">Sair</button></div></section>';
     h+='<section class="vcard"><h3><span>Aparência</span><small>vale só para este aparelho</small></h3><div class="cfx"><span class="ci2">'+ic.gear+'</span><span><b>Tema</b><small>Automático segue o aparelho</small></span><span class="seg2" role="group" aria-label="Tema">'+[['','Auto'],['light','Claro'],['dark','Escuro']].map(o=>'<button data-act="theme" data-t="'+o[0]+'" aria-pressed="'+(th===o[0])+'">'+o[1]+'</button>').join('')+'</span></div>'
       +'<div class="cfx"><span class="ci2">'+ic.bell+'</span><span><b>Alarmes no Google Agenda</b><small>Um por post ou story, '+((window.BELLE_CONFIG&&BELLE_CONFIG.AVISO_MIN)||5)+' minutos antes do horário marcado</small></span><span></span></div></section>';
     h+='<section class="vcard wide"><h3><span>Conexões</span><small>a Agenda só lê e organiza: nada é publicado sozinho</small></h3>'
@@ -2956,6 +2956,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     if(act==='ff'){ fFilter=el.dataset.s; renderAll(); return; }
     if(act==='stsync'){ toast('Atualizando a planilha…'); await stFlush(); toast(stQ.size?'Não consegui atualizar tudo. Tente de novo.':'Planilha atualizada'); return; }
     if(act==='impart'){ if(RO()){ toast('Somente visualização: você não pode alterar.'); return; } if(impUpd.size&&impState!=='perm'){ impReloadAll(); return; } impConnect(); return; }
+    if(act==='logout'){ try{ await window.belleSb.client().auth.signOut(); }catch(_){} try{ localStorage.removeItem('belle_mail'); }catch(_){} location.reload(); return; }
     if(act==='refresh'){ if(window.claude&&mcp) { try{ await mcp.invalidate(); }catch(_){} } load(); return; }
     const it=itemById(openId); if(!it) return;
     if(act==='status'){ await saveItem(it.id,{status:el.dataset.s},true); renderAll(); renderSheet(); return; }

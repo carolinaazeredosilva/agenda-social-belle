@@ -666,6 +666,49 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
 .cst2.w{color:#B88A00}.cst2.n{color:var(--muted)}
 .cfl{display:flex;gap:8px;flex-wrap:wrap}.cfl a{text-decoration:none}
 @media (max-width:479px){.cfx{grid-template-columns:36px minmax(0,1fr)}.cfx>:last-child{grid-column:2;justify-self:start}}
+
+/* ===== v2.0: Visão geral ===== */
+.ovins{display:flex;gap:12px;align-items:flex-start;background:#381B49;color:#EFE4F6;border-radius:18px;padding:14px 18px;margin-bottom:14px;font-size:14.5px;line-height:1.5}
+.ovins p{margin:0}.ovins b{color:#fff}.ovins em{font-style:normal;color:#F58BD8;font-weight:700}.ovins svg{color:#F58BD8;margin-top:2px}
+.ovg{display:grid;gap:14px;margin-bottom:14px}@media (min-width:900px){.ovg{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start}}
+.ovtd,.ovat{display:flex;flex-direction:column;gap:10px}
+.tdh{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.tdh small{color:var(--muted);font-size:12.5px}
+.tdl{display:flex;flex-direction:column;gap:8px}
+.tdi{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:9px 12px;background:var(--panel);text-align:left;width:100%}
+.tdi:hover{border-color:var(--accent)}
+@media (max-width:560px){.tdi{grid-template-columns:34px minmax(0,1fr);row-gap:6px}.tdi .tr{grid-column:2;justify-content:flex-start}.ovtd .tdi .tm b{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}}
+.tic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 10%,var(--panel));color:var(--accent)}
+.tdi .tm b{display:block;color:var(--ink);font-size:14px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tdi .tm small{display:block;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tdi .tr{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.evrow{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
+.evchip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 12px 4px 10px;font-size:12.5px;color:var(--body)}
+.evchip b{color:var(--ink)}.evchip .mt{width:42px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.evchip .mt i{display:block;height:100%;background:linear-gradient(90deg,#A11176,#8461F4,#81D8E5)}
+.ovat .sb{display:flex;flex-direction:column;gap:8px}.ovat>.btn{align-self:flex-start}
+.rw.ua{cursor:default}.rw .rd b.hot{color:var(--danger)}.rw .rd b.warm{color:#B88A00}
+.ovks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}@media (min-width:760px){.ovks{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.ovk{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.ovk .kl{display:block;font-size:13px;font-weight:600;color:var(--ink)}.ovk .ki{position:absolute;top:12px;right:12px;color:var(--accent);opacity:.8}
+.ovk b{display:block;font:800 30px/1.15 var(--font-display);color:var(--ink);margin:6px 0 2px}.ovk small{font-size:12px;color:var(--muted)}
+.ovk em{font-style:normal;font-weight:700}.ovk em.up{color:var(--s-green)}.ovk em.dn{color:var(--danger)}
+.ovch,.ovwk{margin-bottom:14px}
+.ovsvg{width:100%;height:190px;display:block;overflow:visible}
+.ovax{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px}
+.wkx{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:thin}
+.wkc{flex:0 0 min(100%,520px);scroll-snap-align:start;background:var(--bg);border-radius:16px;padding:10px}
+@media (min-width:1200px){.wkx{display:grid;grid-template-columns:1fr 1fr;overflow:visible}.wkc{flex:none}}
+.wkc.cur{outline:2px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.wkc .wkh{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:8px;gap:8px}.wkc .wkh b{color:var(--ink)}
+.wkc .wkh .ok{color:var(--s-green)}.wkc .wkh .warm{color:#B88A00}.wkc .wkh .hot{color:var(--danger)}
+.wkg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.dc3{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:6px 2px;min-height:86px;font-size:11px;color:var(--muted)}
+.dc3 .w{font-size:10.5px;text-transform:lowercase}.dc3 .n{font:700 16px/1 var(--font-display);color:var(--ink)}
+.dc3 .si{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.dc3.r{box-shadow:inset 0 4px 0 #F06262}.dc3.r .si{color:#F06262}
+.dc3.y{box-shadow:inset 0 4px 0 #F2B600}.dc3.y .si{color:#C99700}
+.dc3.gr{box-shadow:inset 0 4px 0 #2DC27A}.dc3.gr .si{color:#2DC27A}
+.dc3.past{opacity:.6}.dc3.today{outline:2px solid var(--ink);outline-offset:1px;opacity:1}
+.dc3 .fr{display:flex;gap:3px;min-height:8px}.dc3 .fr i{width:7px;height:7px;border-radius:50%;background:var(--accent)}.dc3 .fr i.gap{background:transparent;border:1.5px dashed var(--danger)}
+.legend .lg{width:12px;height:10px;border-radius:3px;background:var(--panel);border:1px solid var(--line)}.legend .lg.r{box-shadow:inset 0 3px 0 #F06262}.legend .lg.y{box-shadow:inset 0 3px 0 #F2B600}.legend .lg.gr{box-shadow:inset 0 3px 0 #2DC27A}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -732,6 +775,9 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
   const longDay=s=>fromIso(s).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
   const shortDay=s=>{const d=fromIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
   const ic={
+    trend:'<svg class="i" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
+    heart:'<svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg>',
+    user:'<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>',
     bell:'<svg class="i" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg>',
     eye:'<svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
     gear:'<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
@@ -1242,7 +1288,89 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
       +'<div class="vcard"><h3><span>Mês no feed</span><button class="linkbtn" data-act="tab" data-v="feed" style="padding:0">ver grade</button></h3><div class="vmini">'+g6.map(x=>{ const a=artIds(x)[0]; return '<button data-act="open" data-id="'+esc(x.id)+'">'+(a?artTag(a,''):'<span class="ph">'+esc((x.tema||'').slice(0,24))+'</span>')+'<em>'+(pinOf(x)?'📌 ':'')+shortDay(x.date)+'</em></button>'; }).join('')+'</div></div></div>';
     return h;
   }
-  function renderPainel(){
+
+  /* ---------- Visão geral (v2.0): resumo, Hoje, Precisa de atenção, números, gráfico e semanas ---------- */
+  let ovAll=false;
+  function dayState3(k){
+    const its=feedOn(k).concat(storiesOn(k).filter(x=>x.kind==='story')); if(!its.length) return '';
+    const okI=x=>{ const st=statusOf(x); return !!M(x.id).feito||st==='Publicado'||st==='Agendado'; };
+    if(its.every(okI)) return 'gr';
+    if(k<todayIso()) return '';
+    return its.every(x=>okI(x)||statusOf(x)==='Aprovado')?'y':'r';
+  }
+  const ST3={gr:'tudo certo',y:'aprovado, falta agendar',r:'falta organizar'};
+  const ICS3={gr:'<path d="m5 12 5 5 9-10"/>',y:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',r:'<path d="M12 5v9M12 19h.01"/>'};
+  function ovInsight(){
+    if(!MT||!MT.janelas) return '';
+    const J=MT.janelas['7'], A=J&&J.anterior; if(!J) return '';
+    const pub=feed.filter(x=>x.date>=J.inicio&&x.date<=J.fim&&statusOf(x)==='Publicado').length, ns=(MT.stories||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim).length;
+    const dv=A&&A.visualizacoes?Math.round((J.visualizacoes-A.visualizacoes)/A.visualizacoes*100):null;
+    return '<div class="ovins">'+ic.trend+'<p>Nos últimos 7 dias, <b>'+mtN(J.visualizacoes)+' visualizações</b>'+(dv!=null?' (<em>'+(dv>=0?'+':'')+dv+'%</em> sobre os 7 dias anteriores)':'')+', <b>'+pub+(pub===1?' post publicado':' posts publicados')+'</b> e <b>'+ns+' stories</b> no Instagram.</p></div>';
+  }
+  function ovHoje(){
+    const t=todayIso(), F=feedOn(t), S=storiesOn(t).filter(x=>x.kind==='story'), okS=S.filter(x=>{ const s=statusOf(x); return s==='Agendado'||s==='Publicado'||M(x.id).feito; }).length;
+    const row=(act,id,icn,tt,sub,st,extra)=>'<button class="tdi" data-act="'+act+'" '+id+'><span class="tic">'+icn+'</span><span class="tm"><b>'+tt+'</b><small>'+sub+'</small></span><span class="tr">'+(extra||'')+pill(st)+'</span></button>';
+    let h=F.map(x=>row('open','data-id="'+esc(x.id)+'"',ic.grid,esc(x.tema||x.formato||'Post'),'Feed · '+esc(x.formato||'')+(M(x.id).hora?' · '+esc(M(x.id).hora):''),statusOf(x),hasArt(x)?'':'<span class="due hot">sem arte</span>')).join('');
+    const groups={}; S.forEach(x=>{ const k=/manh/i.test(x.planHora)?'de manhã':/noite/i.test(x.planHora)?'de noite':/tarde/i.test(x.planHora)?'de tarde':'do dia'; (groups[k]=groups[k]||[]).push(x); });
+    Object.keys(groups).forEach(k=>{ const L=groups[k], sq=[...new Set(L.map(x=>x.seq).filter(Boolean))].join(', '), noArt=L.filter(x=>!hasArt(x)).length;
+      const st=L.every(x=>['Agendado','Publicado'].includes(statusOf(x)))?(L.every(x=>statusOf(x)==='Publicado')?'Publicado':'Agendado'):L.every(x=>['Aprovado','Agendado','Publicado'].includes(statusOf(x)))?'Aprovado':'Em produção';
+      h+=row('goto','data-d="'+t+'"',ic.today,L.length+(L.length===1?' story ':' stories ')+k,esc(sq||'Sequência do dia'),st,noArt?'<span class="due hot">'+noArt+' sem arte</span>':''); });
+    if(!F.length){ const n=feed.filter(x=>x.date>t&&statusOf(x)!=='Publicado').sort(byDate)[0]; if(n) h+=row('open','data-id="'+esc(n.id)+'"',ic.grid,'A seguir: '+esc(n.tema||'post'),esc(WD[fromIso(n.date).getDay()])+', '+shortDay(n.date)+' · '+esc(n.formato||''),statusOf(n)); }
+    const ev=evList().filter(e=>!evPast(e)).map(e=>{ const tot=(e.tarefas||[]).length, ok=tot-evPend(e).length; return '<button class="evchip" data-act="evgo" data-id="'+esc(e.id)+'"><b>'+esc(e.nome)+'</b><span class="mt"><i style="width:'+(tot?Math.round(ok/tot*100):0)+'%"></i></span>'+ok+'/'+tot+' tarefas</button>'; }).join('');
+    return '<section class="vcard ovtd"><div class="tdh"><div><h3 style="margin:0"><span>Hoje, '+esc(longDay(t).toLowerCase())+'</span></h3><small>'+(F.length?F.length+(F.length===1?' post':' posts')+' no feed':'Sem post no feed')+' · '+(S.length?okS+' de '+S.length+' stories agendados':'sem stories')+'</small></div><button class="btn primary" data-act="goto" data-d="'+t+'">Abrir o dia</button></div>'
+      +(S.length?'<span class="meter"><i style="width:'+Math.round(okS/S.length*100)+'%"></i></span>':'')
+      +'<div class="tdl">'+(h||'<p class="hint" style="margin:0">Nada planejado para hoje.</p>')+'</div>'+(ev?'<div class="evrow">'+ev+'</div>':'')+'</section>';
+  }
+  function ovAtencao(){
+    const t=todayIso(), A=[], end=addDays(t,13), D=todayData();
+    D.U.forEach(u=>A.push([-1,'<div class="rw ua '+u[0]+'"><span class="rd"><b class="'+u[0]+'">!</b><span>hoje</span></span><span class="rm"><span class="rt">'+esc(u[1])+'</span>'+(u[2]?'<span class="rs">'+esc(u[2])+'</span>':'')+'</span>'+u[3]+'</div>']));
+    if(MT&&MT.ideias) MT.ideias.forEach(x=>A.push([-2,'<div class="rw ua hot"><span class="rd"><b class="hot">!</b><span>aviso</span></span><span class="rm"><span class="rt">Instagram</span><span class="rs">'+x+'</span></span><button class="go" data-act="tab" data-v="metricas">Ver</button></div>']));
+    feed.filter(x=>x.date>t&&x.date<=end&&statusOf(x)!=='Publicado'&&statusOf(x)!=='Agendado').sort(byDate).forEach(x=>{ const n=dleft(x.date), st=statusOf(x);
+      A.push([n,rowHTML(x,'<span class="due '+urgCls(n)+'">'+(!hasArt(x)?'sem arte · ':st==='Aprovado'?'falta agendar · ':'')+dueTxt(n)+'</span>')]); });
+    for(let i=1;i<14;i++){ const d=addDays(t,i); if(FEED_DOW.indexOf(fromIso(d).getDay())>=0&&!feedOn(d).length) A.push([i,'<button class="rw" data-act="goto" data-d="'+d+'"><span class="rd"><b>'+shortDay(d)+'</b><span>'+WD[fromIso(d).getDay()]+'</span></span><span class="rm"><span class="rt">Sem post de feed planejado</span><span class="rs">Dia de feed (seg, qua ou sex)</span></span><span class="due '+urgCls(i)+'">'+dueTxt(i)+'</span></button>']); }
+    for(let i=1;i<7;i++){ const d=addDays(t,i), S=storiesOn(d).filter(x=>x.kind==='story'), na=S.filter(x=>!hasArt(x)).length; if(na) A.push([i,'<button class="rw" data-act="goto" data-d="'+d+'"><span class="rd"><b>'+shortDay(d)+'</b><span>'+WD[fromIso(d).getDay()]+'</span></span><span class="rm"><span class="rt">'+na+(na===1?' story sem arte':' stories sem arte')+'</span><span class="rs">'+S.length+' stories no dia</span></span><span class="due '+urgCls(i)+'">'+dueTxt(i)+'</span></button>']); }
+    A.sort((a,b)=>a[0]-b[0]);
+    return '<section class="vcard ovat"><h3><span>Precisa de atenção</span><small>'+(A.length?A.length+(A.length===1?' item':' itens')+' em 14 dias':'tudo em dia')+'</small></h3><div class="sb">'+((ovAll?A:A.slice(0,3)).map(x=>x[1]).join('')||'<p class="empty">Tudo em dia.</p>')+'</div>'
+      +(A.length>3?'<button class="btn" data-act="ovall">'+(ovAll?'Mostrar menos':'Ver todos ('+A.length+')')+'</button>':'')+'</section>';
+  }
+  function ovKpis(){
+    if(MT===undefined) return '<p class="hint">Carregando os números do Instagram…</p>';
+    if(!MT||!MT.janelas) return '';
+    const J=MT.janelas[mtWin]||MT.janelas['7'], A=J.anterior||{};
+    const dl=(a,b)=>{ if(a==null||!b) return '<em>sem comparação</em>'; const p=(a-b)/b*100; return '<em class="'+(p>=0?'up':'dn')+'">'+(p>=0?'↑ +':'↓ ')+p.toFixed(1).replace('.',',')+'%</em> vs. antes'; };
+    const k=(icn,l,v,sub)=>'<div class="ovk"><span class="kl">'+l+'</span><span class="ki">'+icn+'</span><b>'+v+'</b><small>'+sub+'</small></div>';
+    const net=J.seguiram!=null?J.seguiram-(J.deixaram_de_seguir||0):null;
+    return '<div class="ovks">'+k(ic.eye,'Visualizações',mtN(J.visualizacoes),dl(J.visualizacoes,A.visualizacoes))+k(ic.heart||ic.star,'Interações',mtN(J.interacoes),dl(J.interacoes,A.interacoes))+k(ic.user||ic.eye,'Visitas ao perfil',mtN(J.visitas_perfil),dl(J.visitas_perfil,A.visitas_perfil))+k(ic.plus||ic.star,'Novos seguidores',net==null?'—':(net>=0?'+':'')+trN(net),MT.conta&&MT.conta.seguidores?'total '+trN(MT.conta.seguidores):'')+'</div>';
+  }
+  function smoothPath(P){ if(P.length<2) return ''; let d='M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);
+    for(let i=0;i<P.length-1;i++){ const p0=P[i-1]||P[i], p1=P[i], p2=P[i+1], p3=P[i+2]||p2;
+      d+=' C'+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+' '+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+' '+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+' '+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1); }
+    return d; }
+  function ovChart(){
+    if(!MT||!MT.diario||!MT.diario.length) return '';
+    const J=MT.janelas[mtWin]||MT.janelas['7'], L=MT.diario.filter(x=>x.data>=J.inicio&&x.data<=J.fim&&x.visualizacoes!=null);
+    if(L.length<2) return '';
+    const W=640,H=170, mx=Math.max(...L.map(x=>x.visualizacoes))*1.1||1, P=L.map((x,i)=>[i/(L.length-1)*W,H-x.visualizacoes/mx*H]);
+    const peak=L.reduce((a,b)=>b.visualizacoes>a.visualizacoes?b:a), posted=new Set(feed.filter(x=>statusOf(x)==='Publicado').map(x=>x.date));
+    const step=Math.ceil(L.length/7);
+    return '<section class="vcard ovch"><h3><span>Visualizações por dia</span><span class="vtabs">'+[7,30].map(n=>'<button data-act="mtw" data-w="'+n+'" aria-pressed="'+(mtWin===n)+'">'+n+' dias</button>').join('')+'</span></h3><p class="hint" style="margin:0 0 8px">Pico em '+shortDay(peak.data)+': '+mtN(peak.visualizacoes)+'. Os pontos marcam dias com post publicado no feed.</p>'
+      +'<svg class="ovsvg" viewBox="-6 -8 '+(W+12)+' '+(H+16)+'" preserveAspectRatio="none" role="img" aria-label="Visualizações por dia"><defs><linearGradient id="ovg" x1="0" x2="1"><stop offset="0" stop-color="#A11176"/><stop offset=".55" stop-color="#8461F4"/><stop offset="1" stop-color="#81D8E5"/></linearGradient><linearGradient id="ovf" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#8461F4" stop-opacity=".18"/><stop offset="1" stop-color="#8461F4" stop-opacity="0"/></linearGradient></defs>'
+      +'<path d="'+smoothPath(P)+' L'+W+' '+H+' L0 '+H+'Z" fill="url(#ovf)"/><path d="'+smoothPath(P)+'" fill="none" stroke="url(#ovg)" stroke-width="3" vector-effect="non-scaling-stroke"/>'
+      +L.map((x,i)=>posted.has(x.data)?'<circle cx="'+P[i][0].toFixed(1)+'" cy="'+P[i][1].toFixed(1)+'" r="4" fill="#A11176" vector-effect="non-scaling-stroke"><title>'+shortDay(x.data)+': '+mtN(x.visualizacoes)+'</title></circle>':'').join('')+'</svg>'
+      +'<div class="ovax">'+L.filter((x,i)=>i%step===0||i===L.length-1).map(x=>'<span>'+shortDay(x.data)+'</span>').join('')+'</div></section>';
+  }
+  function ovWeeks(){
+    const t=todayIso(); let mon=(function(){ const d=fromIso(t); d.setDate(d.getDate()-((d.getDay()+6)%7)-7); return iso(d); })();
+    let h='<section class="vcard ovwk"><h3><span>Semanas</span><small>feed seg, qua e sex · toque num dia para abrir</small></h3><div class="wkx">';
+    for(let w=0;w<4;w++){ const wd=[0,1,2,3,4,5,6].map(i=>addDays(mon,i)), nf=wd.reduce((a,d)=>a+feedOn(d).length,0), ns=wd.reduce((a,d)=>a+storiesOn(d).filter(x=>x.kind==='story').length,0);
+      h+='<div class="wkc'+(wd.includes(t)?' cur':'')+'"><div class="wkh"><b>'+shortDay(wd[0])+' a '+shortDay(wd[6])+'</b><span class="'+(nf>FEED_MAX?'hot':nf<FEED_DOW.length?'warm':'ok')+'">'+nf+(nf===1?' post':' posts')+' · '+ns+' st</span></div><div class="wkg">';
+      wd.forEach(d=>{ const st=dayState3(d), f=feedOn(d), s=storiesOn(d).filter(x=>x.kind==='story').length;
+        h+='<button class="dc3 '+st+(d<t?' past':'')+(d===t?' today':'')+'" data-act="goto" data-d="'+d+'" aria-label="'+esc(longDay(d))+(st?', '+ST3[st]:'')+'"><span class="w">'+WD[fromIso(d).getDay()]+'</span><span class="n">'+fromIso(d).getDate()+'</span>'+(st?'<svg viewBox="0 0 24 24" class="si">'+ICS3[st]+'</svg>':'<span class="si"></span>')+'<span class="fr">'+(f.length?f.map(()=>'<i></i>').join(''):FEED_DOW.indexOf(fromIso(d).getDay())>=0&&d>=t?'<i class="gap"></i>':'')+'</span><span class="sc">'+(s?s+' st':'–')+'</span></button>'; });
+      h+='</div></div>'; mon=addDays(mon,7); }
+    return h+'</div><div class="legend"><span><i class="lg r"></i>! falta organizar</span><span><i class="lg y"></i>◷ aprovado, falta agendar</span><span><i class="lg gr"></i>✓ tudo certo</span><span><i style="background:var(--accent)"></i>post no feed</span><span><i style="border:2px dashed var(--danger);background:transparent;box-sizing:border-box"></i>dia de feed vazio</span></div></section>';
+  }
+  function renderPainel(){ mtLoad(); return ovInsight()+'<div class="ovg">'+ovHoje()+ovAtencao()+'</div>'+ovKpis()+ovChart()+ovWeeks(); }
+  function renderPainelOld(){
     const t=todayIso(), days=[]; for(let i=0;i<hz;i++) days.push(addDays(t,i)); const end=days[days.length-1];
     const fH=feed.filter(x=>x.date>=t&&x.date<=end).sort(byDate);
     const need=fH.filter(x=>statusOf(x)!=='Publicado'&&!hasArt(x));
@@ -1881,7 +2009,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
   /* ---------- Métricas do Instagram (instagram/metricas.json, gerado a cada 3h por .github/workflows/instagram.yml) ---------- */
   let MT, mtBusy=false, mtWin=7;
   function mtLoad(){ if(MT!==undefined||mtBusy) return; mtBusy=true;
-    fetch('instagram/metricas.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ MT=j; }).catch(()=>{ MT=null; }).finally(()=>{ mtBusy=false; if(view==='metricas') renderAll(); }); }
+    fetch('instagram/metricas.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ MT=j; }).catch(()=>{ MT=null; }).finally(()=>{ mtBusy=false; if(view==='metricas'||view==='painel') renderAll(); }); }
   const mtN=v=>v==null?'—':trN(v);
   function mtVar(a,b){ if(a==null||!b) return ''; const p=(a-b)/b*100; return '<em class="'+(p>=0?'up':'dn')+'">'+(p>=0?'+':'')+p.toFixed(1).replace('.',',')+'% vs. '+mtWin+' dias antes</em>'; }
   function mtNav(L){ const s={avancou:0,voltou:0,saiu:0,proxima_conta:0}; L.forEach(x=>Object.keys(s).forEach(k=>{ s[k]+=+x[k]||0; })); return s; }
@@ -2433,6 +2561,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     if(act==='close'){ closeItem(); return; }
     if(act==='fold'){ const o=el.getAttribute('aria-expanded')==='true'; el.setAttribute('aria-expanded',String(!o)); $('#tree').hidden=o; try{ localStorage.setItem('belle_fold',o?'1':''); }catch(_){} return; }
     if(act==='theme'){ const t=el.dataset.t; if(t) document.documentElement.dataset.theme=t; else delete document.documentElement.dataset.theme; try{ localStorage.setItem('belle_theme',t); }catch(_){} renderAll(); return; }
+    if(act==='ovall'){ ovAll=!ovAll; renderAll(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='dadd'){ dAdd=el.dataset.k||null; renderDay(); if(dAdd){ const f=$('#dpanel .addf'); if(f) f.scrollIntoView({block:'nearest'}); } return; }
     if(act==='hsug'){ e.preventDefault(); const f=$('#f-hora'); if(f){ f.value=el.dataset.h; f.dataset.commit='1'; f.dispatchEvent(new Event('change',{bubbles:true})); } toast('Horário '+el.dataset.h); setTimeout(()=>renderSheet(),300); return; }

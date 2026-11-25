@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125082206">
+<meta name="belle-ver" content="20261125113211">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -618,6 +618,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <div class="grp">Geral</div>
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>
     <button class="tab" role="tab" data-act="tab" data-v="hoje" id="tab-hoje"></button>
+    <div class="grp">Mídia paga</div>
     <button class="tab" role="tab" data-act="tab" data-v="trafego" id="tab-trafego"></button>
     <button class="tab" role="tab" data-act="tab" data-v="google" id="tab-google"></button>
     <div class="grp">Conteúdo</div>
@@ -677,6 +678,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const longDay=s=>fromIso(s).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
   const shortDay=s=>{const d=fromIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
   const ic={
+    metaads:'<svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg>',
     gads:'<svg class="i" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>',
     mega:'<svg class="i" viewBox="0 0 24 24"><path d="M3 11v2a2 2 0 0 0 2 2h2l5 4V5L7 9H5a2 2 0 0 0-2 2zM17 8a5 5 0 0 1 0 8M20 5a9 9 0 0 1 0 14"/></svg>',
     chart:'<svg class="i" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
@@ -711,7 +713,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
   let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null, editF=null, editBusy=false;
-  let view=location.hash==='#trafego'?'trafego':location.hash==='#google'?'google':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
+  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
 
@@ -1728,7 +1730,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const T=d.raws_total||camps.reduce((t,c)=>{ Object.entries(c.raws||{}).forEach(([k,v])=>t[k]=(t[k]||0)+(+v||0)); return t; },{});
     const spend=+d.spend_total||0, ctr=T.impressions?T.clicks/T.impressions*100:null, cpc=T.clicks?spend/T.clicks:null, cpm=T.impressions?spend/T.impressions*1000:null;
     const pk=d.primary_kpi||'cpl', K=(d.kpis_summary||{})[pk];
-    h+='<p class="ihd">Últimos '+trWin+' dias, atualizado em '+trWhen(d.generated_at)+'<br><small>Os números chegam da Meta três vezes por dia.</small></p>';
+    h+='<p class="ihd">Últimos '+trWin+' dias, atualizado em '+trWhen(d.generated_at)+'<br><small>Só Meta Ads (Facebook e Instagram). Os números chegam da Meta três vezes por dia. Google Ads fica na aba ao lado.</small></p>';
     // destaque: custo por lead contra a meta
     if(K&&K.value!=null){ const tg=+K.target||0, v=+K.value, mx=Math.max(tg*2,v*1.15,1), st=K.status==='green'?'ok':K.status==='yellow'?'wa':K.status==='red'?'bd':'', dp=K.delta_pct;
       const msg=dp==null?'':dp<=0?Math.abs(dp).toFixed(0)+'% abaixo da meta':dp.toFixed(0)+'% acima da meta';
@@ -1789,7 +1791,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const camps=(d.campaigns||[]).slice().sort((a,b)=>(b.status==='ENABLED')-(a.status==='ENABLED')||(b.spend||0)-(a.spend||0));
     const T=d.totals||{}, spend=+T.spend||0, ctr=T.impressions?T.clicks/T.impressions*100:null, cpc=T.clicks?spend/T.clicks:null;
     const K=d.kpi||{}, acoes=d.kpi_acoes_encontradas&&d.kpi_acoes_encontradas.length?d.kpi_acoes_encontradas:null;
-    h+='<p class="ihd">Últimos '+gaWin+' dias, atualizado em '+trWhen(d.generated_at)+'<br><small>Os números chegam do Google Ads três vezes por dia. '+(acoes?'Cadastro = '+esc(acoes.join(', '))+'.':'Cadastro = todas as conversões principais da conta.')+'</small></p>';
+    h+='<p class="ihd">Últimos '+gaWin+' dias, atualizado em '+trWhen(d.generated_at)+'<br><small>Só Google Ads (Pesquisa, Performance Max, YouTube). Os números chegam do Google Ads três vezes por dia. Meta Ads fica na aba ao lado. '+(acoes?'Cadastro = '+esc(acoes.join(', '))+'.':'Cadastro = todas as conversões principais da conta.')+'</small></p>';
     if(K.valor!=null){ const v=+K.valor, a=+K.scale_at, b=+K.kill_at, mx=Math.max(b*1.3,v*1.1,1), st=v<=a?'ok':v>=b?'bd':'wa';
       const msg=st==='ok'?'Abaixo de '+brl(a)+': campanhas boas podem escalar':st==='bd'?'Acima de '+brl(b)+': hora de cortar':'Entre '+brl(a)+' e '+brl(b);
       h+='<div class="vcard trhero '+st+'"><div class="trh-top"><div><span class="trh-k">Custo por cadastro no trial</span><b class="trh-v">'+brl(v)+'</b></div><div class="trh-s"><span>'+(st==='ok'?'Dentro da meta':st==='wa'?'Na faixa de atenção':'Fora da meta')+'</span><em>'+msg+'</em></div></div>'
@@ -2009,12 +2011,12 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Geral · Tráfego pago',google:'Geral · Google Ads',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Tráfego pago',ic.mega],['google','Google Ads',ic.gads],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['insights','Insights',ic.chart],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['insights','Insights',ic.chart],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
     if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }

@@ -1,0 +1,999 @@
+{
+ "generated_at": "2026-11-25T09:05:00-03:00",
+ "fonte": "painel",
+ "fonte_obs": "Lido do Meta Business Suite pelo navegador em 25/11 (plano B). Quando o token da API for aprovado, a atualização passa a ser automática.",
+ "conta": {
+  "usuario": "bellesoftware",
+  "seguidores": 11700,
+  "seguidores_aprox": true
+ },
+ "janelas": {
+  "7": {
+   "inicio": "2026-11-18",
+   "fim": "2026-11-24",
+   "alcance": null,
+   "visualizacoes": 78192,
+   "interacoes": 179,
+   "visitas_perfil": 633,
+   "cliques_link": 871,
+   "anterior": {
+    "inicio": "2026-11-11",
+    "fim": "2026-11-17",
+    "visualizacoes": 43660,
+    "interacoes": 180,
+    "visitas_perfil": 701,
+    "cliques_link": 844
+   },
+   "seguiram": 91
+  },
+  "30": {
+   "inicio": "2026-10-26",
+   "fim": "2026-11-24",
+   "alcance": 214800,
+   "visualizacoes": 300376,
+   "interacoes": 1034,
+   "visitas_perfil": 3314,
+   "cliques_link": 4371,
+   "seguiram": 447,
+   "deixaram_de_seguir": 147,
+   "anterior": {
+    "inicio": "2026-09-26",
+    "fim": "2026-10-25",
+    "alcance": null,
+    "visualizacoes": 522393,
+    "interacoes": 2498,
+    "visitas_perfil": null,
+    "cliques_link": null
+   }
+  }
+ },
+ "diario": [
+  {
+   "data": "2026-10-26",
+   "alcance": 17520,
+   "visualizacoes": 26391,
+   "novos_seguidores": 6
+  },
+  {
+   "data": "2026-10-27",
+   "alcance": 15263,
+   "visualizacoes": 13249,
+   "novos_seguidores": 16
+  },
+  {
+   "data": "2026-10-28",
+   "alcance": 10892,
+   "visualizacoes": 11598,
+   "novos_seguidores": 12
+  },
+  {
+   "data": "2026-10-29",
+   "alcance": 12505,
+   "visualizacoes": 13396,
+   "novos_seguidores": 19
+  },
+  {
+   "data": "2026-10-30",
+   "alcance": 11559,
+   "visualizacoes": 13478,
+   "novos_seguidores": 23
+  },
+  {
+   "data": "2026-10-31",
+   "alcance": 12150,
+   "visualizacoes": 11467,
+   "novos_seguidores": 19
+  },
+  {
+   "data": "2026-11-01",
+   "alcance": 17104,
+   "visualizacoes": 15494,
+   "novos_seguidores": 26
+  },
+  {
+   "data": "2026-11-02",
+   "alcance": 15596,
+   "visualizacoes": 13157,
+   "novos_seguidores": 27
+  },
+  {
+   "data": "2026-11-03",
+   "alcance": 14834,
+   "visualizacoes": 11427,
+   "novos_seguidores": 24
+  },
+  {
+   "data": "2026-11-04",
+   "alcance": 8774,
+   "visualizacoes": 8273,
+   "novos_seguidores": 10
+  },
+  {
+   "data": "2026-11-05",
+   "alcance": 10033,
+   "visualizacoes": 7160,
+   "novos_seguidores": 13
+  },
+  {
+   "data": "2026-11-06",
+   "alcance": 7717,
+   "visualizacoes": 6175,
+   "novos_seguidores": 16
+  },
+  {
+   "data": "2026-11-07",
+   "alcance": 6204,
+   "visualizacoes": 7182,
+   "novos_seguidores": 11
+  },
+  {
+   "data": "2026-11-08",
+   "alcance": 8418,
+   "visualizacoes": 7052,
+   "novos_seguidores": 17
+  },
+  {
+   "data": "2026-11-09",
+   "alcance": 6499,
+   "visualizacoes": 6218,
+   "novos_seguidores": 14
+  },
+  {
+   "data": "2026-11-10",
+   "alcance": 7124,
+   "visualizacoes": 6922,
+   "novos_seguidores": 10
+  },
+  {
+   "data": "2026-11-11",
+   "alcance": 6140,
+   "visualizacoes": 6068,
+   "novos_seguidores": 13
+  },
+  {
+   "data": "2026-11-12",
+   "alcance": 9039,
+   "visualizacoes": 7645,
+   "novos_seguidores": 11
+  },
+  {
+   "data": "2026-11-13",
+   "alcance": 7628,
+   "visualizacoes": 5358,
+   "novos_seguidores": 21
+  },
+  {
+   "data": "2026-11-14",
+   "alcance": 6827,
+   "visualizacoes": 5067,
+   "novos_seguidores": 15
+  },
+  {
+   "data": "2026-11-15",
+   "alcance": 11812,
+   "visualizacoes": 6941,
+   "novos_seguidores": 5
+  },
+  {
+   "data": "2026-11-16",
+   "alcance": 7772,
+   "visualizacoes": 6471,
+   "novos_seguidores": 14
+  },
+  {
+   "data": "2026-11-17",
+   "alcance": 11106,
+   "visualizacoes": 6110,
+   "novos_seguidores": 14
+  },
+  {
+   "data": "2026-11-18",
+   "alcance": 11745,
+   "visualizacoes": 8854,
+   "novos_seguidores": 11
+  },
+  {
+   "data": "2026-11-19",
+   "alcance": 9261,
+   "visualizacoes": 10220,
+   "novos_seguidores": 15
+  },
+  {
+   "data": "2026-11-20",
+   "alcance": 7438,
+   "visualizacoes": 8936,
+   "novos_seguidores": 17
+  },
+  {
+   "data": "2026-11-21",
+   "alcance": 9879,
+   "visualizacoes": 9190,
+   "novos_seguidores": 21
+  },
+  {
+   "data": "2026-11-22",
+   "alcance": 10648,
+   "visualizacoes": 8465,
+   "novos_seguidores": 15
+  },
+  {
+   "data": "2026-11-23",
+   "alcance": 13888,
+   "visualizacoes": 12724,
+   "novos_seguidores": 12
+  },
+  {
+   "data": "2026-11-24",
+   "alcance": 18808,
+   "visualizacoes": 19803,
+   "novos_seguidores": null
+  }
+ ],
+ "stories": [
+  {
+   "id": "2026-11-11T15:24",
+   "data": "2026-11-11",
+   "hora": "15:24",
+   "visualizacoes": 47,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 3
+  },
+  {
+   "id": "2026-11-11T16:20",
+   "data": "2026-11-11",
+   "hora": "16:20",
+   "visualizacoes": 37,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-11T16:21",
+   "data": "2026-11-11",
+   "hora": "16:21",
+   "visualizacoes": 37,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-12T09:15",
+   "data": "2026-11-12",
+   "hora": "09:15",
+   "visualizacoes": 47,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-12T12:00",
+   "data": "2026-11-12",
+   "hora": "12:00",
+   "visualizacoes": 35,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-12T15:30",
+   "data": "2026-11-12",
+   "hora": "15:30",
+   "visualizacoes": 36,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-12T15:31",
+   "data": "2026-11-12",
+   "hora": "15:31",
+   "visualizacoes": 35,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-12T21:00",
+   "data": "2026-11-12",
+   "hora": "21:00",
+   "visualizacoes": 37,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-13T09:30",
+   "data": "2026-11-13",
+   "hora": "09:30",
+   "visualizacoes": 49,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-13T12:34",
+   "data": "2026-11-13",
+   "hora": "12:34",
+   "visualizacoes": 51,
+   "alcance": null,
+   "interacoes": 2,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-13T13:21",
+   "data": "2026-11-13",
+   "hora": "13:21",
+   "visualizacoes": 48,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-13T15:00",
+   "data": "2026-11-13",
+   "hora": "15:00",
+   "visualizacoes": 47,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-13T15:30",
+   "data": "2026-11-13",
+   "hora": "15:30",
+   "visualizacoes": 46,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-13T15:31",
+   "data": "2026-11-13",
+   "hora": "15:31",
+   "visualizacoes": 43,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-13T18:35",
+   "data": "2026-11-13",
+   "hora": "18:35",
+   "visualizacoes": 47,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-13T22:00",
+   "data": "2026-11-13",
+   "hora": "22:00",
+   "visualizacoes": 62,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-14T13:39",
+   "data": "2026-11-14",
+   "hora": "13:39",
+   "visualizacoes": 80,
+   "alcance": null,
+   "interacoes": 3,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-14T16:00",
+   "data": "2026-11-14",
+   "hora": "16:00",
+   "visualizacoes": 66,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-14T21:00",
+   "data": "2026-11-14",
+   "hora": "21:00",
+   "visualizacoes": 70,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-15T14:00",
+   "data": "2026-11-15",
+   "hora": "14:00",
+   "visualizacoes": 165,
+   "alcance": 133,
+   "interacoes": 2,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-15T22:00",
+   "data": "2026-11-15",
+   "hora": "22:00",
+   "visualizacoes": 58,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-15T22:01",
+   "data": "2026-11-15",
+   "hora": "22:01",
+   "visualizacoes": 53,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-16T09:00",
+   "data": "2026-11-16",
+   "hora": "09:00",
+   "visualizacoes": 59,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-16T10:00",
+   "data": "2026-11-16",
+   "hora": "10:00",
+   "visualizacoes": 65,
+   "alcance": null,
+   "interacoes": 2,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-16T14:30",
+   "data": "2026-11-16",
+   "hora": "14:30",
+   "visualizacoes": 61,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-16T15:00",
+   "data": "2026-11-16",
+   "hora": "15:00",
+   "visualizacoes": 45,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-16T21:01",
+   "data": "2026-11-16",
+   "hora": "21:01",
+   "visualizacoes": 52,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-17T11:02",
+   "data": "2026-11-17",
+   "hora": "11:02",
+   "visualizacoes": 65,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-17T12:00",
+   "data": "2026-11-17",
+   "hora": "12:00",
+   "visualizacoes": 45,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-17T12:01",
+   "data": "2026-11-17",
+   "hora": "12:01",
+   "visualizacoes": 42,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-17T12:02",
+   "data": "2026-11-17",
+   "hora": "12:02",
+   "visualizacoes": 37,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-17T14:08",
+   "data": "2026-11-17",
+   "hora": "14:08",
+   "visualizacoes": 439,
+   "alcance": 336,
+   "interacoes": 3,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-17T21:04",
+   "data": "2026-11-17",
+   "hora": "21:04",
+   "visualizacoes": 63,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-18T10:00",
+   "data": "2026-11-18",
+   "hora": "10:00",
+   "visualizacoes": 53,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-18T13:37",
+   "data": "2026-11-18",
+   "hora": "13:37",
+   "visualizacoes": 45,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-18T13:38",
+   "data": "2026-11-18",
+   "hora": "13:38",
+   "visualizacoes": 40,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-18T21:00",
+   "data": "2026-11-18",
+   "hora": "21:00",
+   "visualizacoes": 57,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-19T09:20",
+   "data": "2026-11-19",
+   "hora": "09:20",
+   "visualizacoes": 61,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 2
+  },
+  {
+   "id": "2026-11-19T13:29",
+   "data": "2026-11-19",
+   "hora": "13:29",
+   "visualizacoes": 51,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-19T13:32",
+   "data": "2026-11-19",
+   "hora": "13:32",
+   "visualizacoes": 49,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-19T15:20",
+   "data": "2026-11-19",
+   "hora": "15:20",
+   "visualizacoes": 47,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-19T20:00",
+   "data": "2026-11-19",
+   "hora": "20:00",
+   "visualizacoes": 44,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-20T09:00",
+   "data": "2026-11-20",
+   "hora": "09:00",
+   "visualizacoes": 51,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-20T13:31",
+   "data": "2026-11-20",
+   "hora": "13:31",
+   "visualizacoes": 46,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-20T14:01",
+   "data": "2026-11-20",
+   "hora": "14:01",
+   "visualizacoes": 41,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-20T14:31",
+   "data": "2026-11-20",
+   "hora": "14:31",
+   "visualizacoes": 44,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-20T15:01",
+   "data": "2026-11-20",
+   "hora": "15:01",
+   "visualizacoes": 43,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-20T15:31",
+   "data": "2026-11-20",
+   "hora": "15:31",
+   "visualizacoes": 46,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-20T20:00",
+   "data": "2026-11-20",
+   "hora": "20:00",
+   "visualizacoes": 51,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-21T09:00",
+   "data": "2026-11-21",
+   "hora": "09:00",
+   "visualizacoes": 57,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-21T13:00",
+   "data": "2026-11-21",
+   "hora": "13:00",
+   "visualizacoes": 64,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-21T13:30",
+   "data": "2026-11-21",
+   "hora": "13:30",
+   "visualizacoes": 55,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-21T14:00",
+   "data": "2026-11-21",
+   "hora": "14:00",
+   "visualizacoes": 58,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-21T14:30",
+   "data": "2026-11-21",
+   "hora": "14:30",
+   "visualizacoes": 56,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-21T15:00",
+   "data": "2026-11-21",
+   "hora": "15:00",
+   "visualizacoes": 52,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-21T21:00",
+   "data": "2026-11-21",
+   "hora": "21:00",
+   "visualizacoes": 71,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-22T09:04",
+   "data": "2026-11-22",
+   "hora": "09:04",
+   "visualizacoes": 76,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-22T11:16",
+   "data": "2026-11-22",
+   "hora": "11:16",
+   "visualizacoes": 77,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-22T13:30",
+   "data": "2026-11-22",
+   "hora": "13:30",
+   "visualizacoes": 68,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-22T14:04",
+   "data": "2026-11-22",
+   "hora": "14:04",
+   "visualizacoes": 68,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-22T15:05",
+   "data": "2026-11-22",
+   "hora": "15:05",
+   "visualizacoes": 66,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-22T20:04",
+   "data": "2026-11-22",
+   "hora": "20:04",
+   "visualizacoes": 67,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-23T09:10",
+   "data": "2026-11-23",
+   "hora": "09:10",
+   "visualizacoes": 55,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-23T15:49",
+   "data": "2026-11-23",
+   "hora": "15:49",
+   "visualizacoes": 55,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-23T20:10",
+   "data": "2026-11-23",
+   "hora": "20:10",
+   "visualizacoes": 46,
+   "alcance": null,
+   "interacoes": 1,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-24T09:00",
+   "data": "2026-11-24",
+   "hora": "09:00",
+   "visualizacoes": 41,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 1
+  },
+  {
+   "id": "2026-11-24T12:00",
+   "data": "2026-11-24",
+   "hora": "12:00",
+   "visualizacoes": 29,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T12:30",
+   "data": "2026-11-24",
+   "hora": "12:30",
+   "visualizacoes": 28,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T13:00",
+   "data": "2026-11-24",
+   "hora": "13:00",
+   "visualizacoes": 29,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T14:00",
+   "data": "2026-11-24",
+   "hora": "14:00",
+   "visualizacoes": 24,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T15:30",
+   "data": "2026-11-24",
+   "hora": "15:30",
+   "visualizacoes": 28,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T16:00",
+   "data": "2026-11-24",
+   "hora": "16:00",
+   "visualizacoes": 23,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T16:30",
+   "data": "2026-11-24",
+   "hora": "16:30",
+   "visualizacoes": 21,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T17:30",
+   "data": "2026-11-24",
+   "hora": "17:30",
+   "visualizacoes": 20,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T17:36",
+   "data": "2026-11-24",
+   "hora": "17:36",
+   "visualizacoes": 21,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  },
+  {
+   "id": "2026-11-24T20:01",
+   "data": "2026-11-24",
+   "hora": "20:01",
+   "visualizacoes": 17,
+   "alcance": null,
+   "interacoes": 0,
+   "respostas": 0
+  }
+ ],
+ "stories_desde": "2026-11-11",
+ "posts": [
+  {
+   "data": "2026-11-23",
+   "hora": "10:00",
+   "tipo": "carrossel",
+   "legenda": "Antes de anunciar, confira se a sua clínica está pronta (checklist Black Friday)",
+   "visualizacoes": 124,
+   "alcance": 43,
+   "interacoes": 7,
+   "curtidas": 5,
+   "comentarios": 0,
+   "compartilhamentos": 1,
+   "salvamentos": 1
+  },
+  {
+   "data": "2026-11-20",
+   "hora": "21:00",
+   "tipo": "carrossel",
+   "legenda": "Como vender mais na Black Friday sem depender só de desconto? 5 dicas",
+   "visualizacoes": 174,
+   "alcance": 67,
+   "interacoes": 6,
+   "curtidas": 5,
+   "comentarios": 0,
+   "compartilhamentos": 0,
+   "salvamentos": 1
+  },
+  {
+   "data": "2026-11-18",
+   "hora": "19:00",
+   "tipo": "carrossel",
+   "legenda": "Desconto avulso reduz o valor de uma sessão. Pacote organiza várias",
+   "visualizacoes": 161,
+   "alcance": 68,
+   "interacoes": 3,
+   "curtidas": 3,
+   "comentarios": 0,
+   "compartilhamentos": 0,
+   "salvamentos": 0
+  },
+  {
+   "data": "2026-11-16",
+   "hora": "18:30",
+   "tipo": "reel",
+   "legenda": "O que acontece com o paciente depois que ele chama no WhatsApp da sua clínica?",
+   "visualizacoes": 251,
+   "alcance": null,
+   "interacoes": 5,
+   "curtidas": 5,
+   "comentarios": 0,
+   "compartilhamentos": 0,
+   "salvamentos": 0
+  },
+  {
+   "data": "2026-11-13",
+   "hora": "18:30",
+   "tipo": "reel",
+   "legenda": "O WhatsApp da sua clínica é só um canal de conversa ou de receita?",
+   "visualizacoes": 312,
+   "alcance": null,
+   "interacoes": 7,
+   "curtidas": 6,
+   "comentarios": 0,
+   "compartilhamentos": 0,
+   "salvamentos": 0
+  },
+  {
+   "data": "2026-11-11",
+   "hora": "18:30",
+   "tipo": "reel",
+   "legenda": "Seu WhatsApp responde às 22h? No BelleChat, a IA responde e agenda",
+   "visualizacoes": 163,
+   "alcance": 112,
+   "interacoes": 7,
+   "curtidas": 5,
+   "comentarios": 0,
+   "compartilhamentos": 1,
+   "salvamentos": 1
+  }
+ ]
+}

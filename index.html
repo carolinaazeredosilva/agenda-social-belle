@@ -2,15 +2,17 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125193345">
+<meta name="belle-ver" content="20261125193449">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Agenda Social">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>try{var t=localStorage.getItem('belle_theme');if(t)document.documentElement.dataset.theme=t;}catch(_){}</script>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -634,6 +636,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 .prof{display:flex;gap:10px;align-items:center;padding:2px 6px 12px}
 .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#A11176,#8461F4 55%,#81D8E5);display:grid;place-items:center;font:800 15px var(--font-display);color:#fff;flex:none;box-shadow:0 0 0 2px #2B1338,0 0 0 3.5px #F58BD8}
 .av.sm{width:30px;height:30px;font-size:12px;box-shadow:none}
+.prof .blogo{width:36px;height:36px;flex:none;display:block;border-radius:10px;box-shadow:0 4px 12px rgba(161,17,118,.35)}
 .prof b{display:block;color:#fff;font:700 14px/1.2 var(--font-display)}.prof span{font-size:12px;color:#A995B8}
 .brand-row{border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:2px}
 .grp{font:600 11.5px var(--font-body);letter-spacing:0;text-transform:none;color:#9C88AD;padding:14px 12px 4px}
@@ -844,7 +847,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
-  <div class="brand-row"><div class="brand prof"><div class="av">B</div><div><b>Belle Software</b><span>@bellesoftware</span></div></div><button class="iconbtn side-tg" data-act="sidemini" aria-label="Recolher menu" title="Recolher menu"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button></div>
+  <div class="brand-row"><div class="brand prof"><img class="blogo" src="logo.svg" alt="" width="36" height="36"><div><b>Agenda Social</b><span>Belle Software</span></div></div><button class="iconbtn side-tg" data-act="sidemini" aria-label="Recolher menu" title="Recolher menu"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button></div>
   <div class="in-tabs" role="tablist">
     <div class="grp">Análise</div>
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>

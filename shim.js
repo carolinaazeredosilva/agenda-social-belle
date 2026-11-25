@@ -16,7 +16,7 @@
       overlay=document.createElement('div');
       overlay.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg,#F8F3FB);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:var(--font-body,system-ui)';
       var inp='display:block;width:100%;box-sizing:border-box;min-height:48px;margin:0 0 10px;padding:0 14px;border:1px solid var(--line,#E6DCEE);border-radius:12px;background:var(--panel,#fff);color:var(--ink,#381B49);font:16px var(--font-body,system-ui)';
-      overlay.innerHTML='<form id="lg-form" style="width:100%;max-width:320px"><div style="font:800 26px/1.1 var(--font-display,system-ui);color:var(--ink,#381B49)">Agenda Social</div>'+
+      overlay.innerHTML='<form id="lg-form" style="width:100%;max-width:320px"><img src="logo.svg" alt="" width="64" height="64" style="display:block;width:64px;height:64px;margin-bottom:14px;border-radius:18px;box-shadow:0 8px 24px rgba(161,17,118,.3)"><div style="font:800 26px/1.1 var(--font-display,system-ui);color:var(--ink,#381B49)">Agenda Social</div>'+
         '<p id="lg-msg" style="margin:12px 0 20px;color:var(--body,#5A4869);font-size:15px;line-height:1.45">Entre para ver a planilha e salvar o que você organizar.</p>'+
         '<input id="lg-mail" type="email" autocomplete="username" placeholder="E-mail" style="'+inp+'" value="'+((function(){ try{ return localStorage.getItem('belle_mail')||''; }catch(_){ return ''; } })())+'">'+
         '<input id="lg-pass" type="password" autocomplete="current-password" placeholder="Senha" style="'+inp+'">'+

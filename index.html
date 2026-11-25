@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125113314">
+<meta name="belle-ver" content="20261125115154">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1834,17 +1834,18 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(MT===undefined) return h+'<p class="empty">Carregando as métricas do Instagram…</p>';
     if(!MT||!MT.janelas) return h+'<div class="note">O Instagram ainda não está conectado. Assim que a conexão com a Meta for feita, os números aparecem aqui sozinhos e se atualizam a cada 3 horas.'+(MT&&MT.erro?'<br><br><b>Última tentativa ('+trWhen(MT.erro_em)+'):</b> '+esc(MT.erro):'')+'</div>';
     const J=MT.janelas[mtWin]||{}, A=J.anterior||{}, C=MT.conta||{};
-    h+='<p class="ihd">@'+esc(C.usuario||'')+' · '+shortDay(J.inicio)+' a '+shortDay(J.fim)+', atualizado em '+trWhen(MT.generated_at)+'<br><small>Os números vêm direto do Instagram a cada 3 horas. O período vai até ontem, com dias completos.</small></p>';
+    h+='<p class="ihd">@'+esc(C.usuario||'')+' · '+shortDay(J.inicio)+' a '+shortDay(J.fim)+', atualizado em '+trWhen(MT.generated_at)+'<br><small>'+(MT.fonte==='painel'?'Leitura manual do painel.':'Os números vêm direto do Instagram a cada 3 horas.')+' O período vai até ontem, com dias completos.</small></p>';
+    if(MT.fonte==='painel') h+='<div class="note" style="margin-bottom:12px">'+esc(MT.fonte_obs||'Números lidos do painel do Instagram.')+'</div>';
     if(MT.erro) h+='<div class="note" style="margin-bottom:12px">A última atualização falhou ('+trWhen(MT.erro_em)+'): '+esc(MT.erro)+'. Os números abaixo são da última vez que deu certo.</div>';
     const saldo=J.seguiram!=null?(J.seguiram||0)-(J.deixaram_de_seguir||0):null;
     h+='<div class="ikpis mt3">'
-      +'<div class="vcard ik"><span>Seguidores</span><b>'+mtN(C.seguidores)+'</b>'+(J.seguiram!=null?'<em class="'+(saldo>=0?'up':'dn')+'">+'+trN(J.seguiram)+' novos · '+trN(J.deixaram_de_seguir)+' saíram</em>':'')+'</div>'
-      +'<div class="vcard ik"><span>Alcance</span><b>'+mtN(J.alcance)+'</b>'+(mtVar(J.alcance,A.alcance)||'<em>contas diferentes que viram</em>')+'</div>'
+      +'<div class="vcard ik"><span>Seguidores</span><b>'+(C.seguidores_aprox&&C.seguidores>=1000?(C.seguidores/1000).toFixed(1).replace('.',',')+' mil':mtN(C.seguidores))+'</b>'+(J.seguiram!=null?'<em class="'+(saldo>=0?'up':'dn')+'">+'+trN(J.seguiram)+' novos'+(J.deixaram_de_seguir!=null?' · '+trN(J.deixaram_de_seguir)+' saíram':'')+'</em>':'')+'</div>'
+      +'<div class="vcard ik"><span>Alcance</span><b>'+mtN(J.alcance)+'</b>'+(mtVar(J.alcance,A.alcance)||'<em>'+(J.alcance==null?'o painel só mostra no período de 30 dias':'contas diferentes que viram')+'</em>')+'</div>'
       +'<div class="vcard ik"><span>Visualizações</span><b>'+mtN(J.visualizacoes)+'</b>'+(mtVar(J.visualizacoes,A.visualizacoes)||'<em>posts, reels e stories</em>')+'</div>'
       +'<div class="vcard ik"><span>Interações</span><b>'+mtN(J.interacoes)+'</b>'+(mtVar(J.interacoes,A.interacoes)||'<em>'+mtN(J.contas_engajadas)+' contas engajadas</em>')+'</div>'
       +'<div class="vcard ik"><span>Visitas ao perfil</span><b>'+mtN(J.visitas_perfil)+'</b>'+(mtVar(J.visitas_perfil,A.visitas_perfil)||'')+'</div>'
       +'<div class="vcard ik"><span>Toques no link</span><b>'+mtN(J.cliques_link)+'</b>'+(mtVar(J.cliques_link,A.cliques_link)||'<em>link da bio</em>')+'</div></div>';
-    h+='<p class="hint" style="margin:-4px 0 18px">Curtidas '+mtN(J.curtidas)+' · comentários '+mtN(J.comentarios)+' · compartilhamentos '+mtN(J.compartilhamentos)+' · salvamentos '+mtN(J.salvamentos)+'.</p>';
+    if(J.curtidas!=null) h+='<p class="hint" style="margin:-4px 0 18px">Curtidas '+mtN(J.curtidas)+' · comentários '+mtN(J.comentarios)+' · compartilhamentos '+mtN(J.compartilhamentos)+' · salvamentos '+mtN(J.salvamentos)+'.</p>';
     // série diária
     const D=(MT.diario||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim), mx=Math.max(...D.map(x=>+x.alcance||0),1);
     if(D.length) h+='<div class="vcard"><h3>Alcance por dia</h3><div class="icol">'+D.map(x=>'<div class="icb" title="'+shortDay(x.data)+': alcance '+mtN(x.alcance)+', '+mtN(x.visualizacoes)+' visualizações'+(x.novos_seguidores!=null?', '+x.novos_seguidores+' seguidores novos':'')+'"><b>'+(x.alcance>=1000?(x.alcance/1000).toFixed(1).replace('.',',')+'k':mtN(x.alcance))+'</b><i style="height:'+Math.round((+x.alcance||0)/mx*100)+'%"></i><span>'+x.data.slice(8)+'/'+x.data.slice(5,7)+'</span></div>').join('')+'</div><p class="hint">Passe o dedo ou o mouse numa barra para ver as visualizações e os seguidores novos do dia.</p></div>';
@@ -1859,7 +1860,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
         +'<div class="vcard ik"><span>Stories postados</span><b>'+S.length+'</b><em>'+(SA.length?'contra '+SA.length+' antes':'no período')+'</em></div>'
         +'<div class="vcard ik"><span>Visualizações</span><b>'+trN(sv(S))+'</b>'+(SA.length?mtVar(sv(S),sv(SA)):'<em>somando todos</em>')+'</div>'
         +'<div class="vcard ik"><span>Média por story</span><b>'+trN(sm(S))+'</b>'+(SA.length?mtVar(sm(S),sm(SA)):'<em>visualizações</em>')+'</div>'
-        +'<div class="vcard ik"><span>Telas tocadas</span><b>'+trN(tl)+'</b><em>'+(tl?trP(N.saiu/tl*100,0)+' foram saídas':'avançar, voltar e sair')+'</em></div></div>';
+        +(tl?'<div class="vcard ik"><span>Telas tocadas</span><b>'+trN(tl)+'</b><em>'+trP(N.saiu/tl*100,0)+' foram saídas</em></div>':'<div class="vcard ik"><span>Respostas</span><b>'+trN(S.reduce((s,x)=>s+(+x.respostas||0),0))+'</b><em>'+trN(S.reduce((s,x)=>s+(+x.interacoes||0),0))+' interações</em></div>')+'</div>';
       if(tl) h+='<div class="vcard"><h3>O que fizeram nas telas</h3>'+insBars({'Avançaram':N.avancou,'Voltaram':N.voltou,'Saíram':N.saiu,'Foram para a próxima conta':N.proxima_conta})+'<p class="hint">Voltar costuma ser bom sinal (quiseram ver de novo). Sair e ir para a próxima conta mostram onde a sequência perdeu atenção.</p></div>';
       h+='<div class="vcard" style="margin-top:14px"><h3>Stories do período</h3><div class="itab"><div class="itr ith"><span>Dia</span><span>Horário</span><span>Visualiz.</span><span>Avanç.</span><span>Saídas</span><span>Respostas</span></div>'
         +S.slice().reverse().map(x=>'<div class="itr"><span>'+shortDay(x.data)+'</span><span class="itt">'+(x.link?'<a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.hora)+'</a>':esc(x.hora))+(x.tipo==='VIDEO'?' <i class="itag">vídeo</i>':'')+'</span><span><b>'+mtN(x.visualizacoes)+'</b></span><span>'+mtN(x.avancou)+'</span><span>'+mtN(x.saiu)+'</span><span>'+mtN(x.respostas)+'</span></div>').join('')+'</div></div>';
@@ -1869,7 +1870,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     h+='<h2 class="ish">Posts e reels</h2>';
     if(!P.length) h+='<p class="empty">Nenhum post no feed neste período.</p>';
     else h+='<div class="vcard"><div class="itab"><div class="itr ith"><span>Dia</span><span>Post</span><span>Visualiz.</span><span>Curtidas</span><span>Coment.</span><span>Salvos</span></div>'
-      +P.map(x=>'<div class="itr"><span>'+shortDay(x.data)+'</span><span class="itt"><a href="'+esc(x.link||'#')+'" target="_blank" rel="noopener">'+esc(x.legenda||'(sem legenda)')+'</a>'+(x.tipo!=='post'?' <i class="itag">'+x.tipo+'</i>':'')+'</span><span><b>'+mtN(x.visualizacoes)+'</b></span><span>'+mtN(x.curtidas)+'</span><span>'+mtN(x.comentarios)+'</span><span>'+mtN(x.salvamentos)+'</span></div>').join('')+'</div></div>';
+      +P.map(x=>'<div class="itr"><span>'+shortDay(x.data)+'</span><span class="itt">'+(x.link?'<a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.legenda||'(sem legenda)')+'</a>':esc(x.legenda||'(sem legenda)'))+(x.tipo!=='post'?' <i class="itag">'+x.tipo+'</i>':'')+'</span><span><b>'+mtN(x.visualizacoes)+'</b></span><span>'+mtN(x.curtidas)+'</span><span>'+mtN(x.comentarios)+'</span><span>'+mtN(x.salvamentos)+'</span></div>').join('')+'</div></div>';
     return h;
   }
 

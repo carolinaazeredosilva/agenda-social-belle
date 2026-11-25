@@ -4,6 +4,8 @@ window.BELLE_CONFIG={
   SUPABASE_KEY:'sb_publishable_Q5Uk0cz8oL-nmiKybi5gVQ_fBKu9PBe',
   EMAIL:'carolinaazeredosilva@gmail.com',
   GOOGLE_CLIENT_ID:'128852705605-g2busj6kf3ief342un6ti1a53e58sis1.apps.googleusercontent.com',
+  /* Nome no "Bom dia, ..." de cada pessoa que entra (e-mail em minúsculas). */
+  NOMES:{'carolinaazeredosilva@gmail.com':'Carolina','mariocesarseibel@gmail.com':'Mário'},
   AVISO_MIN:5,
   WHATSAPP:'https://wa.me/551132305180',
   PLANILHA:'1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4',

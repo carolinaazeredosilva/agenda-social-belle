@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125194520">
+<meta name="belle-ver" content="20261125195737">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -2655,7 +2655,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     else sy.textContent=loaded?'Não consegui ler a planilha':'Lendo a planilha…';
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
-    { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
+    { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+(((window.BELLE_CONFIG&&BELLE_CONFIG.NOMES)||{})[String(window.belleEmail||'').toLowerCase()]||(window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
       const vn={painel:'Análise · Visão geral',hoje:'Planejador · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Planejador · Calendário',feed:'Planejador · Prévia do feed',prog:'Planejador · Programar posts',eventos:'Estratégia · Eventos',config:'Configurações',ideias:'Planejador · Ideias',metricas:'Análise · Plataformas',respostas:'Análise · Respostas do Instagram',posts:'Análise · Posts',trends:'Estratégia · Trending topics',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }

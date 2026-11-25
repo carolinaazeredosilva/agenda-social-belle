@@ -788,6 +788,12 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
 .ti{border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px;background:var(--panel)}.ti h4{margin:0;font-size:15px;color:var(--ink);line-height:1.3}.ti .src{font-size:12px;color:var(--muted)}.ti p{margin:0;font-size:13px;color:var(--muted)}.ti p b{color:var(--ink)}
 .ttag{align-self:flex-start;font-size:11px;font-weight:700;border-radius:999px;padding:2px 10px}.ttag.g{background:color-mix(in srgb,#2DC27A 18%,var(--panel));color:#178A52}.ttag.e{background:color-mix(in srgb,#F2B600 22%,var(--panel));color:#8A6A00}.ttag.p{background:var(--bg);color:var(--muted)}
 .ccs{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}.ccx{border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}.ccx b{color:var(--ink);font-size:13px}
+/* ===== v2.0: Mídia paga ===== */
+.adf{margin:-4px 0 12px}.adf button.trd{border:1px solid transparent;cursor:pointer;min-height:28px;padding:0 10px;font:inherit;font-size:12px;font-weight:700}
+.adf button.trd[aria-pressed="true"]{border-color:currentColor;box-shadow:0 0 0 2px color-mix(in srgb,currentColor 18%,transparent)}
+.trd.al{background:var(--panel);color:var(--ink);border-color:var(--line)!important}.trd.al[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.trcs{display:grid;gap:12px}.trcs .trc{margin:0}
+@media (min-width:1180px){.trcs{grid-template-columns:1fr 1fr}.trcs .trc.open{grid-column:1/-1}}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -2020,6 +2026,10 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     if(!t) o.tags=[];
     return o; }
   const TR_DEC={SCALE:['Escalar','sc'],KEEP:['Manter','kp'],KILL:['Pausar','kl'],'KEEP-amostra':['Pouco dado','lo']};
+  let adF={trafego:'',google:''}, gaShowOff=false;
+  function adChips(v,keys){ const cnt={}; keys.forEach(k=>{ if(k) cnt[k]=(cnt[k]||0)+1; }); const ks=['SCALE','KEEP','KILL','KEEP-amostra'].filter(k=>cnt[k]); if(!ks.length) return '';
+    if(adF[v]&&!cnt[adF[v]]) adF[v]='';
+    return '<div class="trnext adf" role="group" aria-label="Filtrar campanhas pela sugestão"><span>Sugestão:</span><button class="trd al" data-act="adf" data-v="'+v+'" data-k="" aria-pressed="'+(!adF[v])+'">Todas '+keys.length+'</button>'+ks.map(k=>'<button class="trd '+TR_DEC[k][1]+'" data-act="adf" data-v="'+v+'" data-k="'+k+'" aria-pressed="'+(adF[v]===k)+'">'+TR_DEC[k][0]+' '+cnt[k]+'</button>').join('')+'</div>'; }
   const trDec=d=>{ const x=TR_DEC[d]; return x?'<span class="trd '+x[1]+'">'+x[0]+'</span>':''; };
   function trWhy(r){ if(!r) return ''; const num=x=>brl(parseFloat(x)); let m;
     if(m=r.match(/^cpl ([\d.]+) ≤ [\d.]+ \((\d+)% abaixo/)) return 'Custo por lead de '+num(m[1])+', '+m[2]+'% abaixo do limite';
@@ -2054,11 +2064,9 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
       +'<div class="vcard ik"><span>Cliques</span><b>'+trN(T.clicks)+'</b><em>taxa de clique '+trP(ctr,2)+'</em></div>'
       +'<div class="vcard ik"><span>Alcance</span><b>'+trN(T.reach)+'</b><em>CPM '+brl(cpm)+', CPC '+brl(cpc)+'</em></div></div>';
     // o que fazer
-    const cnt={}; camps.forEach(c=>{ if(c.decide) cnt[c.decide]=(cnt[c.decide]||0)+1; });
-    const acts=['SCALE','KEEP','KILL'].filter(k=>cnt[k]);
-    if(acts.length) h+='<div class="trnext"><span>Sugestão para as campanhas:</span>'+acts.map(k=>'<span class="trd '+TR_DEC[k][1]+'">'+TR_DEC[k][0]+' '+cnt[k]+'</span>').join('')+'</div>';
-    h+='<h2 class="ish">Campanhas</h2>';
-    camps.forEach(c=>{ const nm=trName(c.name), r=c.raws||{}, cpl=trCpl(c), share=spend?(c.spend||0)/spend*100:0, k='c'+c.campaign_id, open=!!trOpen[k];
+    h+='<h2 class="ish">Campanhas</h2>'+adChips('trafego',camps.map(c=>c.decide));
+    h+='<div class="trcs">';
+    camps.filter(c=>!adF.trafego||c.decide===adF.trafego).forEach(c=>{ const nm=trName(c.name), r=c.raws||{}, cpl=trCpl(c), share=spend?(c.spend||0)/spend*100:0, k='c'+c.campaign_id, open=!!trOpen[k];
       const ads=(c.adsets||[]).reduce((n,a)=>n+(a.ads||[]).length,0), paused=c.effective_status&&c.effective_status!=='ACTIVE';
       h+='<div class="vcard trc'+(open?' open':'')+'">'
         +'<div class="trc-hd"><div class="trc-t"><div class="trc-m">'+trDec(c.decide)+(paused?'<span class="trd lo">Pausada</span>':'')+(nm.since?'<small>desde '+esc(nm.since)+'</small>':'')+'</div><h3>'+esc(nm.title)+'</h3></div><div class="trc-sp"><b>'+brl(c.spend)+'</b><small>'+trP(share,0)+' do investimento</small></div></div>'
@@ -2072,7 +2080,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
               +'<div class="trad-n"><span>'+brl(ad.spend)+'</span><span>'+trN(ar.leads)+' leads</span><span>'+(ar.leads?brl(trCpl(ad))+'/lead':'')+'</span></div></div>'; });
           h+='</div>'; }); }
       h+='</div>'; });
-    h+='<p class="hint" style="margin-top:16px">Criar, pausar ou escalar campanhas continua sendo pelo Claude Code, com <b>/agente-trafego-pago</b>. Aqui você acompanha os resultados.</p>';
+    h+='</div><p class="hint" style="margin-top:16px">Criar, pausar ou escalar campanhas continua sendo pelo Claude Code, com <b>/agente-trafego-pago</b>. Aqui você acompanha os resultados.</p>';
     return h;
   }
 
@@ -2114,16 +2122,17 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
       +'<div class="vcard ik"><span>Cadastros</span><b>'+trN(T.conversions)+'</b><em>teste grátis de 14 dias</em></div>'
       +'<div class="vcard ik"><span>Cliques</span><b>'+trN(T.clicks)+'</b><em>taxa de clique '+trP(ctr,2)+'</em></div>'
       +'<div class="vcard ik"><span>Impressões</span><b>'+trN(T.impressions)+'</b><em>CPC '+brl(cpc)+'</em></div></div>';
-    const cnt={}; camps.forEach(c=>{ if(c.status==='ENABLED'&&c.decide) cnt[c.decide]=(cnt[c.decide]||0)+1; });
-    const acts=['SCALE','KEEP','KILL'].filter(k=>cnt[k]);
-    if(acts.length) h+='<div class="trnext"><span>Sugestão para as campanhas ativas:</span>'+acts.map(k=>'<span class="trd '+TR_DEC[k][1]+'">'+TR_DEC[k][0]+' '+cnt[k]+'</span>').join('')+'</div>';
-    h+='<h2 class="ish">Campanhas</h2>';
+    const gk=c=>c.status!=='ENABLED'?'':(c.decide==='KEEP'&&/mínimo para julgar|sem gasto/.test(c.decide_reason||''))?'KEEP-amostra':c.decide;
+    const on=camps.filter(c=>c.status==='ENABLED'), off=camps.length-on.length;
+    h+='<h2 class="ish">Campanhas ativas</h2>'+adChips('google',on.map(gk));
     if(!camps.length) h+='<p class="empty">Nenhuma campanha teve impressões nesse período.</p>';
-    camps.forEach(c=>{ const share=spend?(c.spend||0)/spend*100:0;
+    h+='<div class="trcs">';
+    camps.filter(c=>(gaShowOff||c.status==='ENABLED')&&(!adF.google||gk(c)===adF.google)).forEach(c=>{ const share=spend?(c.spend||0)/spend*100:0;
       h+='<div class="vcard trc"><div class="trc-hd"><div class="trc-t"><div class="trc-m">'+gaDec(c)+'<i class="gach">'+esc(GA_CH[c.channel]||c.channel||'')+'</i>'+(c.budget_daily?'<small>orçamento '+brl(c.budget_daily)+'/dia</small>':'')+'</div><h3>'+esc(c.name)+'</h3></div><div class="trc-sp"><b>'+brl(c.spend)+'</b><small>'+trP(share,0)+' do investimento</small></div></div>'
         +'<div class="trbar"><i style="width:'+share.toFixed(1)+'%"></i></div>'
         +'<div class="trc-n"><span><b>'+trN(c.conversions)+'</b>cadastros</span><span><b>'+brl(c.cpa)+'</b>por cadastro</span><span><b>'+trP(c.impressions?c.clicks/c.impressions*100:null,2)+'</b>taxa de clique</span></div>'
         +(c.status==='ENABLED'&&c.decide_reason?'<p class="gac-why">'+gaWhy(c)+'</p>':'')+'</div>'; });
+    h+='</div>'+(off?'<button class="btn" style="margin-top:12px" data-act="gaoff">'+(gaShowOff?'Esconder as pausadas':'Mostrar '+off+(off===1?' campanha pausada':' campanhas pausadas'))+'</button>':'');
     h+='<p class="hint" style="margin-top:16px">Criar, pausar ou escalar campanhas do Google continua sendo pelo Claude Code, com <b>/agente-google-ads</b>. Aqui você acompanha os resultados.</p>';
     return h;
   }
@@ -2887,6 +2896,8 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     if(act==='pos'){ poS=el.dataset.s; renderAll(); return; }
     if(act==='trf'){ trF=el.dataset.f||''; renderAll(); return; }
     if(act==='tridea'){ const t=TRN[+el.dataset.i]; if(t) idCreate([],{titulo:t[1],nota:'Ângulo para o Belle: '+t[4]+'\nFonte: '+t[2],link:t[3],tags:['tendência']}); return; }
+    if(act==='adf'){ adF[el.dataset.v]=el.dataset.k||''; renderAll(); return; }
+    if(act==='gaoff'){ gaShowOff=!gaShowOff; renderAll(); return; }
     if(act==='calf'){ calF=el.dataset.f||''; renderAll(); return; }
     if(act==='calt'){ calTab=el.dataset.t2; renderAll(); return; }
     if(act==='mon'){ const y=+month.slice(0,4), mo=+month.slice(5,7)-1+Number(el.dataset.n); const d=new Date(y,mo,1,12); month=d.getFullYear()+'-'+pad(d.getMonth()+1); renderAll(); return; }

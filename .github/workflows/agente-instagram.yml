@@ -64,7 +64,7 @@ jobs:
         run: |
           f=$(mktemp)
           for s in IG_RESPOSTAS_TOKEN META_APP_SECRET IG_VERIFY_TOKEN ANTHROPIC_API_KEY IG_USER_ID AGENTE_LINK_TESTE AGENTE_WHATSAPP AGENTE_SUPORTE; do
-            [ -n "${!s}" ] && printf '%s=%s\n' "$s" "${!s}" >> "$f"
+            if [ -n "${!s}" ]; then printf '%s=%s\n' "$s" "${!s}" >> "$f"; fi
           done
           supabase secrets set --project-ref "$PROJECT_REF" --env-file "$f" >/dev/null
           rm -f "$f"

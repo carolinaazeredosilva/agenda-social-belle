@@ -1,0 +1,88 @@
+name: Agente do Instagram (servidor)
+
+# Publica no Supabase o servidor do agente de respostas (pasta supabase/):
+# a tabela da caixa de entrada, as chaves e as duas funções (ig-webhook e ig-enviar).
+# Roda sozinho quando algo em supabase/ muda na main, ou pelo botão "Run workflow".
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/**', '.github/workflows/agente-instagram.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agente-instagram
+  cancel-in-progress: false
+
+env:
+  PROJECT_REF: bthjozkfxppgvkzwfabh
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+  SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+  IG_RESPOSTAS_TOKEN: ${{ secrets.IG_RESPOSTAS_TOKEN }}
+  META_APP_SECRET: ${{ secrets.META_APP_SECRET }}
+  IG_VERIFY_TOKEN: ${{ secrets.IG_VERIFY_TOKEN }}
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  IG_USER_ID: ${{ vars.IG_USER_ID }}
+  AGENTE_LINK_TESTE: ${{ vars.AGENTE_LINK_TESTE }}
+  AGENTE_WHATSAPP: ${{ vars.AGENTE_WHATSAPP }}
+  AGENTE_SUPORTE: ${{ vars.AGENTE_SUPORTE }}
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir segredos
+        run: |
+          falta=""
+          for s in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD IG_RESPOSTAS_TOKEN META_APP_SECRET IG_VERIFY_TOKEN; do
+            [ -n "${!s}" ] || falta="$falta $s"
+          done
+          if [ -n "$falta" ]; then
+            echo "::error::Faltam estes segredos no repositório (Settings > Secrets and variables > Actions):$falta"
+            echo "### Faltam segredos: $falta" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          [ -n "$ANTHROPIC_API_KEY" ] || echo "::warning::Sem ANTHROPIC_API_KEY: o agente separa as mensagens por palavras-chave e não sugere respostas."
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Criar ou atualizar a tabela da caixa de entrada
+        run: |
+          supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+          supabase db push --password "$SUPABASE_DB_PASSWORD"
+
+      - name: Guardar as chaves no Supabase
+        run: |
+          f=$(mktemp)
+          for s in IG_RESPOSTAS_TOKEN META_APP_SECRET IG_VERIFY_TOKEN ANTHROPIC_API_KEY IG_USER_ID AGENTE_LINK_TESTE AGENTE_WHATSAPP AGENTE_SUPORTE; do
+            [ -n "${!s}" ] && printf '%s=%s\n' "$s" "${!s}" >> "$f"
+          done
+          supabase secrets set --project-ref "$PROJECT_REF" --env-file "$f" >/dev/null
+          rm -f "$f"
+
+      - name: Publicar as funções
+        run: |
+          supabase functions deploy ig-webhook --project-ref "$PROJECT_REF" --no-verify-jwt
+          supabase functions deploy ig-enviar --project-ref "$PROJECT_REF"
+
+      - name: Ligar os avisos da página do Facebook
+        run: python3 scripts/agente_assinar.py
+
+      - name: Resumo
+        if: always()
+        run: |
+          {
+            echo "### Agente do Instagram"
+            echo ""
+            echo "Endereço do webhook para o painel da Meta:"
+            echo ""
+            echo "\`https://$PROJECT_REF.supabase.co/functions/v1/ig-webhook\`"
+            echo ""
+            echo "Token de verificação: o mesmo valor do segredo IG_VERIFY_TOKEN."
+          } >> "$GITHUB_STEP_SUMMARY"

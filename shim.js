@@ -13,24 +13,73 @@
   var overlay=null, loginPromise=null, loginResolve=null;
   function showOverlay(msg){
     if(!overlay){
-      overlay=document.createElement('div');
-      overlay.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg,#F8F3FB);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:var(--font-body,system-ui)';
-      var inp='display:block;width:100%;box-sizing:border-box;min-height:48px;margin:0 0 10px;padding:0 14px;border:1px solid var(--line,#E6DCEE);border-radius:12px;background:var(--panel,#fff);color:var(--ink,#381B49);font:16px var(--font-body,system-ui)';
-      overlay.innerHTML='<form id="lg-form" style="width:100%;max-width:320px"><img src="logo.svg" alt="" width="64" height="64" style="display:block;width:64px;height:64px;margin-bottom:14px;border-radius:18px;box-shadow:0 8px 24px rgba(161,17,118,.3)"><div style="font:800 26px/1.1 var(--font-display,system-ui);color:var(--ink,#381B49)">Agenda Social</div>'+
-        '<p id="lg-msg" style="margin:12px 0 20px;color:var(--body,#5A4869);font-size:15px;line-height:1.45">Entre para ver a planilha e salvar o que você organizar.</p>'+
-        '<input id="lg-mail" type="email" autocomplete="username" placeholder="E-mail" style="'+inp+'" value="'+((function(){ try{ return localStorage.getItem('belle_mail')||''; }catch(_){ return ''; } })())+'">'+
-        '<input id="lg-pass" type="password" autocomplete="current-password" placeholder="Senha" style="'+inp+'">'+
-        '<button id="lg-btn" type="submit" style="width:100%;min-height:48px;margin-top:6px;border:0;border-radius:14px;background:var(--accent,#A11176);color:var(--accent-ink,#fff);font:700 15px var(--font-display,system-ui);cursor:pointer">Entrar</button></form>';
+      var mail=(function(){ try{ return localStorage.getItem('belle_mail')||''; }catch(_){ return ''; } })();
+      var h=new Date().getHours(), oi=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+      var css='#lg-ov{position:fixed;inset:0;z-index:9999;display:flex;background:var(--bg,#F8F3FB);font-family:var(--font-body,system-ui);color:var(--ink,#381B49);overflow:auto}'+
+        '#lg-ov *{box-sizing:border-box}'+
+        '#lg-art{position:relative;flex:1 1 52%;display:flex;flex-direction:column;justify-content:space-between;padding:48px 56px;color:#fff;overflow:hidden;background:linear-gradient(140deg,#A11176 0%,#8461F4 62%,#81D8E5 130%)}'+
+        '#lg-art:before{content:"";position:absolute;width:520px;height:520px;right:-180px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),rgba(255,255,255,0) 68%)}'+
+        '#lg-art:after{content:"";position:absolute;width:420px;height:420px;left:-140px;bottom:-180px;border-radius:50%;background:radial-gradient(circle,rgba(129,216,229,.45),rgba(129,216,229,0) 70%)}'+
+        '.lg-brand{position:relative;z-index:1;display:flex;align-items:center;gap:12px;font:700 15px var(--font-display,system-ui);letter-spacing:.01em}'+
+        '.lg-brand img{width:40px;height:40px;border-radius:12px;box-shadow:0 6px 18px rgba(56,27,73,.25)}'+
+        '.lg-brand small{display:block;font:600 12px var(--font-body,system-ui);opacity:.8}'+
+        '.lg-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:min(300px,62%);margin:40px auto;transform:rotate(-6deg)}'+
+        '.lg-grid i{display:block;aspect-ratio:4/5;border-radius:16px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(2px)}'+
+        '.lg-grid i:nth-child(3){background:#81D8E5;border-color:#81D8E5}'+
+        '.lg-grid i:nth-child(5){background:#fff;display:flex;align-items:center;justify-content:center}'+
+        '.lg-grid i:nth-child(2),.lg-grid i:nth-child(7){background:rgba(255,255,255,.3)}'+
+        '.lg-pitch{position:relative;z-index:1;max-width:440px}'+
+        '.lg-pitch h2{margin:0 0 12px;font:800 clamp(26px,3vw,36px)/1.15 var(--font-display,system-ui)}'+
+        '.lg-pitch p{margin:0;font-size:15px;line-height:1.55;opacity:.88}'+
+        '#lg-side{position:relative;z-index:1;flex:1 1 48%;display:flex;align-items:center;justify-content:center;padding:40px 24px}'+
+        '#lg-form{width:100%;max-width:380px}'+
+        '.lg-hi{display:inline-flex;align-items:center;gap:6px;margin-bottom:14px;padding:6px 12px;border-radius:999px;background:var(--panel,#fff);border:1px solid var(--line,#E6DCEE);font:600 13px var(--font-display,system-ui);color:var(--accent,#A11176)}'+
+        '#lg-form h1{margin:0 0 8px;font:800 30px/1.15 var(--font-display,system-ui);color:var(--ink,#381B49)}'+
+        '#lg-msg{margin:0 0 28px;color:var(--body,#5A4869);font-size:15px;line-height:1.5}'+
+        '#lg-msg.err{padding:10px 14px;border-radius:12px;background:rgba(240,98,98,.12);color:#C23B3B;font-weight:600}'+
+        '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #lg-msg.err{color:#FF9A9A;background:rgba(240,98,98,.16)}}:root[data-theme="dark"] #lg-msg.err{color:#FF9A9A;background:rgba(240,98,98,.16)}'+
+        '.lg-f{display:block;margin-bottom:16px}'+
+        '.lg-f span{display:block;margin-bottom:6px;font:600 13px var(--font-display,system-ui);color:var(--ink,#381B49)}'+
+        '.lg-in{position:relative;display:block}'+
+        '.lg-in input{display:block;width:100%;min-height:52px;padding:0 16px;border:1.5px solid var(--line,#E6DCEE);border-radius:14px;background:var(--panel,#fff);color:var(--ink,#381B49);font:16px var(--font-body,system-ui);outline:0;transition:border-color .15s,box-shadow .15s}'+
+        '.lg-in input::placeholder{color:var(--muted,#9A8BA6)}'+
+        '.lg-in input:focus{border-color:#8461F4;box-shadow:0 0 0 4px rgba(132,97,244,.16)}'+
+        '#lg-pass{padding-right:84px}'+
+        '#lg-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);min-height:36px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--accent,#A11176);font:600 13px var(--font-display,system-ui);cursor:pointer}'+
+        '#lg-eye:hover{background:rgba(161,17,118,.08)}'+
+        '#lg-btn{width:100%;min-height:54px;margin-top:10px;border:0;border-radius:14px;background:linear-gradient(100deg,#A11176,#8461F4);color:#fff;font:700 16px var(--font-display,system-ui);cursor:pointer;box-shadow:0 10px 24px rgba(161,17,118,.28);transition:transform .15s,box-shadow .15s,opacity .15s}'+
+        '#lg-btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(161,17,118,.34)}'+
+        '#lg-btn:disabled{opacity:.7;cursor:wait;transform:none}'+
+        '.lg-foot{margin:28px 0 0;text-align:center;font-size:13px;color:var(--muted,#9A8BA6)}'+
+        '@media (max-width:860px){#lg-ov{flex-direction:column}#lg-art{flex:0 0 auto;padding:28px 24px 48px}.lg-grid{display:none}#lg-art:before{width:320px;height:320px;right:-120px;top:-140px}.lg-pitch{margin-top:22px}.lg-pitch h2{font-size:22px;margin-bottom:6px}.lg-pitch p{font-size:14px}#lg-side{flex:1 0 auto;align-items:flex-start;margin-top:-26px;padding:0 16px 32px}#lg-form{padding:26px 22px;border-radius:22px;background:var(--panel,#fff);box-shadow:0 12px 34px rgba(56,27,73,.12)}#lg-form h1{font-size:25px}}';
+      overlay=document.createElement('div'); overlay.id='lg-ov';
+      overlay.innerHTML='<style>'+css+'</style>'+
+        '<aside id="lg-art"><div class="lg-brand"><img src="logo.svg" alt=""><div>Agenda Social<small>Belle Software</small></div></div>'+
+        '<div class="lg-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i><svg width="34" height="34" viewBox="0 0 76 76"><defs><linearGradient id="lg-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A11176"/><stop offset="1" stop-color="#8461F4"/></linearGradient></defs><path d="M38 0C41 26 50 35 76 38 50 41 41 50 38 76 35 50 26 41 0 38 26 35 35 26 38 0Z" fill="url(#lg-g)"/></svg></i><i></i><i></i><i></i><i></i></div>'+
+        '<div class="lg-pitch"><h2>Seu feed organizado, do planejamento ao post.</h2><p>Calendário, artes e métricas da Belle em um lugar só.</p></div></aside>'+
+        '<main id="lg-side"><form id="lg-form" novalidate>'+
+        '<div class="lg-hi">'+oi+(mail?', que bom te ver de novo':'')+' ✨</div>'+
+        '<h1>Entrar na Agenda</h1>'+
+        '<p id="lg-msg">Entre para ver a planilha e salvar o que você organizar.</p>'+
+        '<label class="lg-f"><span>E-mail</span><span class="lg-in"><input id="lg-mail" type="email" autocomplete="username" placeholder="voce@bellesoftware.com.br" required></span></label>'+
+        '<label class="lg-f"><span>Senha</span><span class="lg-in"><input id="lg-pass" type="password" autocomplete="current-password" placeholder="Sua senha" required><button id="lg-eye" type="button" aria-label="Mostrar senha">Mostrar</button></span></label>'+
+        '<button id="lg-btn" type="submit">Entrar</button>'+
+        '<p class="lg-foot">Acesso só para a equipe Belle.</p></form></main>';
       document.body.appendChild(overlay);
+      var mi=overlay.querySelector('#lg-mail'), pi=overlay.querySelector('#lg-pass'), eye=overlay.querySelector('#lg-eye'), msgEl=overlay.querySelector('#lg-msg');
+      mi.value=mail; setTimeout(function(){ try{ (mail?pi:mi).focus(); }catch(_){} },50);
+      eye.addEventListener('click',function(){ var show=pi.type==='password'; pi.type=show?'text':'password'; eye.textContent=show?'Ocultar':'Mostrar'; eye.setAttribute('aria-label',show?'Ocultar senha':'Mostrar senha'); pi.focus(); });
       overlay.querySelector('#lg-form').addEventListener('submit',async function(e){
-        e.preventDefault(); var b=overlay.querySelector('#lg-btn'); b.disabled=true; b.textContent='Entrando…';
-        var r=await client().auth.signInWithPassword({email:overlay.querySelector('#lg-mail').value.trim(),password:overlay.querySelector('#lg-pass').value});
+        e.preventDefault(); var b=overlay.querySelector('#lg-btn');
+        if(!mi.value.trim()||!pi.value){ msgEl.className='err'; msgEl.textContent='Preencha o e-mail e a senha.'; return; }
+        b.disabled=true; b.textContent='Entrando…';
+        var r=await client().auth.signInWithPassword({email:mi.value.trim(),password:pi.value});
         b.disabled=false; b.textContent='Entrar';
-        if(r.error){ overlay.querySelector('#lg-msg').textContent='E-mail ou senha incorretos. Tente de novo.'; return; }
-        setRole(r.data.session); overlay.style.display='none'; if(loginResolve){ var f=loginResolve; loginResolve=null; loginPromise=null; f(r.data.session); }
+        if(r.error){ msgEl.className='err'; msgEl.textContent='E-mail ou senha incorretos. Tente de novo.'; return; }
+        msgEl.className=''; setRole(r.data.session); overlay.style.display='none'; if(loginResolve){ var f=loginResolve; loginResolve=null; loginPromise=null; f(r.data.session); }
       });
     }
-    if(msg) overlay.querySelector('#lg-msg').textContent=msg;
+    if(msg){ var m=overlay.querySelector('#lg-msg'); m.className=''; m.textContent=msg; }
     overlay.style.display='flex';
   }
   function setRole(sess){

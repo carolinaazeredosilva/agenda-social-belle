@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125115154">
+<meta name="belle-ver" content="20261125115701">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -630,7 +630,6 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <button class="tab" role="tab" data-act="tab" data-v="ideias" id="tab-ideias"></button>
     <div class="grp">Resultados</div>
     <button class="tab" role="tab" data-act="tab" data-v="metricas" id="tab-metricas"></button>
-    <button class="tab" role="tab" data-act="tab" data-v="insights" id="tab-insights"></button>
     <div class="grp">Ações</div>
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
     <button class="tab" data-act="impart" id="tab-impart" title="Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Conectar pasta de artes</span></button>
@@ -1257,7 +1256,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const wd=d?new Date(d+'T12:00').getDay():-1, mtq=wd>=1&&wd<=3;
     return '<div class="bh"><span class="bh-i">'+ic.clock+'</span><div class="bh-t"><b>Melhores horários</b><span>Pico às <b>18h</b> · forte das 12h às 21h'+(d?(mtq?' · <b>hoje (seg a qua): 18h–21h</b>':''):' · seg a qua: 18h–21h')+'</span></div>'
       +'<div class="bh-g" aria-hidden="true">'+BEST_H.map(x=>'<i class="'+(x[0]==='18h'?'pk':'')+'" style="height:'+Math.round(x[1]*0.26)+'px" title="'+x[0]+'"></i>').join('')+'</div>'
-      +'<button class="linkbtn" data-act="tab" data-v="insights">insights</button></div>';
+      +'<button class="linkbtn" data-act="tab" data-v="metricas">métricas</button></div>';
   }
   function renderCal(){
     const y=+month.slice(0,4), mo=+month.slice(5,7)-1;
@@ -1871,6 +1870,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(!P.length) h+='<p class="empty">Nenhum post no feed neste período.</p>';
     else h+='<div class="vcard"><div class="itab"><div class="itr ith"><span>Dia</span><span>Post</span><span>Visualiz.</span><span>Curtidas</span><span>Coment.</span><span>Salvos</span></div>'
       +P.map(x=>'<div class="itr"><span>'+shortDay(x.data)+'</span><span class="itt">'+(x.link?'<a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.legenda||'(sem legenda)')+'</a>':esc(x.legenda||'(sem legenda)'))+(x.tipo!=='post'?' <i class="itag">'+x.tipo+'</i>':'')+'</span><span><b>'+mtN(x.visualizacoes)+'</b></span><span>'+mtN(x.curtidas)+'</span><span>'+mtN(x.comentarios)+'</span><span>'+mtN(x.salvamentos)+'</span></div>').join('')+'</div></div>';
+    h+='<p class="hint" style="margin-top:16px">Relatório antigo, montado com os prints (25/10 a 10/11): <button class="linkbtn" data-act="tab" data-v="insights">abrir</button></p>';
     return h;
   }
 
@@ -2068,12 +2068,12 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',metricas:'Resultados · Métricas do Instagram',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',metricas:'Resultados · Métricas do Instagram',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['metricas','Métricas',ic.ig],['insights','Insights (prints)',ic.chart],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['metricas','Métricas',ic.ig],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
     if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='metricas'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }

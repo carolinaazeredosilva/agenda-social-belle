@@ -757,6 +757,37 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
 @media (max-width:759px){.mnav h2{min-width:0;font-size:16px}.mg{gap:3px}.mc{padding:4px 3px;min-height:64px}}
 @media (min-width:760px){.mc{min-height:104px;padding:6px 5px}.ci{font-size:11px;padding:3px 5px}}
 @media (min-width:700px) and (max-width:959px),(min-width:1180px){.ctabs{display:none}.cwrap{grid-template-columns:clamp(170px,26%,250px) minmax(0,1fr);align-items:start}.cwrap .fpan,.cwrap.showfeed .fpan{display:block;position:sticky;top:12px}.cwrap .cmain,.cwrap.showfeed .cmain{display:block}}
+/* ===== v2.0: Plataformas, Posts, Trending ===== */
+.plc{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:14px}
+.pc{display:flex;flex-direction:column;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;min-height:150px}
+.pc.on{grid-column:span 2}@media (max-width:520px){.pc.on{grid-column:1/-1}.plc{grid-template-columns:1fr 1fr}}
+.pc .pn{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--ink);font-size:14px}.pc .pn .cst2{margin-left:auto}
+.pc .lg{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:#fff;flex:none}.pc .lg .i{width:15px;height:15px}
+.pc .big{font:800 28px/1.1 var(--font-display);color:var(--ink)}.pc .pm,.pk2 .pm{font-size:12.5px;color:var(--muted)}.pm .up{color:var(--s-green);font-style:normal;font-weight:700}
+.pc.dim{opacity:.85}.pc .off{font-size:12px;font-weight:700;color:var(--muted);background:var(--bg);border-radius:999px;padding:3px 10px;align-self:flex-start}
+.spk{width:100%;height:44px;display:block}.spk path{fill:none;stroke:var(--accent);stroke-width:2.2}
+.g2c{display:grid;gap:14px}@media (min-width:900px){.g2c{grid-template-columns:1fr 1fr}}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.vs>div{background:var(--bg);border-radius:14px;padding:12px}.vs b{display:block;font:800 24px var(--font-display);color:var(--ink)}.vs span{font-size:12px;color:var(--muted)}.vs .hi{background:color-mix(in srgb,var(--accent) 10%,var(--panel))}
+.nbars{display:flex;align-items:flex-end;gap:2px;height:110px;margin-top:10px}.nbars i{flex:1;background:color-mix(in srgb,var(--violet,#8461F4) 45%,transparent);border-radius:3px 3px 0 0}.nbars i.mx{background:var(--accent)}
+.srcl{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--muted)}.srcl li{display:flex;gap:10px;align-items:flex-start}.srcl b{color:var(--ink)}.srcl .cst2{flex:none;min-width:48px;text-align:center}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;margin-bottom:12px}
+.pcs{display:grid;gap:12px}@media (min-width:760px){.pcs{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
+.pk2{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px}
+.pth{aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:var(--tile);border:0;padding:0;display:block;width:100%}.pth img{width:100%;height:100%;object-fit:cover;display:block}
+.pth.ph{display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font-size:10.5px;color:var(--ink);background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 18%,var(--panel)),color-mix(in srgb,var(--violet,#8461F4) 18%,var(--panel)))}
+.pkb{display:flex;flex-direction:column;gap:4px;min-width:0}.pk2 .ttl{font-weight:700;color:var(--ink);font-size:14px;line-height:1.3}.pk2 .ttl a{color:inherit;text-decoration:none}
+.bomb{display:inline-block;background:var(--accent);color:#fff;border-radius:999px;font-size:10.5px;padding:1px 8px;margin-left:4px;vertical-align:middle}
+.mrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}.mrow>div{background:var(--bg);border-radius:10px;padding:6px 8px}.mrow b{display:block;color:var(--ink);font-size:14px}.mrow span{font-size:11px;color:var(--muted)}.mrow .k{background:color-mix(in srgb,var(--accent) 10%,var(--panel))}
+.itr.ht3{grid-template-columns:1.4fr 1fr 1fr}
+.wbars{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;height:130px;align-items:end;margin-top:10px}.wbars div{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}.wbars i{width:100%;background:color-mix(in srgb,var(--violet,#8461F4) 40%,transparent);border-radius:6px 6px 0 0}.wbars i.mx{background:var(--accent)}.wbars span{font-size:11px;color:var(--muted)}
+.cons{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px}.cons div{border-radius:12px;padding:10px 4px;text-align:center;background:var(--panel);border:1px solid var(--line)}.cons b{display:block;font:800 20px var(--font-display);color:var(--ink)}.cons span{font-size:11px;color:var(--muted)}
+.cons .ok{box-shadow:inset 0 4px 0 #2DC27A}.cons .mid{box-shadow:inset 0 4px 0 #F2B600}.cons .no{box-shadow:inset 0 4px 0 #F06262}
+.trl{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}@media (min-width:900px){.trl{grid-template-columns:1fr 1fr}}
+#view[data-v="posts"] .itab{max-height:460px;overflow:auto}
+.seg2.wrapx{display:flex;flex-wrap:wrap;max-width:100%}
+.ti{border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px;background:var(--panel)}.ti h4{margin:0;font-size:15px;color:var(--ink);line-height:1.3}.ti .src{font-size:12px;color:var(--muted)}.ti p{margin:0;font-size:13px;color:var(--muted)}.ti p b{color:var(--ink)}
+.ttag{align-self:flex-start;font-size:11px;font-weight:700;border-radius:999px;padding:2px 10px}.ttag.g{background:color-mix(in srgb,#2DC27A 18%,var(--panel));color:#178A52}.ttag.e{background:color-mix(in srgb,#F2B600 22%,var(--panel));color:#8A6A00}.ttag.p{background:var(--bg);color:var(--muted)}
+.ccs{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px}.ccx{border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}.ccx b{color:var(--ink);font-size:13px}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -765,6 +796,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     <div class="grp">Análise</div>
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>
     <button class="tab" role="tab" data-act="tab" data-v="metricas" id="tab-metricas"></button>
+    <button class="tab" role="tab" data-act="tab" data-v="posts" id="tab-posts"></button>
     <div class="grp">Estratégia</div>
     <button class="tab fold" data-act="fold" aria-expanded="true" id="tab-fold"><svg class="i" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><span class="lb">Planejador de conteúdo</span><svg class="i chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
     <div class="tree" id="tree">
@@ -773,6 +805,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
       <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
       <button class="tab" role="tab" data-act="tab" data-v="prog" id="tab-prog"></button>
     </div>
+    <button class="tab" role="tab" data-act="tab" data-v="trends" id="tab-trends"></button>
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
     <div class="grp">Mídia paga</div>
     <button class="tab" role="tab" data-act="tab" data-v="trafego" id="tab-trafego"></button>
@@ -867,7 +900,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
   let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null, editF=null, editBusy=false;
-  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#ga4'?'ga4':location.hash==='#metricas'?'metricas':location.hash==='#config'?'config':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
+  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#ga4'?'ga4':/^#(metricas|plataformas)$/.test(location.hash)?'metricas':location.hash==='#posts'?'posts':location.hash==='#trends'?'trends':location.hash==='#config'?'config':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
 
@@ -2098,7 +2131,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
   /* ---------- Métricas do Instagram (instagram/metricas.json, gerado a cada 3h por .github/workflows/instagram.yml) ---------- */
   let MT, mtBusy=false, mtWin=7;
   function mtLoad(){ if(MT!==undefined||mtBusy) return; mtBusy=true;
-    fetch('instagram/metricas.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ MT=j; }).catch(()=>{ MT=null; }).finally(()=>{ mtBusy=false; if(view==='metricas'||view==='painel') renderAll(); }); }
+    fetch('instagram/metricas.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{ MT=j; }).catch(()=>{ MT=null; }).finally(()=>{ mtBusy=false; if(['metricas','painel','posts'].includes(view)) renderAll(); }); }
   const mtN=v=>v==null?'—':trN(v);
   function mtVar(a,b){ if(a==null||!b) return ''; const p=(a-b)/b*100; return '<em class="'+(p>=0?'up':'dn')+'">'+(p>=0?'+':'')+p.toFixed(1).replace('.',',')+'% vs. '+mtWin+' dias antes</em>'; }
   function mtNav(L){ const s={avancou:0,voltou:0,saiu:0,proxima_conta:0}; L.forEach(x=>Object.keys(s).forEach(k=>{ s[k]+=+x[k]||0; })); return s; }
@@ -2126,7 +2159,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     if(J.visualizacoes!=null&&A.visualizacoes&&J.visualizacoes>A.visualizacoes*1.3&&J.visitas_perfil!=null&&A.visitas_perfil&&J.visitas_perfil<=A.visitas_perfil) out.push(['','As visualizações cresceram '+pc(J.visualizacoes,A.visualizacoes)+'%, mas as visitas ao perfil não acompanharam. Quem chega pelos anúncios está vendo e indo embora: teste um gancho que leve ao perfil.']);
     return out;
   }
-  function renderMetricas(){
+  function renderMetricasOld(){
     mtLoad();
     let h='<div class="iwsel" role="group" aria-label="Período">'+[7,30].map(w=>'<button class="chip'+(w===mtWin?' on':'')+'" data-act="mtw" data-w="'+w+'" aria-pressed="'+(w===mtWin)+'">'+w+' dias</button>').join('')+'</div>';
     if(MT===undefined) return h+'<p class="empty">Carregando as métricas do Instagram…</p>';
@@ -2175,6 +2208,125 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     return h;
   }
 
+  function mtHeadOk(){ return MT&&MT.janelas; }
+  function renderMetricas(){
+    mtLoad();
+    let h='<div class="iwsel" role="group" aria-label="Período">'+[7,30].map(w=>'<button class="chip'+(w===mtWin?' on':'')+'" data-act="mtw" data-w="'+w+'" aria-pressed="'+(w===mtWin)+'">'+w+' dias</button>').join('')+'</div>';
+    if(MT===undefined) return h+'<p class="empty">Carregando as métricas do Instagram…</p>';
+    if(!MT||!MT.janelas) return h+'<div class="note">O Instagram ainda não está conectado. Assim que a conexão com a Meta for feita, os números aparecem aqui sozinhos e se atualizam a cada 3 horas.'+(MT&&MT.erro?'<br><br><b>Última tentativa ('+trWhen(MT.erro_em)+'):</b> '+esc(MT.erro):'')+'</div>';
+    const J=MT.janelas[mtWin]||{}, A=J.anterior||{}, C=MT.conta||{};
+    h+='<p class="ihd">@'+esc(C.usuario||'')+' · '+shortDay(J.inicio)+' a '+shortDay(J.fim)+', atualizado em '+trWhen(MT.generated_at)+'<br><small>'+(MT.fonte==='painel'?'Leitura manual do painel.':'Os números vêm direto do Instagram a cada 3 horas.')+' O período vai até ontem, com dias completos.</small></p>';
+    if(MT.fonte==='painel') h+='<div class="note" style="margin-bottom:12px">'+esc(MT.fonte_obs||'Números lidos do painel do Instagram.')+'</div>';
+    if(MT.erro) h+='<div class="note" style="margin-bottom:12px">A última atualização falhou ('+trWhen(MT.erro_em)+'): '+esc(MT.erro)+'. Os números abaixo são da última vez que deu certo.</div>';
+    const ID=mtIdeias(J,A);
+    if(ID.length) h+='<div class="vcard mtid"><h3>O que fazer agora</h3><ul>'+ID.map(x=>'<li class="'+x[0].replace('!','at')+'">'+x[1]+'</li>').join('')+'</ul><p class="hint">Sugestões montadas a partir dos números abaixo. Elas mudam sozinhas a cada atualização.</p></div>';
+    const saldo=J.seguiram!=null?(J.seguiram||0)-(J.deixaram_de_seguir||0):null;
+    h+='<div class="ikpis mt3">'
+      +'<div class="vcard ik"><span>Seguidores</span><b>'+(C.seguidores_aprox&&C.seguidores>=1000?(C.seguidores/1000).toFixed(1).replace('.',',')+' mil':mtN(C.seguidores))+'</b>'+(J.seguiram!=null?'<em class="'+(saldo>=0?'up':'dn')+'">+'+trN(J.seguiram)+' novos'+(J.deixaram_de_seguir!=null?' · '+trN(J.deixaram_de_seguir)+' saíram':'')+'</em>':'')+'</div>'
+      +'<div class="vcard ik"><span>Alcance</span><b>'+mtN(J.alcance)+'</b>'+(mtVar(J.alcance,A.alcance)||'<em>'+(J.alcance==null?'o painel só mostra no período de 30 dias':'contas diferentes que viram')+'</em>')+'</div>'
+      +'<div class="vcard ik"><span>Visualizações</span><b>'+mtN(J.visualizacoes)+'</b>'+(mtVar(J.visualizacoes,A.visualizacoes)||'<em>posts, reels e stories</em>')+'</div>'
+      +'<div class="vcard ik"><span>Interações</span><b>'+mtN(J.interacoes)+'</b>'+(mtVar(J.interacoes,A.interacoes)||'<em>'+mtN(J.contas_engajadas)+' contas engajadas</em>')+'</div>'
+      +'<div class="vcard ik"><span>Visitas ao perfil</span><b>'+mtN(J.visitas_perfil)+'</b>'+(mtVar(J.visitas_perfil,A.visitas_perfil)||'')+'</div>'
+      +'<div class="vcard ik"><span>Toques no link</span><b>'+mtN(J.cliques_link)+'</b>'+(mtVar(J.cliques_link,A.cliques_link)||'<em>link da bio</em>')+'</div></div>';
+    if(J.curtidas!=null) h+='<p class="hint" style="margin:-4px 0 18px">Curtidas '+mtN(J.curtidas)+' · comentários '+mtN(J.comentarios)+' · compartilhamentos '+mtN(J.compartilhamentos)+' · salvamentos '+mtN(J.salvamentos)+'.</p>';
+    // série diária
+    const D=(MT.diario||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim), mx=Math.max(...D.map(x=>+x.alcance||0),1);
+    if(D.length) h+='<div class="vcard"><h3>Alcance por dia</h3><div class="icol">'+D.map(x=>'<div class="icb" title="'+shortDay(x.data)+': alcance '+mtN(x.alcance)+', '+mtN(x.visualizacoes)+' visualizações'+(x.novos_seguidores!=null?', '+x.novos_seguidores+' seguidores novos':'')+'"><b>'+(x.alcance>=1000?(x.alcance/1000).toFixed(1).replace('.',',')+'k':mtN(x.alcance))+'</b><i style="height:'+Math.round((+x.alcance||0)/mx*100)+'%"></i><span>'+x.data.slice(8)+'/'+x.data.slice(5,7)+'</span></div>').join('')+'</div><p class="hint">Passe o dedo ou o mouse numa barra para ver as visualizações e os seguidores novos do dia.</p></div>';
+    { const pc=platCards(), at=h.indexOf('<div class="vcard mtid">'); h=at>=0?h.slice(0,at)+pc+h.slice(at):h.replace('<div class="ikpis mt3">',pc+'<div class="ikpis mt3">'); }
+    h+=platExtras(J);
+    h+='<p class="hint" style="margin-top:16px">Relatório antigo, montado com os prints (25/10 a 10/11): <button class="linkbtn" data-act="tab" data-v="insights">abrir</button></p>';
+    return h;
+  }
+  function renderPosts(){
+    mtLoad();
+    let h='<div class="iwsel" role="group" aria-label="Período">'+[7,30].map(w=>'<button class="chip'+(w===mtWin?' on':'')+'" data-act="mtw" data-w="'+w+'" aria-pressed="'+(w===mtWin)+'">'+w+' dias</button>').join('')+'</div>';
+    if(MT===undefined) return h+'<p class="empty">Carregando as métricas do Instagram…</p>';
+    if(!MT||!MT.janelas) return h+'<div class="note">O Instagram ainda não está conectado. Assim que a conexão com a Meta for feita, os números aparecem aqui sozinhos e se atualizam a cada 3 horas.'+(MT&&MT.erro?'<br><br><b>Última tentativa ('+trWhen(MT.erro_em)+'):</b> '+esc(MT.erro):'')+'</div>';
+    const J=MT.janelas[mtWin]||{}, A=J.anterior||{};
+    h+=postCards(J);
+    // stories
+    const S=(MT.stories||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim), SA=(MT.stories||[]).filter(x=>x.data>=A.inicio&&x.data<=A.fim);
+    const sv=L=>L.reduce((s,x)=>s+(+x.visualizacoes||0),0), sm=L=>L.length?Math.round(sv(L)/L.length):0, N=mtNav(S);
+    h+='<h2 class="ish">Stories</h2>';
+    if(!S.length) h+='<p class="empty">'+(MT.stories&&MT.stories.length?'Nenhum story registrado neste período.':'Os stories começam a ser registrados a partir da conexão. A Meta só mostra os números de um story enquanto ele está no ar (24 horas), então o histórico vai se formando dia a dia.')+'</p>';
+    else {
+      const tl=N.avancou+N.voltou+N.saiu+N.proxima_conta;
+      h+='<div class="ikpis">'
+        +'<div class="vcard ik"><span>Stories postados</span><b>'+S.length+'</b><em>'+(SA.length?'contra '+SA.length+' antes':'no período')+'</em></div>'
+        +'<div class="vcard ik"><span>Visualizações</span><b>'+trN(sv(S))+'</b>'+(SA.length?mtVar(sv(S),sv(SA)):'<em>somando todos</em>')+'</div>'
+        +'<div class="vcard ik"><span>Média por story</span><b>'+trN(sm(S))+'</b>'+(SA.length?mtVar(sm(S),sm(SA)):'<em>visualizações</em>')+'</div>'
+        +(tl?'<div class="vcard ik"><span>Telas tocadas</span><b>'+trN(tl)+'</b><em>'+trP(N.saiu/tl*100,0)+' foram saídas</em></div>':'<div class="vcard ik"><span>Respostas</span><b>'+trN(S.reduce((s,x)=>s+(+x.respostas||0),0))+'</b><em>'+trN(S.reduce((s,x)=>s+(+x.interacoes||0),0))+' interações</em></div>')+'</div>';
+      if(tl) h+='<div class="vcard"><h3>O que fizeram nas telas</h3>'+insBars({'Avançaram':N.avancou,'Voltaram':N.voltou,'Saíram':N.saiu,'Foram para a próxima conta':N.proxima_conta})+'<p class="hint">Voltar costuma ser bom sinal (quiseram ver de novo). Sair e ir para a próxima conta mostram onde a sequência perdeu atenção.</p></div>';
+      h+='<div class="vcard" style="margin-top:14px"><h3>Stories do período</h3><div class="itab"><div class="itr ith"><span>Dia</span><span>Horário</span><span>Visualiz.</span><span>Avanç.</span><span>Saídas</span><span>Respostas</span></div>'
+        +S.slice().reverse().map(x=>'<div class="itr"><span>'+shortDay(x.data)+'</span><span class="itt">'+(x.link?'<a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.hora)+'</a>':esc(x.hora))+(x.tipo==='VIDEO'?' <i class="itag">vídeo</i>':'')+'</span><span><b>'+mtN(x.visualizacoes)+'</b></span><span>'+mtN(x.avancou)+'</span><span>'+mtN(x.saiu)+'</span><span>'+mtN(x.respostas)+'</span></div>').join('')+'</div></div>';
+    }
+    h+=postExtras();
+    return h;
+  }
+  const LOGO={IG:'<path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',FB:'<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8z"/>',YT:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/>',TT:'<path d="M14 3v11a4 4 0 1 1-4-4"/><path d="M14 3a5 5 0 0 0 5 5"/>',IN:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7h.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/>'};
+  function spark(vals){ if(!vals.length) return ''; const mx=Math.max(...vals,1), mn=Math.min(...vals), w=200, hh=44; const pts=vals.map((v,i)=>[i/(vals.length-1||1)*w, hh-4-(v-mn)/((mx-mn)||1)*(hh-8)]); return '<svg class="spk" viewBox="0 0 '+w+' '+hh+'" preserveAspectRatio="none"><path d="'+smoothPath(pts)+'"/></svg>'; }
+  function platCards(){
+    const C=MT.conta||{}, J7=MT.janelas['7']||{}, D=(MT.diario||[]).slice(-30);
+    const cnt=k=>feed.filter(x=>(x.redes||[]).includes(k)).length;
+    const nets=[['FB','Facebook','#1877F2','Facebook'],['YT','YouTube Shorts','#FF0000','YT Shorts'],['TT','TikTok','#111','TikTok'],['IN','LinkedIn','#0A66C2','LinkedIn']];
+    return '<div class="plc"><div class="pc on"><span class="pn"><span class="lg" style="background:linear-gradient(45deg,#F58529,#DD2A7B 50%,#8134AF 80%,#515BD4)"><svg class="i" viewBox="0 0 24 24">'+LOGO.IG+'</svg></span>Instagram<span class="cst2">conectado</span></span><b class="big">'+(C.seguidores?(C.seguidores>=1000?(C.seguidores/1000).toFixed(1).replace('.',',')+' mil':trN(C.seguidores)):'—')+'</b><span class="pm">seguidores'+(J7.seguiram!=null?' · <em class="up">+'+trN(J7.seguiram)+'</em> em 7 dias':'')+'</span>'+spark(D.map(x=>+x.visualizacoes||0))+'<span class="pm">Visualizações por dia, '+D.length+' dias</span></div>'
+      +nets.map(n=>'<div class="pc dim"><span class="pn"><span class="lg" style="background:'+n[2]+'"><svg class="i" viewBox="0 0 24 24">'+LOGO[n[0]]+'</svg></span>'+n[1]+'</span><span class="off">Fonte a conectar</span><span class="pm" style="margin-top:auto">'+cnt(n[3])+(cnt(n[3])===1?' post marcado':' posts marcados')+' na planilha</span></div>').join('')+'</div>';
+  }
+  function platExtras(J){
+    const P=(MT.posts||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim), S=(MT.stories||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim);
+    const avg=L=>L.length?L.reduce((a,b)=>a+b,0)/L.length:0, pf=avg(P.map(x=>+x.visualizacoes||0)), ps=avg(S.map(x=>+x.visualizacoes||0));
+    let h='<div class="g2c">';
+    h+='<div class="vcard"><h3>Feed ou stories?</h3><p class="hint">Média de visualizações por publicação no período</p>'+(P.length&&S.length?'<div class="vs"><div class="hi"><b>'+trN(Math.round(pf))+'</b><span>por post no feed ('+P.length+')</span></div><div><b>'+trN(Math.round(ps))+'</b><span>por story ('+S.length+')</span></div></div><p class="hint">'+(ps?'Cada post do feed rende cerca de '+Math.max(1,Math.round(pf/ps))+' vezes as visualizações de um story. ':'')+'Os stories somam '+trN(S.reduce((a,x)=>a+(+x.visualizacoes||0),0))+' visualizações e '+S.reduce((a,x)=>a+(+x.respostas||0),0)+' respostas.</p>':'<p class="empty">Ainda sem posts e stories suficientes neste período.</p>')+'</div>';
+    const D=(MT.diario||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim&&x.novos_seguidores!=null), mx=Math.max(...D.map(x=>+x.novos_seguidores||0),1), tot=D.reduce((a,x)=>a+(+x.novos_seguidores||0),0);
+    h+='<div class="vcard"><h3>Novos seguidores por dia</h3>'+(D.length?'<p class="hint">'+trN(tot)+' no período. Pico de '+mx+' em '+shortDay((D.find(x=>+x.novos_seguidores===mx)||D[0]).data)+'.</p><div class="nbars">'+D.map(x=>'<i class="'+(+x.novos_seguidores===mx?'mx':'')+'" style="height:'+Math.max(3,(+x.novos_seguidores||0)/mx*100)+'%" title="'+shortDay(x.data)+': '+x.novos_seguidores+'"></i>').join('')+'</div><div class="ovax"><span>'+shortDay(D[0].data)+'</span><span>'+shortDay(D[D.length-1].data)+'</span></div>':'<p class="empty">fonte a conectar</p>')+'</div></div>';
+    h+='<div class="vcard" style="margin-top:14px"><h3>De onde vêm os dados</h3><ul class="srcl"><li><span class="cst2">ligado</span><span><b>Instagram</b><br>'+(MT.fonte==='painel'?'Lido do painel profissional.':'Direto do Instagram, a cada 3 horas.')+' Última leitura: '+trWhen(MT.generated_at)+'.</span></li><li><span class="cst2 n">falta</span><span><b>Facebook</b><br>Mesmo acesso da Meta. Entra junto com a API do Instagram.</span></li><li><span class="cst2 n">falta</span><span><b>YouTube Shorts, TikTok e LinkedIn</b><br>Cada um precisa de uma conexão própria. Só vale ligar se essas redes entrarem na rotina.</span></li></ul></div>';
+    return h;
+  }
+  let poF='', poS='visualizacoes';
+  function postCards(J){
+    const all=(MT.posts||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim);
+    let h='<h2 class="ish">Posts do feed</h2>';
+    if(!all.length) return h+'<p class="empty">Nenhum post no feed neste período.</p>';
+    const vals=all.map(x=>+x.visualizacoes||0).sort((a,b)=>a-b), md=vals[Math.floor(vals.length/2)]||1;
+    const tipos=[...new Set(all.map(x=>x.tipo))];
+    const L=all.filter(x=>!poF||x.tipo===poF).sort((a,b)=>poS==='data'?(a.data<b.data?1:-1):(+b[poS]||0)-(+a[poS]||0));
+    h+='<div class="ctl"><div class="seg2" role="group" aria-label="Formato">'+[''].concat(tipos).map(t=>'<button data-act="pof" data-f="'+esc(t)+'" aria-pressed="'+(poF===t)+'">'+(t?esc(t[0].toUpperCase()+t.slice(1)):'Todos')+' ('+(t?all.filter(x=>x.tipo===t).length:all.length)+')</button>').join('')+'</div>'
+      +'<div class="seg2" role="group" aria-label="Ordenar">'+[['visualizacoes','Visualizações'],['interacoes','Interações'],['salvamentos','Salvos'],['data','Recentes']].map(o=>'<button data-act="pos" data-s="'+o[0]+'" aria-pressed="'+(poS===o[0])+'">'+o[1]+'</button>').join('')+'</div></div>';
+    const m=(l,v,k)=>'<div'+(k?' class="k"':'')+'><b>'+(v==null?'—':trN(v))+'</b><span>'+l+'</span></div>';
+    h+='<div class="pcs">'+L.map(x=>{ const it=feed.find(f=>f.date===x.data), a=it&&artIds(it)[0];
+      const th=a?'<button class="pth" data-act="open" data-id="'+esc(it.id)+'" aria-label="Abrir o post na Agenda">'+artTag(a,'',1)+'</button>':'<div class="pth ph"><b>'+esc((x.legenda||'').slice(0,60))+'</b></div>';
+      return '<article class="pk2">'+th+'<div class="pkb"><span class="pm">'+WD[fromIso(x.data).getDay()]+', '+shortDay(x.data)+(x.hora?' às '+esc(x.hora):'')+' · '+esc(x.tipo||'post')+'</span><span class="ttl">'+(x.link?'<a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(it&&it.tema||x.legenda||'(sem legenda)')+'</a>':esc(it&&it.tema||x.legenda||'(sem legenda)'))+((+x.visualizacoes||0)>2*md?' <span class="bomb">bombou</span>':'')+'</span><span class="pm">'+((+x.visualizacoes||0)/md).toFixed(1).replace('.',',')+'x a mediana'+(x.alcance?' · '+((+x.interacoes||0)/x.alcance*100).toFixed(1).replace('.',',')+'% de interação sobre o alcance':'')+'</span>'
+        +'<div class="mrow">'+m('visualizações',x.visualizacoes,1)+m('alcance',x.alcance)+m('curtidas',x.curtidas)+m('coment.',x.comentarios)+m('compart.',x.compartilhamentos)+m('salvos',x.salvamentos)+'</div></div></article>'; }).join('')+'</div>';
+    h+='<p class="hint"><b>Bombou</b> = mais de 2x a mediana ('+trN(md)+'). A capa vem da arte guardada no post da Agenda do mesmo dia.</p>';
+    const H={}; all.forEach(x=>{ if(x.hora){ const k=x.hora.slice(0,2)+'h'; (H[k]=H[k]||[]).push(+x.visualizacoes||0); } }); const hs=Object.keys(H).sort((a,b)=>H[b].reduce((s,v)=>s+v,0)/H[b].length-H[a].reduce((s,v)=>s+v,0)/H[a].length);
+    if(hs.length) h+='<div class="vcard" style="margin-top:14px"><h3>Horário de postagem</h3><p class="hint">Média de visualizações dos posts por horário'+(all.length<12?'. Ainda são poucos posts, o padrão fica mais confiável com um mês de registro.':'')+'</p><div class="itab"><div class="itr ith ht3"><span>Horário</span><span>Posts</span><span>Média</span></div>'+hs.map((k,i)=>'<div class="itr ht3"><span><b>'+k+'</b>'+(i===0?' <i class="itag">melhor</i>':'')+'</span><span>'+H[k].length+'</span><span><b>'+trN(Math.round(H[k].reduce((s,v)=>s+v,0)/H[k].length))+'</b></span></div>').join('')+'</div></div>';
+    return h;
+  }
+  function postExtras(){
+    const D=(MT.diario||[]).slice(-30), W=[0,0,0,0,0,0,0], N=[0,0,0,0,0,0,0];
+    D.forEach(x=>{ const d=(fromIso(x.data).getDay()+6)%7; W[d]+=+x.visualizacoes||0; N[d]++; });
+    const av=W.map((v,i)=>N[i]?v/N[i]:0), mx=Math.max(...av,1), bi=av.indexOf(Math.max(...av)), nm=['seg','ter','qua','qui','sex','sáb','dom'];
+    let h='<div class="g2c" style="margin-top:14px"><div class="vcard"><h3>Melhor dia para postar</h3>'+(D.length?'<p class="hint">'+['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'][bi]+' tem a maior média de visualizações do perfil nos últimos '+D.length+' dias.</p><div class="wbars">'+av.map((v,i)=>'<div><i class="'+(i===bi?'mx':'')+'" style="height:'+Math.max(3,v/mx*100)+'%"></i><span>'+nm[i]+'</span></div>').join('')+'</div>':'<p class="empty">fonte a conectar</p>')+'</div>';
+    const t=todayIso(), k0=(fromIso(t).getDay()+6)%7, mon=addDays(t,-k0), wk=[];
+    for(let i=5;i>=0;i--){ const a=addDays(mon,-7*i), b=addDays(a,6); wk.push([a,feed.filter(x=>x.date>=a&&x.date<=b&&x.date<=t&&statusOf(x)==='Publicado').length]); }
+    const tgt=FEED_DOW.length, okW=wk.filter(w=>w[1]>=tgt).length;
+    h+='<div class="vcard"><h3>Consistência de postagem</h3><p class="hint">Posts publicados no feed por semana (meta: '+tgt+'). '+okW+' de 6 semanas na meta.</p><div class="cons">'+wk.map(w=>'<div class="'+(w[1]>=tgt?'ok':w[1]?'mid':'no')+'"><b>'+w[1]+'</b><span>'+shortDay(w[0])+'</span></div>').join('')+'</div></div></div>';
+    return h;
+  }
+  const TRN=[
+   ['g','5 tendências que marcam uma nova fase da estética facial','Tribuna do Sertão, 14/10/2026','https://tribunadosertao.com.br/vida-e-saude/2026/10/14/997074-5-tendencias-que-marcam-uma-nova-fase-da-estetica-facial','O que o paciente pede mudou. Sua ficha de anamnese acompanhou?'],
+   ['g','Quanto custa fazer uma harmonização facial em 2026?','Catraca Livre','https://catracalivre.com.br/saude-bem-estar/quanto-custa-fazer-uma-harmonizacao-facial-em-2026/','O paciente pesquisa preço antes de chamar no WhatsApp. Você sabe a margem de cada procedimento?'],
+   ['e','A busca pela naturalidade está transformando o mercado da estética','Estado de Minas, jul/2026','https://www.em.com.br/networking-e-negocios/2026/07/7457744-uma-nova-era-na-dermatologia-a-busca-pela-naturalidade-esta-transformando-o-mercado-da-estetica-por-dra-lais-rios.html','Tratamentos em etapas pedem retorno certo. Mostrar como o Belle lembra o paciente da próxima sessão.'],
+   ['e','Futuro da estética: tecnologia, diversidade e interesse mais cedo','Futuro da Saúde','https://futurodasaude.com.br/estudo-sobre-futuro-da-estetica/','Público mais jovem chega pelo Instagram e pelo WhatsApp. Gancho para o BelleChat.'],
+   ['p','Harmonização facial faz buscas por Vini Jr. superarem a Copa','TNH1','https://www.tnh1.com.br/noticia/nid/com-harmonizacao-facial-e-volta-com-virginia-buscas-por-vini-jr-superam-periodo-da-copa/','Fofoca de celebridade, sem ligação com a gestão da clínica.']];
+  const TTN={g:'Potencial de gancho',e:'Explicar',p:'Pular'}; let trF='';
+  function renderTrends(){
+    let h='<div class="vcard"><h3>Tendências da semana</h3><p class="hint">O que está sendo falado sobre estética e clínicas, com uma sugestão de ângulo para o Belle. Estes são resultados de uma busca feita em 25/11, nem todos desta semana. A busca automática entra quando você escolher as fontes.</p>'
+      +'<div class="seg2 wrapx" role="group" aria-label="Filtrar" style="margin:10px 0">'+[['','Todos']].concat(Object.entries(TTN)).map(c=>'<button data-act="trf" data-f="'+c[0]+'" aria-pressed="'+(trF===c[0])+'">'+c[1]+' ('+(c[0]?TRN.filter(t=>t[0]===c[0]).length:TRN.length)+')</button>').join('')+'</div><div class="trl">'
+      +TRN.map((t,i)=>[t,i]).filter(([t])=>!trF||t[0]===trF).map(([t,i])=>'<article class="ti"><span class="ttag '+t[0]+'">'+TTN[t[0]]+'</span><h4>'+esc(t[1])+'</h4><span class="src">'+esc(t[2])+'</span><p><b>'+(t[0]==='p'?'Por quê':'Ângulo para o Belle')+':</b> '+esc(t[4])+'</p><div class="row">'+(t[0]!=='p'?'<button class="btn primary edonly" data-act="tridea" data-i="'+i+'">'+ic.bulb+'Virar ideia</button>':'')+'<a class="btn" href="'+esc(t[3])+'" target="_blank" rel="noopener">'+ic.link+'Abrir fonte</a></div></article>').join('')+'</div></div>';
+    h+='<div class="vcard" style="margin-top:14px"><h3>Concorrentes: top Reels da semana</h3><p class="hint">Os Reels com mais curtidas e comentários das contas que você escolher, toda segunda.</p><div class="ccs">'+[1,2,3,4].map(i=>'<div class="ccx"><b>@ conta '+i+'</b><span>fonte a conectar</span></div>').join('')+'</div><ul class="srcl" style="margin-top:12px"><li><span class="cst2 n">falta</span><span><b>Quais contas acompanhar</b> (até 8). Me mande os @.</span></li><li><span class="cst2">fonte</span><span>A própria API do Instagram, com o mesmo acesso das Métricas. Ela não mostra visualizações de outras contas, então o ranking é por curtidas e comentários.</span></li></ul></div>';
+    return h;
+  }
   /* ---------- GA4 (JSONs gerados por scripts/publicar_app.py no projeto trafego-pago-google-ads) ---------- */
   const G4_WINS=[4,7,14,30]; let g4Win=7, g4Evt=null; const G4={}, g4Busy={};
   function g4Load(w){ if(w in G4||g4Busy[w]) return; g4Busy[w]=true;
@@ -2444,17 +2596,17 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Análise · Visão geral',hoje:'Planejador · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Planejador · Calendário',feed:'Planejador · Prévia do feed',prog:'Planejador · Programar posts',eventos:'Estratégia · Eventos',config:'Configurações',ideias:'Planejador · Ideias',metricas:'Análise · Métricas do Instagram',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Análise · Visão geral',hoje:'Planejador · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Planejador · Calendário',feed:'Planejador · Prévia do feed',prog:'Planejador · Programar posts',eventos:'Estratégia · Eventos',config:'Configurações',ideias:'Planejador · Ideias',metricas:'Análise · Plataformas',posts:'Análise · Posts',trends:'Estratégia · Trending topics',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
     const nLate=loaded?feed.filter(x=>x.date>=todayIso()&&x.date<=addDays(todayIso(),6)&&statusOf(x)!=='Agendado'&&statusOf(x)!=='Publicado').length:0, nIdeas=(()=>{ try{ return idList().filter(x=>!x.usada).length; }catch(_){ return 0; } })();
-    [['painel','Visão geral',ic.dash],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['ga4','GA4',ic.ga4],['cal','Calendário',ic.month,nLate,'Posts dos próximos 7 dias ainda sem agendar'],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Ideias',ic.bulb,nIdeas,'Ideias guardadas ainda não usadas'],['metricas','Métricas',ic.ig],['eventos','Eventos',ic.star,evList().length,'Eventos ativos'],['config','Configurações',ic.gear]].forEach(t=>{ const b=$('#tab-'+t[0]); if(!b) return; b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[3]?'<span class="ct" title="'+t[4]+'">'+t[3]+'</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['ga4','GA4',ic.ga4],['cal','Calendário',ic.month,nLate,'Posts dos próximos 7 dias ainda sem agendar'],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Ideias',ic.bulb,nIdeas,'Ideias guardadas ainda não usadas'],['metricas','Plataformas',ic.ig],['posts','Posts',ic.img],['trends','Trending topics',ic.trend],['eventos','Eventos',ic.star,evList().length,'Eventos ativos'],['config','Configurações',ic.gear]].forEach(t=>{ const b=$('#tab-'+t[0]); if(!b) return; b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[3]?'<span class="ct" title="'+t[4]+'">'+t[3]+'</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
     if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='ga4'&&view!=='metricas'&&view!=='config'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }
-    else v.innerHTML=view==='config'?renderConfig():view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='ga4'?renderGa4():view==='metricas'?renderMetricas():renderFeed();
+    else v.innerHTML=view==='config'?renderConfig():view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='ga4'?renderGa4():view==='metricas'?renderMetricas():view==='posts'?renderPosts():view==='trends'?renderTrends():renderFeed();
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();
@@ -2731,6 +2883,10 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     if(act==='dview'){ dview=el.dataset.v; renderDay(); return; }
     if(act==='dnav'){ dayOpen=addDays(dayOpen,Number(el.dataset.n)); month=dayOpen.slice(0,7); renderAll(); $('#dpanel').scrollTop=0; return; }
     if(act==='dtoday'){ sel=dayOpen; view='hoje'; closeDay(); renderAll(); window.scrollTo(0,0); return; }
+    if(act==='pof'){ poF=el.dataset.f||''; renderAll(); return; }
+    if(act==='pos'){ poS=el.dataset.s; renderAll(); return; }
+    if(act==='trf'){ trF=el.dataset.f||''; renderAll(); return; }
+    if(act==='tridea'){ const t=TRN[+el.dataset.i]; if(t) idCreate([],{titulo:t[1],nota:'Ângulo para o Belle: '+t[4]+'\nFonte: '+t[2],link:t[3],tags:['tendência']}); return; }
     if(act==='calf'){ calF=el.dataset.f||''; renderAll(); return; }
     if(act==='calt'){ calTab=el.dataset.t2; renderAll(); return; }
     if(act==='mon'){ const y=+month.slice(0,4), mo=+month.slice(5,7)-1+Number(el.dataset.n); const d=new Date(y,mo,1,12); month=d.getFullYear()+'-'+pad(d.getMonth()+1); renderAll(); return; }

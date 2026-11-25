@@ -3030,7 +3030,7 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     window.addEventListener('touchend',()=>{ if(y0==null) return; y0=null; if(dy>=TH){ ind.classList.add('load'); ind.querySelector('.ptr-t').textContent='Atualizando…'; setTimeout(()=>location.reload(),150); } else { ind.classList.remove('on'); set(0); } dy=0; },{passive:true});
   })();
   (function(){ const cur=(document.querySelector('meta[name="belle-ver"]')||{}).content||'';
-    async function chk(){ try{ const t=await (await fetch('index.html?'+Date.now(),{cache:'no-store'})).text(); const m=t.match(/name="belle-ver" content="(\d+)"/); if(m&&cur&&m[1]>cur&&!document.getElementById('nv')){ const b=document.createElement('button'); b.id='nv'; b.className='nv'; b.textContent='Nova versão do site disponível · toque para atualizar'; b.onclick=()=>location.reload(); document.body.appendChild(b); } }catch(_){} }
+    async function chk(){ try{ const t=await (await fetch((location.pathname.split('/').pop()||'index.html')+'?'+Date.now(),{cache:'no-store'})).text(); const m=t.match(/name="belle-ver" content="(\d+)"/); if(m&&cur&&m[1]>cur&&!document.getElementById('nv')){ const b=document.createElement('button'); b.id='nv'; b.className='nv'; b.textContent='Nova versão do site disponível · toque para atualizar'; b.onclick=()=>location.reload(); document.body.appendChild(b); } }catch(_){} }
     setTimeout(chk,8000); setInterval(chk,120000); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) chk(); }); })();
   /* ---------- início ---------- */
   renderAll();

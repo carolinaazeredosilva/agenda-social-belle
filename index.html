@@ -273,7 +273,7 @@ label.f:first-of-type{margin-top:0}
 .hello .sub{font-size:13px;min-height:0}
 .hello .sub::first-letter{text-transform:uppercase}
 #view[data-v="hoje"],#view[data-v="feed"]{max-width:760px}
-#view[data-v="cal"]{max-width:920px}
+#view[data-v="cal"]{max-width:none}
 /* resumo do dia */
 .hero{margin-top:16px;border-radius:26px;padding:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%,var(--panel)) 0%,color-mix(in srgb,var(--violet) 9%,var(--panel)) 60%,color-mix(in srgb,#81D8E5 16%,var(--panel)) 100%);border:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
 .hero h2{font-size:17px}
@@ -709,6 +709,54 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
 .dc3.past{opacity:.6}.dc3.today{outline:2px solid var(--ink);outline-offset:1px;opacity:1}
 .dc3 .fr{display:flex;gap:3px;min-height:8px}.dc3 .fr i{width:7px;height:7px;border-radius:50%;background:var(--accent)}.dc3 .fr i.gap{background:transparent;border:1.5px dashed var(--danger)}
 .legend .lg{width:12px;height:10px;border-radius:3px;background:var(--panel);border:1px solid var(--line)}.legend .lg.r{box-shadow:inset 0 3px 0 #F06262}.legend .lg.y{box-shadow:inset 0 3px 0 #F2B600}.legend .lg.gr{box-shadow:inset 0 3px 0 #2DC27A}
+/* ===== v2.0: Calendário ===== */
+.cstats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 0 12px;padding-bottom:2px}.cstats::-webkit-scrollbar{display:none}
+.cst{flex:none;display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:7px 12px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.cst .i{width:15px;height:15px;color:var(--muted)}.cst b{font:700 16px var(--font-display);color:var(--ink)}
+.cst.hot b,.cst.hot .i{color:var(--danger)}
+@media (min-width:760px){.cstats{flex-wrap:wrap;overflow:visible}}
+.ctabs{display:inline-flex;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:12px}
+.ctabs button{border:0;background:none;border-radius:9px;min-height:34px;padding:0 14px;font-size:13px;font-weight:600;color:var(--muted)}
+.ctabs button[aria-selected=true]{background:var(--ink);color:var(--panel)}
+.cwrap{display:grid;gap:14px}
+.cwrap .fpan{display:none}.cwrap.showfeed .fpan{display:block}.cwrap.showfeed .cmain{display:none}
+.fph{display:flex;gap:10px;align-items:center;margin-bottom:12px}.fph b{display:block;color:var(--ink);font:700 14px var(--font-display)}.fph span{font-size:12px;color:var(--muted)}
+.fpan .av{width:34px;height:34px;flex:none}
+.fmini{padding:2px;gap:2px;border-radius:14px}
+.fmini .tile .ph{padding:24px 5px 20px}@media (min-width:700px) and (max-width:959px),(min-width:1180px){.fmini .tile .ph span{display:none}}.fmini .tile .ph b{font-size:10.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.fmini .tile .ph span{font-size:9.5px}
+.fmini .tile .bd{font-size:9.5px;padding:0 6px 0 5px;left:4px;bottom:4px}
+.fmini .tile .fm{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:6px;background:rgba(20,8,28,.55);display:grid;place-items:center;color:#fff}.fmini .tile .fm .i{width:12px;height:12px}
+.fmini .tile .ly{display:none}
+.fmini .tile.old{filter:saturate(.7);opacity:.85}
+.calh{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mnav{display:flex;align-items:center;gap:8px}.mnav h2{font-size:18px;min-width:150px;text-align:center;margin:0}
+.cchips button{min-height:32px}
+.mg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mg .wd{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:center;padding-bottom:2px;font-weight:600}
+.mc{display:flex;flex-direction:column;align-items:stretch;gap:3px;min-width:0;overflow:hidden;min-height:70px;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:5px 4px;text-align:left}
+.mc:hover{border-color:var(--accent)}
+.mc .n{display:flex;align-items:center;justify-content:space-between;gap:2px}
+.mc .dnum{font:700 12.5px/1 var(--font-display);color:var(--ink);font-variant-numeric:tabular-nums}
+.mc.today .dnum{background:var(--ink);color:var(--panel);border-radius:999px;padding:3px 5px;margin:-3px 0 -3px -3px}
+.mc .si{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.mc.r{box-shadow:inset 0 4px 0 #F06262}.mc.r .si{color:#F06262}
+.mc.y{box-shadow:inset 0 4px 0 #F2B600}.mc.y .si{color:#C99700}
+.mc.gr{box-shadow:inset 0 4px 0 #2DC27A}.mc.gr .si{color:#2DC27A}
+.mc.out{opacity:.4;background:transparent;box-shadow:none}.mc.past:not(.today){opacity:.7}.mc.out.past{opacity:.35}
+.ci{display:flex;align-items:center;gap:3px;border-radius:6px;padding:2px 3px;font-size:10.5px;font-weight:600;line-height:1.25;color:var(--ink);background:color-mix(in srgb,var(--accent) 10%,var(--panel));border-left:3px solid var(--accent)}
+.ci .i{width:11px;height:11px;flex:none}
+.ci.gr{background:color-mix(in srgb,#2DC27A 13%,var(--panel));border-color:#2DC27A}
+.ci.y{background:color-mix(in srgb,#F2B600 15%,var(--panel));border-color:#F2B600}
+.ci.r{background:color-mix(in srgb,#F06262 12%,var(--panel));border-color:#F06262}
+.ci.sto{background:color-mix(in srgb,var(--violet,#8461F4) 10%,var(--panel));border-color:var(--violet,#8461F4);color:var(--muted)}
+.ci .tt{overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ci.sto .tt{display:block;white-space:nowrap;text-overflow:ellipsis}
+.ci .tm2{display:none}
+.cmain{container-type:inline-size}
+@container (max-width:640px){.cmain .ci{justify-content:center;padding:2px 0;border-left-width:0;border-top:2px solid}.cmain .ci .tt,.cmain .ci.sto .tt{display:none}.cmain .ci.sto .tm2{display:inline;font-size:9.5px}}
+@media (max-width:759px){.mnav h2{min-width:0;font-size:16px}.mg{gap:3px}.mc{padding:4px 3px;min-height:64px}}
+@media (min-width:760px){.mc{min-height:104px;padding:6px 5px}.ci{font-size:11px;padding:3px 5px}}
+@media (min-width:700px) and (max-width:959px),(min-width:1180px){.ctabs{display:none}.cwrap{grid-template-columns:clamp(170px,26%,250px) minmax(0,1fr);align-items:start}.cwrap .fpan,.cwrap.showfeed .fpan{display:block;position:sticky;top:12px}.cwrap .cmain,.cwrap.showfeed .cmain{display:block}}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
@@ -1443,7 +1491,48 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
       +'<div class="bh-g" aria-hidden="true">'+BEST_H.map(x=>'<i class="'+(x[0]==='18h'?'pk':'')+'" style="height:'+Math.round(x[1]*0.26)+'px" title="'+x[0]+'"></i>').join('')+'</div>'
       +'<button class="linkbtn" data-act="tab" data-v="metricas">métricas</button></div>';
   }
+  let calF='', calTab='cal';
+  const svgI=d=>'<svg class="i" viewBox="0 0 24 24">'+d+'</svg>';
+  const FMT_IC={reels:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="m10 8.5 5 3.5-5 3.5z"/>',car:'<rect x="7" y="3" width="13" height="15" rx="2"/><path d="M4 7v12a2 2 0 0 0 2 2h10"/>',img:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',sto:'<circle cx="12" cy="12" r="9" stroke-dasharray="4 2.2"/>'};
+  const fmtIc=f=>svgI(/reel|vídeo|video/i.test(f||'')?FMT_IC.reels:/carross/i.test(f||'')?FMT_IC.car:FMT_IC.img);
+  const itCls=it=>{ const st=statusOf(it); if(M(it.id).feito||st==='Publicado'||st==='Agendado') return 'gr'; if(it.date<todayIso()) return ''; return st==='Aprovado'?'y':'r'; };
+  function calStats(){
+    const t=todayIso(), k=(fromIso(t).getDay()+6)%7, a=addDays(t,-k), b=addDays(t,6-k), mo=month;
+    const pipe=feed.filter(x=>x.date>=t&&statusOf(x)!=='Publicado').length;
+    const wk=feed.filter(x=>x.date>=a&&x.date<=b).length;
+    const swk=stories.filter(x=>x.kind==='story'&&x.date>=a&&x.date<=b).length;
+    const late=feed.filter(x=>x.date>=t&&x.date<=addDays(t,6)&&statusOf(x)!=='Agendado'&&statusOf(x)!=='Publicado').length;
+    const pub=feed.filter(x=>x.date.slice(0,7)===mo&&['Agendado','Publicado'].includes(statusOf(x))).length;
+    const ml=new Date(+mo.slice(0,4),+mo.slice(5,7)-1,1,12).toLocaleDateString('pt-BR',{month:'long'});
+    const p=(i,n,l,c)=>'<div class="cst'+(c?' '+c:'')+'">'+i+'<b>'+n+'</b><span>'+l+'</span></div>';
+    return '<div class="cstats">'+p(ic.layers,pipe,'no pipeline')+p(ic.month,wk,wk===1?'post nesta semana':'posts nesta semana')+p(svgI(FMT_IC.sto),swk,'stories nesta semana')+p(ic.clock,late,(late===1?'post':'posts')+' sem agendar em 7 dias',late?'hot':'')+p(ic.check,pub,'agendados ou publicados em '+ml)+'</div>';
+  }
+  function calFeedPanel(){
+    const t=todayIso(), L=feed.filter(x=>showIdeas||statusOf(x)!=='Ideia').sort(gridSort);
+    const fut=L.filter(x=>x.date>=t).length;
+    return '<section class="vcard fpan" aria-label="Organização do feed"><div class="fph"><div class="av">B</div><div><b>@bellesoftware</b><span>'+fut+' planejados · '+(L.length-fut)+' no perfil</span></div></div>'
+      +(L.length?'<div class="grid fmini">'+L.map(x=>tileHTML(x,'<span class="fm">'+fmtIc(x.formato)+'</span>',x.date<t?'old':'')).join('')+'</div>':'<p class="empty">Nenhum post no feed ainda.</p>')
+      +'<div class="row" style="margin-top:10px"><button class="btn" data-act="tab" data-v="feed">'+ic.grid+'Organizar grade</button></div></section>';
+  }
   function renderCal(){
+    const y=+month.slice(0,4), mo=+month.slice(5,7)-1, first=month+'-01', lead=(new Date(y,mo,1,12).getDay()+6)%7, days=new Date(y,mo+1,0).getDate(), tot=Math.ceil((lead+days)/7)*7, t=todayIso();
+    let cells=['seg','ter','qua','qui','sex','sáb','dom'].map(w=>'<div class="wd">'+w+'</div>').join('');
+    for(let i=0;i<tot;i++){
+      const d=addDays(first,i-lead), out=d.slice(0,7)!==month, n=+d.slice(8), f=feedOn(d), sn=storiesOn(d).filter(x=>x.kind==='story').length, st=out?'':dayState3(d);
+      const fp=calF!=='s'?f.map(x=>'<span class="ci '+itCls(x)+'" title="'+esc(x.tema||'Post')+' · '+esc(statusOf(x))+'">'+fmtIc(x.formato)+'<span class="tt">'+esc(x.tema||'Post')+'</span></span>').join(''):'';
+      const sc=calF!=='f'&&sn?'<span class="ci sto">'+svgI(FMT_IC.sto)+'<span class="tt">'+sn+(sn>1?' stories':' story')+'</span><span class="tm2">'+sn+'</span></span>':'';
+      cells+='<button class="mc '+st+(out?' out':'')+(d<t?' past':'')+(d===t?' today':'')+'" data-act="goto" data-d="'+d+'" aria-label="'+esc(longDay(d))+(st?', '+ST3[st]:'')+'"><span class="n"><span class="dnum">'+n+'</span>'+(st?'<svg class="si" viewBox="0 0 24 24">'+ICS3[st]+'</svg>':'')+'</span>'+fp+sc+'</button>';
+    }
+    let label=new Date(y,mo,1,12).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}); label=label[0].toUpperCase()+label.slice(1);
+    const chips='<div class="seg2 cchips" role="group" aria-label="Mostrar">'+[['','Tudo'],['f','Feed'],['s','Stories']].map(c=>'<button data-act="calf" data-f="'+c[0]+'" aria-pressed="'+(calF===c[0])+'">'+c[1]+'</button>').join('')+'</div>';
+    const main='<section class="vcard cmain"><div class="calh"><div class="mnav"><button class="iconbtn" data-act="mon" data-n="-1" aria-label="Mês anterior">'+ic.left+'</button><h2>'+esc(label)+'</h2><button class="iconbtn" data-act="mon" data-n="1" aria-label="Próximo mês">'+ic.right+'</button></div>'+chips+'</div>'
+      +bestHoursHTML()+'<div class="mg">'+cells+'</div>'
+      +'<div class="legend"><span><i class="lg r"></i>! falta organizar</span><span><i class="lg y"></i>◷ aprovado, falta agendar</span><span><i class="lg gr"></i>✓ tudo certo</span></div>'
+      +'<p class="hint">Toque num dia para ver o post, os stories, a legenda para copiar, o checklist e os alarmes.</p></section>';
+    return calStats()+'<div class="ctabs" role="tablist" aria-label="Ver"><button role="tab" data-act="calt" data-t2="cal" aria-selected="'+(calTab==='cal')+'">Calendário</button><button role="tab" data-act="calt" data-t2="feed" aria-selected="'+(calTab==='feed')+'">Feed ao lado</button></div>'
+      +'<div class="cwrap'+(calTab==='feed'?' showfeed':'')+'">'+calFeedPanel()+main+'</div>';
+  }
+  function renderCalOld(){
     const y=+month.slice(0,4), mo=+month.slice(5,7)-1;
     const first=new Date(y,mo,1,12), lead=(first.getDay()+6)%7, days=new Date(y,mo+1,0).getDate();
     let cells='';
@@ -2642,6 +2731,8 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
     if(act==='dview'){ dview=el.dataset.v; renderDay(); return; }
     if(act==='dnav'){ dayOpen=addDays(dayOpen,Number(el.dataset.n)); month=dayOpen.slice(0,7); renderAll(); $('#dpanel').scrollTop=0; return; }
     if(act==='dtoday'){ sel=dayOpen; view='hoje'; closeDay(); renderAll(); window.scrollTo(0,0); return; }
+    if(act==='calf'){ calF=el.dataset.f||''; renderAll(); return; }
+    if(act==='calt'){ calTab=el.dataset.t2; renderAll(); return; }
     if(act==='mon'){ const y=+month.slice(0,4), mo=+month.slice(5,7)-1+Number(el.dataset.n); const d=new Date(y,mo,1,12); month=d.getFullYear()+'-'+pad(d.getMonth()+1); renderAll(); return; }
     if(act==='hz'){ hz=+el.dataset.n||14; renderAll(); return; }
     if(act==='ff'){ fFilter=el.dataset.s; renderAll(); return; }

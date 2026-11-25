@@ -11,6 +11,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script>try{var t=localStorage.getItem('belle_theme');if(t)document.documentElement.dataset.theme=t;}catch(_){}</script>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="shim.js"></script>
@@ -626,37 +627,73 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
 .gac-why{margin:8px 0 0;font-size:12.5px;color:var(--body)}
 .gach{font-style:normal;font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 8px}
 @media (max-width:640px){.trh-v{font-size:36px}.trh-s{text-align:left}.trc-hd{flex-direction:column;gap:8px}.trc-sp{text-align:left}.trc-sp b{display:inline;margin-right:6px}.trk .ik b{font-size:20px}}
+
+/* ===== v2.0: lateral limpa, perfil, planejador recolhível, configurações ===== */
+.side{background:#2B1338}
+.prof{display:flex;gap:10px;align-items:center;padding:2px 6px 12px}
+.av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#A11176,#8461F4 55%,#81D8E5);display:grid;place-items:center;font:800 15px var(--font-display);color:#fff;flex:none;box-shadow:0 0 0 2px #2B1338,0 0 0 3.5px #F58BD8}
+.av.sm{width:30px;height:30px;font-size:12px;box-shadow:none}
+.prof b{display:block;color:#fff;font:700 14px/1.2 var(--font-display)}.prof span{font-size:12px;color:#A995B8}
+.brand-row{border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:2px}
+.grp{font:600 11.5px var(--font-body);letter-spacing:0;text-transform:none;color:#9C88AD;padding:14px 12px 4px}
+.tab{min-height:38px;font-size:13.5px;font-weight:500;color:#DDD0E7;border-radius:10px;padding:0 10px;gap:10px}
+.tab svg{width:17px;height:17px;opacity:.9}
+.tab[aria-selected="true"]{background:#F9D3EC;color:#381B49;font-weight:700}
+.tab[aria-selected="true"] svg{stroke:#A11176;opacity:1}
+.tab .ct{background:rgba(245,139,216,.16);color:#F9D3EC;min-width:22px;text-align:center;padding:0 7px;line-height:19px;font-size:10.5px}
+.tab[aria-selected="true"] .ct{background:#fff;color:#A11176}
+.tab.fold{font-weight:700;color:#fff}.tab.fold .chev{margin-left:auto;width:15px;height:15px;transition:transform .2s}.tab.fold[aria-expanded="false"] .chev{transform:rotate(-90deg)}
+.tree{margin:0 0 2px 19px;padding-left:8px;border-left:1px solid rgba(255,255,255,.14);display:flex;flex-direction:column;gap:2px}
+.tree[hidden]{display:none}
+.side-alerts{display:flex;flex-direction:column;gap:2px;margin-top:auto}
+.side-alerts .tab[hidden]{display:none}
+#tab-config{border-top:1px solid rgba(255,255,255,.08);border-radius:0 0 10px 10px;padding-top:4px;min-height:44px}
+.side-foot{font-size:11.5px;margin-top:0}
+body.mini .prof b,body.mini .prof span,body.mini .tab.fold .chev{display:none}
+body.mini .tree{margin-left:0;padding-left:0;border-left:0}
+.cfg{display:grid;gap:14px}
+@media (min-width:900px){.cfg{grid-template-columns:repeat(2,minmax(0,1fr))}.cfg .wide{grid-column:1/-1}}
+.cfx{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.vcard h3+.cfx{border-top:0}
+.cfx b{display:block;color:var(--ink);font-size:14px;overflow-wrap:anywhere}.cfx small{display:block;font-size:12.5px;color:var(--muted);line-height:1.4}
+.ci2{width:36px;height:36px;border-radius:11px;background:color-mix(in srgb,var(--accent) 10%,var(--panel));display:grid;place-items:center;color:var(--accent)}
+.cfx .btn{white-space:nowrap;text-decoration:none}
+.seg2{display:inline-flex;border:1px solid var(--line);border-radius:10px;padding:2px;background:var(--panel)}
+.seg2 button{border:0;background:none;border-radius:8px;padding:0 10px;min-height:32px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.seg2 button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.cst2{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--s-green);margin-top:2px}
+.cst2 i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.cst2.w{color:#B88A00}.cst2.n{color:var(--muted)}
+.cfl{display:flex;gap:8px;flex-wrap:wrap}.cfl a{text-decoration:none}
+@media (max-width:479px){.cfx{grid-template-columns:36px minmax(0,1fr)}.cfx>:last-child{grid-column:2;justify-self:start}}
 </style>
 
 <nav class="side" id="side" aria-label="Seções">
-  <div class="brand-row"><div class="brand"><div class="logo">B</div><div><b>Agenda Social</b><span>Belle Software</span></div></div><button class="iconbtn side-tg" data-act="sidemini" aria-label="Recolher menu" title="Recolher menu"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button></div>
+  <div class="brand-row"><div class="brand prof"><div class="av">B</div><div><b>Belle Software</b><span>@bellesoftware</span></div></div><button class="iconbtn side-tg" data-act="sidemini" aria-label="Recolher menu" title="Recolher menu"><svg class="i" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button></div>
   <div class="in-tabs" role="tablist">
-    <div class="grp">Geral</div>
+    <div class="grp">Análise</div>
     <button class="tab" role="tab" data-act="tab" data-v="painel" id="tab-painel"></button>
-    <button class="tab" role="tab" data-act="tab" data-v="hoje" id="tab-hoje"></button>
+    <button class="tab" role="tab" data-act="tab" data-v="metricas" id="tab-metricas"></button>
+    <div class="grp">Estratégia</div>
+    <button class="tab fold" data-act="fold" aria-expanded="true" id="tab-fold"><svg class="i" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><span class="lb">Planejador de conteúdo</span><svg class="i chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="tree" id="tree">
+      <button class="tab" role="tab" data-act="tab" data-v="ideias" id="tab-ideias"></button>
+      <button class="tab" role="tab" data-act="tab" data-v="cal" id="tab-cal"></button>
+      <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
+      <button class="tab" role="tab" data-act="tab" data-v="prog" id="tab-prog"></button>
+    </div>
+    <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
     <div class="grp">Mídia paga</div>
     <button class="tab" role="tab" data-act="tab" data-v="trafego" id="tab-trafego"></button>
     <button class="tab" role="tab" data-act="tab" data-v="google" id="tab-google"></button>
     <button class="tab" role="tab" data-act="tab" data-v="ga4" id="tab-ga4"></button>
-    <div class="grp">Conteúdo</div>
-    <button class="tab" role="tab" data-act="tab" data-v="cal" id="tab-cal"></button>
-    <button class="tab" role="tab" data-act="tab" data-v="feed" id="tab-feed"></button>
-    <button class="tab" role="tab" data-act="tab" data-v="prog" id="tab-prog"></button>
-    <button class="tab" role="tab" data-act="tab" data-v="ideias" id="tab-ideias"></button>
-    <div class="grp">Resultados</div>
-    <button class="tab" role="tab" data-act="tab" data-v="metricas" id="tab-metricas"></button>
-    <div class="grp">Ações</div>
-    <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
-    <button class="tab" data-act="impart" id="tab-impart" title="Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Conectar pasta de artes</span></button>
+  </div>
+  <div class="side-alerts">
+    <button class="tab" data-act="impart" id="tab-impart" hidden title="Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Conectar pasta de artes</span></button>
     <input type="file" id="imp-dir" webkitdirectory multiple hidden>
     <button class="tab warn" data-act="stsync" id="tab-stsync" hidden title="Status que você mudou no app e ainda não foram para a planilha"><svg class="i" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg><span class="lb">Atualizar planilha</span></button>
   </div>
-  <div class="links">
-    <h4>Atalhos</h4>
-    <a class="meta" title="Meta Business" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg><span class="lb">Meta Business</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-    <a title="Planilha" href="https://docs.google.com/spreadsheets/d/1iEN3AKjzzQcGcVVFjm1qB5kxCizmHHLOxRk-wo2tCz4/edit" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg><span class="lb">Planilha</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-    <a title="Google Agenda" href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="lb">Google Agenda</span><svg class="i ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-  </div>
+  <button class="tab" role="tab" data-act="tab" data-v="config" id="tab-config"></button>
   <div class="side-foot"><span id="sync" class="lb">Lendo a planilha…</span><button class="iconbtn" id="btn-refresh" data-act="refresh" aria-label="Atualizar da planilha"></button></div>
 </nav>
 <div class="scrim" id="scrim" data-act="menuclose" hidden></div>
@@ -695,6 +732,10 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const longDay=s=>fromIso(s).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
   const shortDay=s=>{const d=fromIso(s);return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
   const ic={
+    bell:'<svg class="i" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg>',
+    eye:'<svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+    gear:'<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+    link:'<svg class="i" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
     metaads:'<svg class="i" viewBox="0 0 24 24"><path d="M2.5 15c0-4 2-8 4.5-8s4 3.5 5 5.5 2.5 5.5 5 5.5 4.5-3 4.5-5.5-2-5.5-4.5-5.5-4 3.5-5 5.5-2.5 5.5-5 5.5S2.5 17 2.5 15z"/></svg>',
     ga4:'<svg class="i" viewBox="0 0 24 24"><path d="M5 20V13M12 20V8M19 20V4"/></svg>',
     gads:'<svg class="i" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>',
@@ -732,7 +773,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   let meta=new Map();            // id -> documento do db
   let db=null, assets=null, dls=null, mcp=null;
   let hz=14, dHora='', replaceIdx=null, showIdeas=false, org=null, editF=null, editBusy=false;
-  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#ga4'?'ga4':location.hash==='#metricas'?'metricas':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
+  let view=/^#(trafego|meta)$/.test(location.hash)?'trafego':location.hash==='#google'?'google':location.hash==='#ga4'?'ga4':location.hash==='#metricas'?'metricas':location.hash==='#config'?'config':'painel', sel=todayIso(),month=todayIso().slice(0,7), fFilter='Todos', openId=null;
   let copyReg={}, uploadFor=null, busy=false, dayOpen=null, dview='horas';
   const queues=new Map(), timers=new Map();
 
@@ -1366,6 +1407,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     }catch(e){ org.busy=false; renderAll(); toast(e&&e.message?e.message:'Não consegui gravar na planilha'); }
   }
   try{ if(localStorage.getItem('belle_mini')==='1') document.body.classList.add('mini'); }catch(_){}
+  try{ if(localStorage.getItem('belle_fold')==='1'){ $('#tree').hidden=true; $('#tab-fold').setAttribute('aria-expanded','false'); } }catch(_){}
   async function doSched(it,onde){
     const mm=M(it.id); if(!mm.hora){ toast('Informe o horário em que agendou'); const f=$('#f-hora'); if(f) f.focus(); renderSheet(); return false; }
     const ck=Object.assign({},mm.checks||{}); checklistFor(it).forEach(l=>{ if(/agendado no meta/i.test(l)) ck[l]=true; });
@@ -2140,11 +2182,39 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
       toast(IMP_MES.test(h.name)?'Você conectou só a pasta "'+h.name+'". Para os próximos meses entrarem sozinhos, conecte a pasta Instagram (a que tem as pastas de cada mês).':'Pasta "'+h.name+'" conectada. Daqui em diante as artes entram sozinhas, inclusive as dos próximos meses.'); impScan(false);
     }catch(e){ if(e&&e.name!=='AbortError') toast('Não consegui conectar a pasta.'); }
   }
+
+  /* ---------- Configurações (v2.0): conexões, sincronização, aparência e atalhos ---------- */
+  function cfImpHTML(){ const nu=impUpd.size, has=!!window.showDirectoryPicker;
+    const st=!has?['n','Este navegador não lê pastas. Use o Chrome ou o Edge no computador.']:impDir?(impState==='perm'?['w','Conectada, mas o navegador pediu permissão de novo']:nu?['w',nu+(nu===1?' arte nova':' artes novas')+' na pasta para recarregar']:['ok','Conectada neste navegador']):['n','Não conectada neste navegador'];
+    const bt=!has?'':impDir?(impState==='perm'?'Liberar pasta':nu?'Recarregar artes':'Trocar pasta'):'Conectar pasta';
+    return '<div class="cfx" id="cf-imp"><span class="ci2">'+ic.link+'</span><span><b>Pasta de artes</b><small>Pasta Instagram com as subpastas de cada mês. As artes novas entram sozinhas no post ou story certo.</small><span class="cst2 '+st[0]+'"><i></i>'+esc(st[1])+'</span></span>'+(bt?'<button class="btn edonly" data-act="impart">'+bt+'</button>':'<span></span>')+'</div>'; }
+  function renderConfig(){
+    const row=(t,sub,st,stTxt,btn)=>'<div class="cfx"><span class="ci2">'+ic.link+'</span><span><b>'+t+'</b><small>'+sub+'</small>'+(stTxt?'<span class="cst2 '+st+'"><i></i>'+stTxt+'</span>':'')+'</span>'+(btn||'<span></span>')+'</div>';
+    const hh=d=>{ const x=new Date(d); return shortDay(iso(x))+' às '+pad(x.getHours())+':'+pad(x.getMinutes()); };
+    const P=(window.BELLE_CONFIG&&BELLE_CONFIG.PLANILHA)||'', th=document.documentElement.dataset.theme||'', em=window.belleEmail||'', dona=!RO();
+    const hid=feed.concat(stories).filter(x=>M(x.id).oculto).sort(byDate);
+    let h='<div class="cfg">';
+    h+='<section class="vcard"><h3><span>Conta</span></h3>'+'<div class="cfx"><span class="ci2"><span class="av sm">'+esc((em[0]||'B').toUpperCase())+'</span></span><span><b>'+esc(em||'Conta conectada')+'</b><small>'+(dona?'Dona da Agenda: edita, muda status e conecta pastas':'Somente visualização: vê tudo, sem editar')+'</small></span><span></span></div></section>';
+    h+='<section class="vcard"><h3><span>Aparência</span><small>vale só para este aparelho</small></h3><div class="cfx"><span class="ci2">'+ic.gear+'</span><span><b>Tema</b><small>Automático segue o aparelho</small></span><span class="seg2" role="group" aria-label="Tema">'+[['','Auto'],['light','Claro'],['dark','Escuro']].map(o=>'<button data-act="theme" data-t="'+o[0]+'" aria-pressed="'+(th===o[0])+'">'+o[1]+'</button>').join('')+'</span></div>'
+      +'<div class="cfx"><span class="ci2">'+ic.bell+'</span><span><b>Alarmes no Google Agenda</b><small>Um por post ou story, '+((window.BELLE_CONFIG&&BELLE_CONFIG.AVISO_MIN)||5)+' minutos antes do horário marcado</small></span><span></span></div></section>';
+    h+='<section class="vcard wide"><h3><span>Conexões</span><small>a Agenda só lê e organiza: nada é publicado sozinho</small></h3>'
+      +row('Planilha Estratégia Social','Abas '+esc((window.BELLE_CONFIG&&BELLE_CONFIG.ABA_FEED)||'Calendário')+' e '+esc((window.BELLE_CONFIG&&BELLE_CONFIG.ABA_STORIES)||'Stories')+'. Lida ao abrir e no botão de atualizar.',loadErr?'w':lastRead?'ok':'n',loadErr?'não consegui ler na última tentativa':lastRead?'lida em '+hh(lastRead)+' · '+feed.length+' posts e '+stories.filter(x=>x.kind==='story').length+' stories':'lendo…','<a class="btn" href="https://docs.google.com/spreadsheets/d/'+esc(P)+'/edit" target="_blank" rel="noopener">Abrir</a>')
+      +cfImpHTML()
+      +row('Instagram','Métricas lidas do painel profissional. Arquivo instagram/metricas.json.',MT?'ok':'n',MT&&MT.generated_at?'atualizado em '+hh(MT.generated_at):'carrega ao abrir Métricas')
+      +row('Meta Ads','Campanhas e anúncios, 3 vezes por dia.',TR[7]?'ok':'n',TR[7]&&TR[7].generated_at?'atualizado em '+hh(TR[7].generated_at):'carrega ao abrir Meta Ads')
+      +row('Google Ads','Campanhas e cadastros, 3 vezes por dia.',GA[7]?'ok':'n',GA[7]&&GA[7].generated_at?'atualizado em '+hh(GA[7].generated_at):'carrega ao abrir Google Ads')
+      +'</section>';
+    h+='<section class="vcard"><h3><span>Sincronização</span></h3>'
+      +'<div class="cfx"><span class="ci2">'+ic.refresh+'</span><span><b>Status para a planilha</b><small>'+(stQ.size?stQ.size+(stQ.size===1?' status mudou':' status mudaram')+' no app e ainda não '+(stQ.size===1?'foi':'foram')+' para a planilha':'Nenhum pendente. Tudo igual à planilha.')+'</small></span>'+(stQ.size?'<button class="btn primary edonly" data-act="stsync">Atualizar planilha</button>':'<span></span>')+'</div>'
+      +'<div class="cfx"><span class="ci2">'+ic.refresh+'</span><span><b>Ler a planilha de novo</b><small>Traz o que mudou na planilha desde a última leitura</small></span><button class="btn" data-act="refresh">Atualizar</button></div></section>';
+    h+='<section class="vcard"><h3><span>Itens escondidos</span><small>'+hid.length+'</small></h3>'+(hid.length?hid.slice(0,30).map(x=>'<div class="cfx"><span class="ci2">'+ic.eye+'</span><span><b>'+esc(itemShort(x))+'</b><small>'+esc(longDay(x.date))+'</small></span><button class="btn edonly" data-act="unhide" data-id="'+esc(x.id)+'">Mostrar</button></div>').join(''):'<p class="hint" style="margin:0">Nenhum post ou story escondido.</p>')+'</section>';
+    h+='<section class="vcard wide"><h3><span>Atalhos</span></h3><div class="cfl"><a class="btn" href="https://docs.google.com/spreadsheets/d/'+esc(P)+'/edit" target="_blank" rel="noopener">Planilha Estratégia Social</a><a class="btn" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener">Meta Business</a><a class="btn" href="https://calendar.google.com/calendar/r" target="_blank" rel="noopener">Google Agenda</a><a class="btn" href="https://ads.google.com" target="_blank" rel="noopener">Google Ads</a></div></section>';
+    return h+'</div>'; }
   function renderSide(){ const b=$('#tab-impart'); if(!b) return; const lb=b.querySelector('.lb');
     const nu=impUpd.size;
     if(lb) lb.textContent=impDir?(impState==='perm'?'Liberar pasta de artes':nu?'Artes: '+nu+(nu===1?' atualizada':' atualizadas')+' na pasta':'Artes: pasta conectada'):'Conectar pasta de artes';
     b.title=nu&&impState!=='perm'?'Toque para recarregar '+(nu===1?'a arte nova':'as '+nu+' artes novas')+' da pasta':'Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo';
-    b.classList.toggle('warn',impState==='perm'); b.classList.toggle('upd',!!nu&&impState!=='perm'); }
+    b.classList.toggle('warn',impState==='perm'); b.classList.toggle('upd',!!nu&&impState!=='perm'); b.hidden=!(impState==='perm'||nu); if(view==='config') { const c=$('#cf-imp'); if(c) c.outerHTML=cfImpHTML(); } }
   async function impBoot(){ if(!window.showDirectoryPicker) return; impDir=await impGetDir(); renderSide(); if(impDir) impScan(true); }
   setInterval(()=>{ if(impDir&&document.visibilityState==='visible') impScan(true); },10*60*1000);
   document.addEventListener('visibilitychange',()=>{ if(impDir&&document.visibilityState==='visible') impScan(true); });
@@ -2157,16 +2227,17 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',metricas:'Resultados · Métricas do Instagram',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Análise · Visão geral',hoje:'Planejador · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',ga4:'Mídia paga · GA4 (Google x Meta)',cal:'Planejador · Calendário',feed:'Planejador · Prévia do feed',prog:'Planejador · Programar posts',eventos:'Estratégia · Eventos',config:'Configurações',ideias:'Planejador · Ideias',metricas:'Análise · Métricas do Instagram',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['ga4','GA4',ic.ga4],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['metricas','Métricas',ic.ig],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    const nLate=loaded?feed.filter(x=>x.date>=todayIso()&&x.date<=addDays(todayIso(),6)&&statusOf(x)!=='Agendado'&&statusOf(x)!=='Publicado').length:0, nIdeas=(()=>{ try{ return idList().filter(x=>!x.usada).length; }catch(_){ return 0; } })();
+    [['painel','Visão geral',ic.dash],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['ga4','GA4',ic.ga4],['cal','Calendário',ic.month,nLate,'Posts dos próximos 7 dias ainda sem agendar'],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Ideias',ic.bulb,nIdeas,'Ideias guardadas ainda não usadas'],['metricas','Métricas',ic.ig],['eventos','Eventos',ic.star,evList().length,'Eventos ativos'],['config','Configurações',ic.gear]].forEach(t=>{ const b=$('#tab-'+t[0]); if(!b) return; b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[3]?'<span class="ct" title="'+t[4]+'">'+t[3]+'</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
-    if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='ga4'&&view!=='metricas'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
+    if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='ga4'&&view!=='metricas'&&view!=='config'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }
-    else v.innerHTML=view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='ga4'?renderGa4():view==='metricas'?renderMetricas():renderFeed();
+    else v.innerHTML=view==='config'?renderConfig():view==='painel'?renderPainel():view==='hoje'?renderHoje():view==='cal'?renderCal():view==='prog'?renderProg():view==='eventos'?renderEventos():view==='ideias'?renderIdeias():view==='insights'?renderInsights():view==='trafego'?renderTrafego():view==='google'?renderGoogle():view==='ga4'?renderGa4():view==='metricas'?renderMetricas():renderFeed();
     v.dataset.v=view; evHydrate();
     if(dayOpen) renderDay();
     if(openId&&!inSheetFocus()) renderSheet();
@@ -2360,6 +2431,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='done'){ e.stopPropagation(); const it=itemById(el.dataset.id); if(!it) return; const on=!M(it.id).feito; await saveItem(it.id,{feito:on},true); renderAll(); toast(on?'Marcado como pronto':'Desmarcado'); return; }
     if(act==='open'){ if(org) return; openItem(el.dataset.id); return; }
     if(act==='close'){ closeItem(); return; }
+    if(act==='fold'){ const o=el.getAttribute('aria-expanded')==='true'; el.setAttribute('aria-expanded',String(!o)); $('#tree').hidden=o; try{ localStorage.setItem('belle_fold',o?'1':''); }catch(_){} return; }
+    if(act==='theme'){ const t=el.dataset.t; if(t) document.documentElement.dataset.theme=t; else delete document.documentElement.dataset.theme; try{ localStorage.setItem('belle_theme',t); }catch(_){} renderAll(); return; }
     if(act==='tab'){ view=el.dataset.v; closeMenu(); renderAll(); window.scrollTo(0,0); return; }
     if(act==='dadd'){ dAdd=el.dataset.k||null; renderDay(); if(dAdd){ const f=$('#dpanel .addf'); if(f) f.scrollIntoView({block:'nearest'}); } return; }
     if(act==='hsug'){ e.preventDefault(); const f=$('#f-hora'); if(f){ f.value=el.dataset.h; f.dataset.commit='1'; f.dispatchEvent(new Event('change',{bubbles:true})); } toast('Horário '+el.dataset.h); setTimeout(()=>renderSheet(),300); return; }

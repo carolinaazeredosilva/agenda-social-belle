@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125191110">
+<meta name="belle-ver" content="20261125193345">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -806,6 +806,11 @@ body.mini .tree{margin-left:0;padding-left:0;border-left:0}
 .rw{padding:12px 14px;gap:12px;margin-bottom:10px;align-items:start}
 .rw>:last-child{align-self:center}
 .ovat .rw .rd,.rw .rd{line-height:1.25}
+/* Visão geral: "Precisa de atenção" com a etiqueta embaixo do texto (coluna estreita não quebra palavra por palavra) e os dois cards com a mesma altura, sem buraco embaixo de "Hoje" */
+@media (min-width:900px){.ovg{align-items:stretch}}
+.ovat .rw{grid-template-columns:40px minmax(0,1fr);row-gap:6px}
+.ovat .rw>:last-child{grid-column:2;justify-self:start;align-self:start}
+.ovat .rw .rs{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ish{margin:32px 0 14px}
 .pk2{padding:14px;gap:14px}.mrow{gap:8px;margin-top:8px}
 .ti{padding:16px;gap:8px}

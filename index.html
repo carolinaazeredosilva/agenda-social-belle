@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125115154">
+<meta name="belle-ver" content="20261125115749">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -493,6 +493,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .icol{display:flex;align-items:flex-end;gap:4px;height:170px;padding-top:18px;overflow-x:auto}
 .icb{flex:1 0 24px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}.icb i{display:block;width:100%;max-width:28px;border-radius:6px 6px 2px 2px;background:var(--accent)}.icb b{font-size:10px;color:var(--body)}.icb span{font-size:10px;color:var(--muted);white-space:nowrap}
 .itab{display:flex;flex-direction:column;margin-top:8px}.itr{display:grid;grid-template-columns:52px minmax(0,1fr) 72px 60px 58px 64px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.itr.i3{grid-template-columns:52px minmax(0,1fr) 72px}
+.mtid{margin-bottom:14px}.mtid ul{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}.mtid li{position:relative;padding-left:22px;font-size:14px;line-height:1.5;color:var(--body)}.mtid li:before{content:"";position:absolute;left:4px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--accent)}.mtid li.up:before{background:var(--s-green)}.mtid li.dn:before{background:var(--danger)}.mtid li.at:before{background:#d98a00}
 .ikpis.mt3{grid-template-columns:repeat(3,1fr)}@media (max-width:640px){.ikpis.mt3{grid-template-columns:1fr 1fr}}
 .itt a{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .itr:last-child{border-bottom:0}.ith{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.itr span:nth-child(n+3){text-align:right}.itt{min-width:0;overflow-wrap:anywhere}.itt .linkbtn{padding:0;text-align:left;white-space:normal;min-height:0;font-size:inherit}
@@ -630,7 +631,6 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     <button class="tab" role="tab" data-act="tab" data-v="ideias" id="tab-ideias"></button>
     <div class="grp">Resultados</div>
     <button class="tab" role="tab" data-act="tab" data-v="metricas" id="tab-metricas"></button>
-    <button class="tab" role="tab" data-act="tab" data-v="insights" id="tab-insights"></button>
     <div class="grp">Ações</div>
     <button class="tab" role="tab" data-act="tab" data-v="eventos" id="tab-eventos"></button>
     <button class="tab" data-act="impart" id="tab-impart" title="Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span class="lb">Conectar pasta de artes</span></button>
@@ -1257,7 +1257,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     const wd=d?new Date(d+'T12:00').getDay():-1, mtq=wd>=1&&wd<=3;
     return '<div class="bh"><span class="bh-i">'+ic.clock+'</span><div class="bh-t"><b>Melhores horários</b><span>Pico às <b>18h</b> · forte das 12h às 21h'+(d?(mtq?' · <b>hoje (seg a qua): 18h–21h</b>':''):' · seg a qua: 18h–21h')+'</span></div>'
       +'<div class="bh-g" aria-hidden="true">'+BEST_H.map(x=>'<i class="'+(x[0]==='18h'?'pk':'')+'" style="height:'+Math.round(x[1]*0.26)+'px" title="'+x[0]+'"></i>').join('')+'</div>'
-      +'<button class="linkbtn" data-act="tab" data-v="insights">insights</button></div>';
+      +'<button class="linkbtn" data-act="tab" data-v="metricas">métricas</button></div>';
   }
   function renderCal(){
     const y=+month.slice(0,4), mo=+month.slice(5,7)-1;
@@ -1828,6 +1828,30 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const mtN=v=>v==null?'—':trN(v);
   function mtVar(a,b){ if(a==null||!b) return ''; const p=(a-b)/b*100; return '<em class="'+(p>=0?'up':'dn')+'">'+(p>=0?'+':'')+p.toFixed(1).replace('.',',')+'% vs. '+mtWin+' dias antes</em>'; }
   function mtNav(L){ const s={avancou:0,voltou:0,saiu:0,proxima_conta:0}; L.forEach(x=>Object.keys(s).forEach(k=>{ s[k]+=+x[k]||0; })); return s; }
+  /* "O que fazer": sugestões montadas a partir dos números do período (e ideias anotadas na leitura, em MT.ideias) */
+  function mtIdeias(J,A){
+    const out=[], br=v=>trN(v), pc=(a,b)=>Math.round((a-b)/b*100);
+    (MT.ideias||[]).forEach(t=>out.push(['!',t]));
+    const S=(MT.stories||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim), SA=(MT.stories||[]).filter(x=>x.data>=A.inicio&&x.data<=A.fim);
+    const sm=L=>L.length?L.reduce((s,x)=>s+(+x.visualizacoes||0),0)/L.length:0;
+    if(S.length&&SA.length){ const a=sm(S), b=sm(SA), dias=new Set(S.map(x=>x.data)).size||1, pd=S.length/dias;
+      if(a<b*0.85) out.push(['dn','A média por story caiu de <b>'+br(b)+'</b> para <b>'+br(a)+'</b> visualizações ('+pc(a,b)+'%). Foram '+S.length+' stories, cerca de '+pd.toFixed(0)+' por dia'+(S.length>SA.length?', contra '+SA.length+' antes':'')+'. Teste menos stories (4 a 6 por dia), concentrados nos horários que rendem mais.']);
+      else if(a>b*1.15) out.push(['up','A média por story subiu de <b>'+br(b)+'</b> para <b>'+br(a)+'</b> ('+(pc(a,b)>0?'+':'')+pc(a,b)+'%). O ritmo desta semana está funcionando, vale manter.']); }
+    if(S.length>=8){ const g={}; S.forEach(x=>{ const h=+x.hora.slice(0,2), k=h<11?'manhã (até 11h)':h<17?'tarde (11h às 17h)':'noite (depois das 17h)'; (g[k]=g[k]||[]).push(x); });
+      const ks=Object.keys(g).filter(k=>g[k].length>=3).sort((x,y)=>sm(g[y])-sm(g[x]));
+      if(ks.length>=2&&sm(g[ks[0]])>sm(g[ks.at(-1)])*1.15) out.push(['','Stories da <b>'+ks[0]+'</b> tiveram média de '+br(sm(g[ks[0]]))+' visualizações; os da '+ks.at(-1)+', '+br(sm(g[ks.at(-1)]))+'. Coloque os stories mais importantes de manhã cedo e deixe a '+ks.at(-1)+' para os de apoio.']);
+      const top=S.slice().sort((x,y)=>y.visualizacoes-x.visualizacoes)[0];
+      if(top&&top.visualizacoes>sm(S)*2) out.push(['up','O story de '+shortDay(top.data)+' às '+esc(top.hora)+(top.legenda?' ("'+esc(top.legenda.slice(0,60))+'")':'')+' teve <b>'+br(top.visualizacoes)+'</b> visualizações, '+(top.visualizacoes/sm(S)).toFixed(0)+'x a média. Repita o formato.']); }
+    const P=(MT.posts||[]), avg=t=>{ const L=P.filter(x=>x.tipo===t&&x.visualizacoes!=null); return L.length?[L.reduce((s,x)=>s+x.visualizacoes,0)/L.length,L.length]:null; };
+    const r=avg('reel'), c=avg('carrossel');
+    if(r&&c){ const [hi,lo,nh,nl]=r[0]>=c[0]?[r,c,'reels','carrosséis']:[c,r,'carrosséis','reels'];
+      if(hi[0]>lo[0]*1.3) out.push(['',nh[0].toUpperCase()+nh.slice(1)+' tiveram média de <b>'+br(hi[0])+'</b> visualizações, contra '+br(lo[0])+' dos '+nl+' (últimos posts). Na próxima semana, priorize '+nh+'.']); }
+    const PW=P.filter(x=>x.data>=J.inicio&&x.data<=J.fim);
+    if(mtWin===7&&PW.length<3) out.push(['dn','Só '+PW.length+(PW.length===1?' post':' posts')+' no feed nesta semana. Com 3 ou mais por semana o perfil se mantém aparecendo para quem não segue.']);
+    if(J.visitas_perfil!=null&&A.visitas_perfil&&J.visitas_perfil<A.visitas_perfil*0.9) out.push(['dn','Visitas ao perfil caíram '+Math.abs(pc(J.visitas_perfil,A.visitas_perfil))+'% ('+br(A.visitas_perfil)+' para '+br(J.visitas_perfil)+'). Feche posts e stories com um convite claro para o perfil ou o link da bio.']);
+    if(J.visualizacoes!=null&&A.visualizacoes&&J.visualizacoes>A.visualizacoes*1.3&&J.visitas_perfil!=null&&A.visitas_perfil&&J.visitas_perfil<=A.visitas_perfil) out.push(['','As visualizações cresceram '+pc(J.visualizacoes,A.visualizacoes)+'%, mas as visitas ao perfil não acompanharam. Quem chega pelos anúncios está vendo e indo embora: teste um gancho que leve ao perfil.']);
+    return out;
+  }
   function renderMetricas(){
     mtLoad();
     let h='<div class="iwsel" role="group" aria-label="Período">'+[7,30].map(w=>'<button class="chip'+(w===mtWin?' on':'')+'" data-act="mtw" data-w="'+w+'" aria-pressed="'+(w===mtWin)+'">'+w+' dias</button>').join('')+'</div>';
@@ -1837,6 +1861,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     h+='<p class="ihd">@'+esc(C.usuario||'')+' · '+shortDay(J.inicio)+' a '+shortDay(J.fim)+', atualizado em '+trWhen(MT.generated_at)+'<br><small>'+(MT.fonte==='painel'?'Leitura manual do painel.':'Os números vêm direto do Instagram a cada 3 horas.')+' O período vai até ontem, com dias completos.</small></p>';
     if(MT.fonte==='painel') h+='<div class="note" style="margin-bottom:12px">'+esc(MT.fonte_obs||'Números lidos do painel do Instagram.')+'</div>';
     if(MT.erro) h+='<div class="note" style="margin-bottom:12px">A última atualização falhou ('+trWhen(MT.erro_em)+'): '+esc(MT.erro)+'. Os números abaixo são da última vez que deu certo.</div>';
+    const ID=mtIdeias(J,A);
+    if(ID.length) h+='<div class="vcard mtid"><h3>O que fazer agora</h3><ul>'+ID.map(x=>'<li class="'+x[0].replace('!','at')+'">'+x[1]+'</li>').join('')+'</ul><p class="hint">Sugestões montadas a partir dos números abaixo. Elas mudam sozinhas a cada atualização.</p></div>';
     const saldo=J.seguiram!=null?(J.seguiram||0)-(J.deixaram_de_seguir||0):null;
     h+='<div class="ikpis mt3">'
       +'<div class="vcard ik"><span>Seguidores</span><b>'+(C.seguidores_aprox&&C.seguidores>=1000?(C.seguidores/1000).toFixed(1).replace('.',',')+' mil':mtN(C.seguidores))+'</b>'+(J.seguiram!=null?'<em class="'+(saldo>=0?'up':'dn')+'">+'+trN(J.seguiram)+' novos'+(J.deixaram_de_seguir!=null?' · '+trN(J.deixaram_de_seguir)+' saíram':'')+'</em>':'')+'</div>'
@@ -1871,6 +1897,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(!P.length) h+='<p class="empty">Nenhum post no feed neste período.</p>';
     else h+='<div class="vcard"><div class="itab"><div class="itr ith"><span>Dia</span><span>Post</span><span>Visualiz.</span><span>Curtidas</span><span>Coment.</span><span>Salvos</span></div>'
       +P.map(x=>'<div class="itr"><span>'+shortDay(x.data)+'</span><span class="itt">'+(x.link?'<a href="'+esc(x.link)+'" target="_blank" rel="noopener">'+esc(x.legenda||'(sem legenda)')+'</a>':esc(x.legenda||'(sem legenda)'))+(x.tipo!=='post'?' <i class="itag">'+x.tipo+'</i>':'')+'</span><span><b>'+mtN(x.visualizacoes)+'</b></span><span>'+mtN(x.curtidas)+'</span><span>'+mtN(x.comentarios)+'</span><span>'+mtN(x.salvamentos)+'</span></div>').join('')+'</div></div>';
+    h+='<p class="hint" style="margin-top:16px">Relatório antigo, montado com os prints (25/10 a 10/11): <button class="linkbtn" data-act="tab" data-v="insights">abrir</button></p>';
     return h;
   }
 
@@ -2068,12 +2095,12 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     $('#banner').innerHTML=stFmtErr?'<div class="banner err"><b>Stories não carregados.</b> '+esc(stFmtErr)+'</div>':loadErr?'<div class="banner err"><b>Planilha indisponível.</b> '+esc(ERR[loadErr.code]||('Erro ao ler: '+(loadErr.message||loadErr.code)))+(feed.length?' Mostrando a última leitura.':'')+'</div>':'';
     $('#btn-refresh').innerHTML=ic.refresh;
     { const hr=new Date().getHours(); $('#hello').textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+', '+((window.BELLE_CONFIG&&BELLE_CONFIG.NOME)||'Carolina')+'.';
-      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',metricas:'Resultados · Métricas do Instagram',insights:'Resultados · Insights do Instagram'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
+      const vn={painel:'Geral · Visão geral',hoje:'Geral · Hoje',trafego:'Mídia paga · Meta Ads',google:'Mídia paga · Google Ads',cal:'Conteúdo · Calendário',feed:'Conteúdo · Prévia do feed',prog:'Conteúdo · Programar posts',eventos:'Ações · Eventos',ideias:'Conteúdo · Banco de ideias',metricas:'Resultados · Métricas do Instagram',insights:'Resultados · Relatório dos prints (até 10/11)'}; $('#crumb').textContent=(vn[view]||'')+(RO()?' · Somente visualização':'');
       let sub=longDay(todayIso());
       if(view==='painel'&&loaded){ const D=todayData(); sub+=' · Hoje tem '+D.fT.length+(D.fT.length===1?' post':' posts')+' e '+D.sT.length+(D.sT.length===1?' story':' stories')+'.'+(D.U.length?' '+(D.U.length===1?'Falta 1 coisa':'Faltam '+D.U.length+' coisas')+' para fechar o dia.':' Tudo certo por hoje.'); }
       $('#today-txt').textContent=sub;
       const bh=$('#tab-hoje .ct'); const nH=storiesOn(todayIso()).filter(x=>x.kind==='story').concat(feedOn(todayIso())).filter(x=>statusOf(x)!=='Publicado'&&!M(x.id).feito).length; if(bh){ bh.textContent=nH; bh.hidden=!nH; } }
-    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['metricas','Métricas',ic.ig],['insights','Insights (prints)',ic.chart],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
+    [['painel','Visão geral',ic.dash],['hoje','Hoje',ic.today],['trafego','Meta Ads',ic.metaads],['google','Google Ads',ic.gads],['cal','Calendário',ic.month],['feed','Prévia do feed',ic.grid],['prog','Programar posts',ic.send],['ideias','Banco de ideias',ic.bulb],['metricas','Métricas',ic.ig],['eventos','Eventos',ic.star]].forEach(t=>{ const b=$('#tab-'+t[0]); b.innerHTML=t[2]+'<span class="lb">'+t[1]+'</span>'+(t[0]==='eventos'&&evList().length?'<span class="ct ev">'+evList().length+'</span>':'')+(t[0]==='hoje'?'<span class="ct" hidden></span>':t[0]==='prog'?'<span class="ct soon">em produção</span>':''); b.title=t[1]; b.setAttribute('aria-selected',String(view===t[0])); });
     const v=$('#view'); const evTyping=()=>{ const a=document.activeElement; return !!(a&&v.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)); };
     if(!loaded&&!feed.length&&view!=='trafego'&&view!=='google'&&view!=='metricas'){ v.innerHTML='<p class="empty">Carregando os posts e stories da planilha Estratégia Social…</p>'; }
     else if((view==='eventos'||view==='ideias')&&v.dataset.v===view&&evTyping()){ }

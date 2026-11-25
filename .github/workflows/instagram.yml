@@ -1,0 +1,39 @@
+name: Métricas do Instagram
+
+# Busca as métricas do @bellesoftware na API da Meta e publica em instagram/ para a aba Métricas do app.
+# A cada 3 horas (os stories só mostram números por 24h, então rodar várias vezes ao dia não perde nenhum).
+on:
+  schedule:
+    - cron: '23 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram-metricas
+  cancel-in-progress: false
+
+jobs:
+  buscar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Buscar métricas
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          IG_USER_ID: ${{ vars.IG_USER_ID }}
+        run: python scripts/instagram_metricas.py
+      - name: Publicar
+        if: always()
+        run: |
+          git config user.name 'metricas-instagram'
+          git config user.email 'actions@users.noreply.github.com'
+          git add instagram/ 2>/dev/null || exit 0
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(instagram): atualiza métricas $(TZ=America/Sao_Paulo date '+%Y-%m-%d %H:%M')"
+          for i in 1 2 3 4; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep $((i*5)); done
+          exit 1

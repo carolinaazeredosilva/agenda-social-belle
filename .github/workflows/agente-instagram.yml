@@ -38,7 +38,7 @@ jobs:
       - name: Conferir segredos
         run: |
           falta=""
-          for s in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD IG_RESPOSTAS_TOKEN META_APP_SECRET; do
+          for s in SUPABASE_ACCESS_TOKEN IG_RESPOSTAS_TOKEN; do
             [ -n "${!s}" ] || falta="$falta $s"
           done
           if [ -n "$falta" ]; then
@@ -46,6 +46,7 @@ jobs:
             echo "### Faltam segredos: $falta" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
+          [ -n "$META_APP_SECRET" ] || echo "::warning::Sem META_APP_SECRET: o servidor é publicado, mas recusa os avisos da Meta até a chave secreta do app ser salva."
           [ -n "$ANTHROPIC_API_KEY" ] || echo "::warning::Sem ANTHROPIC_API_KEY: o agente separa as mensagens por palavras-chave e não sugere respostas."
 
       - uses: supabase/setup-cli@v1
@@ -53,6 +54,8 @@ jobs:
           version: latest
 
       - name: Criar ou atualizar a tabela da caixa de entrada
+        # Sem a senha do banco, a tabela é criada colando o SQL de supabase/migrations no SQL Editor do Supabase.
+        if: env.SUPABASE_DB_PASSWORD != ''
         run: |
           supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
           supabase db push --password "$SUPABASE_DB_PASSWORD"

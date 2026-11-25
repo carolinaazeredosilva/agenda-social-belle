@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125110530">
+<meta name="belle-ver" content="20261125111730">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -1844,6 +1844,13 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     impUpd.set(id,u); await impIdle(); await impReload(id);
   }
   const impIdle=()=>new Promise(res=>{ if(!impBusy) return res(); toast('Terminando a leitura da pasta…'); const t=setInterval(()=>{ if(!impBusy){ clearInterval(t); res(); } },300); });
+  /* "Artes: N atualizadas na pasta" no menu: recarrega todos de uma vez; o contador vai baixando até sumir. */
+  async function impReloadAll(){
+    const ids=[...impUpd.keys()]; if(!ids.length) return; let ok=0;
+    for(const id of ids){ await impIdle(); await impReload(id); if(!impUpd.has(id)) ok++; }
+    renderAll(); renderSide(); if(openId) renderSheet();
+    toast(ok===ids.length?(ok===1?'1 item recarregado da pasta':ok+' itens recarregados da pasta'):ok+' de '+ids.length+' recarregados. Toque de novo para tentar os que faltaram.');
+  }
   function impIgnore(id){ const u=impUpd.get(id); if(!u) return; saveItem(id,{artSkip:u.sig},true); impUpd.delete(id); renderAll(); renderSide(); if(openId) renderSheet(); toast('Ok, mantive a arte que já estava aqui'); }
   function impPlan(entries){
     const dirs={}; entries.forEach(f=>{ if(!IMP_EXT.test(f.name)||/(^|\/)1 - J/i.test(f.path||f.dir||'')) return; const key=f.path||f.dir; (dirs[key]=dirs[key]||{dir:f.dir,fs:[]}).fs.push(f); });
@@ -1884,7 +1891,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     finally{ impBusy=false; }
     renderAll(); renderSide(); if(openId) renderSheet();
     const nu=impUpd.size, key=[...impUpd.keys()].sort().join(','), fresh=key&&key!==impUpdSeen; impUpdSeen=key;
-    const updTxt=nu?' '+nu+(nu===1?' item tem arte nova':' itens têm arte nova')+' na pasta: abra e toque em "Recarregar da pasta".':'';
+    const updTxt=nu?' '+nu+(nu===1?' item tem arte nova':' itens têm arte nova')+' na pasta. Toque em "Artes: '+nu+(nu===1?' atualizada':' atualizadas')+'" no menu para recarregar '+(nu===1?'':'todos')+', ou abra o item.':'';
     if(jobs.length){ const days=[...new Set(jobs.map(j=>shortDay(j.it.date)))];
       toast(ok+(ok===1?' item recebeu arte':' itens receberam arte')+' ('+days.join(', ')+')'+(fail?'. '+fail+' com erro.':'')+updTxt+(quiet?'':missTxt)); }
     else if(nu&&(fresh||!quiet)) toast(updTxt.trim());
@@ -1927,6 +1934,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   function renderSide(){ const b=$('#tab-impart'); if(!b) return; const lb=b.querySelector('.lb');
     const nu=impUpd.size;
     if(lb) lb.textContent=impDir?(impState==='perm'?'Liberar pasta de artes':nu?'Artes: '+nu+(nu===1?' atualizada':' atualizadas')+' na pasta':'Artes: pasta conectada'):'Conectar pasta de artes';
+    b.title=nu&&impState!=='perm'?'Toque para recarregar '+(nu===1?'a arte nova':'as '+nu+' artes novas')+' da pasta':'Conecte a pasta Instagram uma vez: as artes novas entram sozinhas no post ou story certo';
     b.classList.toggle('warn',impState==='perm'); b.classList.toggle('upd',!!nu&&impState!=='perm'); }
   async function impBoot(){ if(!window.showDirectoryPicker) return; impDir=await impGetDir(); renderSide(); if(impDir) impScan(true); }
   setInterval(()=>{ if(impDir&&document.visibilityState==='visible') impScan(true); },10*60*1000);
@@ -2223,7 +2231,7 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     if(act==='hz'){ hz=+el.dataset.n||14; renderAll(); return; }
     if(act==='ff'){ fFilter=el.dataset.s; renderAll(); return; }
     if(act==='stsync'){ toast('Atualizando a planilha…'); await stFlush(); toast(stQ.size?'Não consegui atualizar tudo. Tente de novo.':'Planilha atualizada'); return; }
-    if(act==='impart'){ if(RO()){ toast('Somente visualização: você não pode alterar.'); return; } impConnect(); return; }
+    if(act==='impart'){ if(RO()){ toast('Somente visualização: você não pode alterar.'); return; } if(impUpd.size&&impState!=='perm'){ impReloadAll(); return; } impConnect(); return; }
     if(act==='refresh'){ if(window.claude&&mcp) { try{ await mcp.invalidate(); }catch(_){} } load(); return; }
     const it=itemById(openId); if(!it) return;
     if(act==='status'){ await saveItem(it.id,{status:el.dataset.s},true); renderAll(); renderSheet(); return; }

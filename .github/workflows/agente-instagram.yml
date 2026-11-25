@@ -58,7 +58,7 @@ jobs:
         if: env.SUPABASE_DB_PASSWORD != ''
         run: |
           supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
-          supabase db push --password "$SUPABASE_DB_PASSWORD"
+          supabase db push --yes --password "$SUPABASE_DB_PASSWORD"
 
       - name: Guardar as chaves no Supabase
         run: |
@@ -66,13 +66,13 @@ jobs:
           for s in IG_RESPOSTAS_TOKEN META_APP_SECRET IG_VERIFY_TOKEN ANTHROPIC_API_KEY IG_USER_ID AGENTE_LINK_TESTE AGENTE_WHATSAPP AGENTE_SUPORTE; do
             if [ -n "${!s}" ]; then printf '%s=%s\n' "$s" "${!s}" >> "$f"; fi
           done
-          supabase secrets set --project-ref "$PROJECT_REF" --env-file "$f" >/dev/null
+          supabase secrets set --project-ref "$PROJECT_REF" --env-file "$f" --yes >/dev/null
           rm -f "$f"
 
       - name: Publicar as funções
         run: |
-          supabase functions deploy ig-webhook --project-ref "$PROJECT_REF" --no-verify-jwt
-          supabase functions deploy ig-enviar --project-ref "$PROJECT_REF"
+          supabase functions deploy ig-webhook --project-ref "$PROJECT_REF" --no-verify-jwt --yes
+          supabase functions deploy ig-enviar --project-ref "$PROJECT_REF" --yes
 
       - name: Ligar os avisos da página do Facebook
         run: python3 scripts/agente_assinar.py

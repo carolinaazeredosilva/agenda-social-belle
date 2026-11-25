@@ -38,7 +38,7 @@ jobs:
       - name: Conferir segredos
         run: |
           falta=""
-          for s in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD IG_RESPOSTAS_TOKEN META_APP_SECRET IG_VERIFY_TOKEN; do
+          for s in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD IG_RESPOSTAS_TOKEN META_APP_SECRET; do
             [ -n "${!s}" ] || falta="$falta $s"
           done
           if [ -n "$falta" ]; then
@@ -84,5 +84,5 @@ jobs:
             echo ""
             echo "\`https://$PROJECT_REF.supabase.co/functions/v1/ig-webhook\`"
             echo ""
-            echo "Token de verificação: o mesmo valor do segredo IG_VERIFY_TOKEN."
+            echo "Token de verificação: belle-agente-instagram (ou o valor do segredo IG_VERIFY_TOKEN, se existir)."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -8,7 +8,7 @@ export const CFG = {
   token: env("IG_RESPOSTAS_TOKEN"),
   igUserId: env("IG_USER_ID"),
   appSecret: env("META_APP_SECRET"),
-  verifyToken: env("IG_VERIFY_TOKEN"),
+  verifyToken: env("IG_VERIFY_TOKEN", "belle-agente-instagram"),
   api: "https://graph.facebook.com/" + env("IG_API_VERSION", "v23.0"),
   anthropicKey: env("ANTHROPIC_API_KEY"),
   modelo: env("AGENTE_MODELO", "claude-opus-5-5"),

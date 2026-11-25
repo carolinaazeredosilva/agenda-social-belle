@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="belle-ver" content="20261125115701">
+<meta name="belle-ver" content="20261125115749">
 <title>Agenda Social Belle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#A11176">
@@ -493,6 +493,7 @@ body.mini .grp,body.mini .tab .ct{display:none}
 .icol{display:flex;align-items:flex-end;gap:4px;height:170px;padding-top:18px;overflow-x:auto}
 .icb{flex:1 0 24px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}.icb i{display:block;width:100%;max-width:28px;border-radius:6px 6px 2px 2px;background:var(--accent)}.icb b{font-size:10px;color:var(--body)}.icb span{font-size:10px;color:var(--muted);white-space:nowrap}
 .itab{display:flex;flex-direction:column;margin-top:8px}.itr{display:grid;grid-template-columns:52px minmax(0,1fr) 72px 60px 58px 64px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.itr.i3{grid-template-columns:52px minmax(0,1fr) 72px}
+.mtid{margin-bottom:14px}.mtid ul{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}.mtid li{position:relative;padding-left:22px;font-size:14px;line-height:1.5;color:var(--body)}.mtid li:before{content:"";position:absolute;left:4px;top:7px;width:8px;height:8px;border-radius:50%;background:var(--accent)}.mtid li.up:before{background:var(--s-green)}.mtid li.dn:before{background:var(--danger)}.mtid li.at:before{background:#d98a00}
 .ikpis.mt3{grid-template-columns:repeat(3,1fr)}@media (max-width:640px){.ikpis.mt3{grid-template-columns:1fr 1fr}}
 .itt a{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .itr:last-child{border-bottom:0}.ith{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.itr span:nth-child(n+3){text-align:right}.itt{min-width:0;overflow-wrap:anywhere}.itt .linkbtn{padding:0;text-align:left;white-space:normal;min-height:0;font-size:inherit}
@@ -1827,6 +1828,30 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
   const mtN=v=>v==null?'—':trN(v);
   function mtVar(a,b){ if(a==null||!b) return ''; const p=(a-b)/b*100; return '<em class="'+(p>=0?'up':'dn')+'">'+(p>=0?'+':'')+p.toFixed(1).replace('.',',')+'% vs. '+mtWin+' dias antes</em>'; }
   function mtNav(L){ const s={avancou:0,voltou:0,saiu:0,proxima_conta:0}; L.forEach(x=>Object.keys(s).forEach(k=>{ s[k]+=+x[k]||0; })); return s; }
+  /* "O que fazer": sugestões montadas a partir dos números do período (e ideias anotadas na leitura, em MT.ideias) */
+  function mtIdeias(J,A){
+    const out=[], br=v=>trN(v), pc=(a,b)=>Math.round((a-b)/b*100);
+    (MT.ideias||[]).forEach(t=>out.push(['!',t]));
+    const S=(MT.stories||[]).filter(x=>x.data>=J.inicio&&x.data<=J.fim), SA=(MT.stories||[]).filter(x=>x.data>=A.inicio&&x.data<=A.fim);
+    const sm=L=>L.length?L.reduce((s,x)=>s+(+x.visualizacoes||0),0)/L.length:0;
+    if(S.length&&SA.length){ const a=sm(S), b=sm(SA), dias=new Set(S.map(x=>x.data)).size||1, pd=S.length/dias;
+      if(a<b*0.85) out.push(['dn','A média por story caiu de <b>'+br(b)+'</b> para <b>'+br(a)+'</b> visualizações ('+pc(a,b)+'%). Foram '+S.length+' stories, cerca de '+pd.toFixed(0)+' por dia'+(S.length>SA.length?', contra '+SA.length+' antes':'')+'. Teste menos stories (4 a 6 por dia), concentrados nos horários que rendem mais.']);
+      else if(a>b*1.15) out.push(['up','A média por story subiu de <b>'+br(b)+'</b> para <b>'+br(a)+'</b> ('+(pc(a,b)>0?'+':'')+pc(a,b)+'%). O ritmo desta semana está funcionando, vale manter.']); }
+    if(S.length>=8){ const g={}; S.forEach(x=>{ const h=+x.hora.slice(0,2), k=h<11?'manhã (até 11h)':h<17?'tarde (11h às 17h)':'noite (depois das 17h)'; (g[k]=g[k]||[]).push(x); });
+      const ks=Object.keys(g).filter(k=>g[k].length>=3).sort((x,y)=>sm(g[y])-sm(g[x]));
+      if(ks.length>=2&&sm(g[ks[0]])>sm(g[ks.at(-1)])*1.15) out.push(['','Stories da <b>'+ks[0]+'</b> tiveram média de '+br(sm(g[ks[0]]))+' visualizações; os da '+ks.at(-1)+', '+br(sm(g[ks.at(-1)]))+'. Coloque os stories mais importantes de manhã cedo e deixe a '+ks.at(-1)+' para os de apoio.']);
+      const top=S.slice().sort((x,y)=>y.visualizacoes-x.visualizacoes)[0];
+      if(top&&top.visualizacoes>sm(S)*2) out.push(['up','O story de '+shortDay(top.data)+' às '+esc(top.hora)+(top.legenda?' ("'+esc(top.legenda.slice(0,60))+'")':'')+' teve <b>'+br(top.visualizacoes)+'</b> visualizações, '+(top.visualizacoes/sm(S)).toFixed(0)+'x a média. Repita o formato.']); }
+    const P=(MT.posts||[]), avg=t=>{ const L=P.filter(x=>x.tipo===t&&x.visualizacoes!=null); return L.length?[L.reduce((s,x)=>s+x.visualizacoes,0)/L.length,L.length]:null; };
+    const r=avg('reel'), c=avg('carrossel');
+    if(r&&c){ const [hi,lo,nh,nl]=r[0]>=c[0]?[r,c,'reels','carrosséis']:[c,r,'carrosséis','reels'];
+      if(hi[0]>lo[0]*1.3) out.push(['',nh[0].toUpperCase()+nh.slice(1)+' tiveram média de <b>'+br(hi[0])+'</b> visualizações, contra '+br(lo[0])+' dos '+nl+' (últimos posts). Na próxima semana, priorize '+nh+'.']); }
+    const PW=P.filter(x=>x.data>=J.inicio&&x.data<=J.fim);
+    if(mtWin===7&&PW.length<3) out.push(['dn','Só '+PW.length+(PW.length===1?' post':' posts')+' no feed nesta semana. Com 3 ou mais por semana o perfil se mantém aparecendo para quem não segue.']);
+    if(J.visitas_perfil!=null&&A.visitas_perfil&&J.visitas_perfil<A.visitas_perfil*0.9) out.push(['dn','Visitas ao perfil caíram '+Math.abs(pc(J.visitas_perfil,A.visitas_perfil))+'% ('+br(A.visitas_perfil)+' para '+br(J.visitas_perfil)+'). Feche posts e stories com um convite claro para o perfil ou o link da bio.']);
+    if(J.visualizacoes!=null&&A.visualizacoes&&J.visualizacoes>A.visualizacoes*1.3&&J.visitas_perfil!=null&&A.visitas_perfil&&J.visitas_perfil<=A.visitas_perfil) out.push(['','As visualizações cresceram '+pc(J.visualizacoes,A.visualizacoes)+'%, mas as visitas ao perfil não acompanharam. Quem chega pelos anúncios está vendo e indo embora: teste um gancho que leve ao perfil.']);
+    return out;
+  }
   function renderMetricas(){
     mtLoad();
     let h='<div class="iwsel" role="group" aria-label="Período">'+[7,30].map(w=>'<button class="chip'+(w===mtWin?' on':'')+'" data-act="mtw" data-w="'+w+'" aria-pressed="'+(w===mtWin)+'">'+w+' dias</button>').join('')+'</div>';
@@ -1836,6 +1861,8 @@ video.vtap{width:100%;height:100%;object-fit:cover;display:block;background:var(
     h+='<p class="ihd">@'+esc(C.usuario||'')+' · '+shortDay(J.inicio)+' a '+shortDay(J.fim)+', atualizado em '+trWhen(MT.generated_at)+'<br><small>'+(MT.fonte==='painel'?'Leitura manual do painel.':'Os números vêm direto do Instagram a cada 3 horas.')+' O período vai até ontem, com dias completos.</small></p>';
     if(MT.fonte==='painel') h+='<div class="note" style="margin-bottom:12px">'+esc(MT.fonte_obs||'Números lidos do painel do Instagram.')+'</div>';
     if(MT.erro) h+='<div class="note" style="margin-bottom:12px">A última atualização falhou ('+trWhen(MT.erro_em)+'): '+esc(MT.erro)+'. Os números abaixo são da última vez que deu certo.</div>';
+    const ID=mtIdeias(J,A);
+    if(ID.length) h+='<div class="vcard mtid"><h3>O que fazer agora</h3><ul>'+ID.map(x=>'<li class="'+x[0].replace('!','at')+'">'+x[1]+'</li>').join('')+'</ul><p class="hint">Sugestões montadas a partir dos números abaixo. Elas mudam sozinhas a cada atualização.</p></div>';
     const saldo=J.seguiram!=null?(J.seguiram||0)-(J.deixaram_de_seguir||0):null;
     h+='<div class="ikpis mt3">'
       +'<div class="vcard ik"><span>Seguidores</span><b>'+(C.seguidores_aprox&&C.seguidores>=1000?(C.seguidores/1000).toFixed(1).replace('.',',')+' mil':mtN(C.seguidores))+'</b>'+(J.seguiram!=null?'<em class="'+(saldo>=0?'up':'dn')+'">+'+trN(J.seguiram)+' novos'+(J.deixaram_de_seguir!=null?' · '+trN(J.deixaram_de_seguir)+' saíram':'')+'</em>':'')+'</div>'

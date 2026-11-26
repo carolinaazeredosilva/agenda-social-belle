@@ -125,12 +125,12 @@ export const CATEGORIAS = [
 ] as const;
 type Categoria = typeof CATEGORIAS[number];
 
-// O que pode sair sozinho (quando o modo automático for ligado) e o que vai para a caixa da Kaká.
-// Hoje nada sai sozinho: tudo espera a aprovação dela na aba Respostas.
+// O que sai sozinho quando o "Responder sozinho" está ligado na aba Respostas, e o que espera a Kaká.
 const ACAO: Record<Categoria, "auto" | "caixa" | "ignorar"> = {
-  saudacao: "auto", elogio: "auto", teste_gratis: "auto", vagas: "auto", fora_escopo: "auto",
-  preco: "caixa", demonstracao: "caixa", concorrente: "caixa", duvida_produto: "caixa", acesso_teste: "caixa",
-  suporte: "caixa", financeiro: "caixa", parceria: "caixa", eventos: "caixa", reclamacao: "caixa", outro: "caixa",
+  saudacao: "auto", elogio: "auto", teste_gratis: "auto", duvida_produto: "auto", preco: "auto",
+  demonstracao: "auto", vagas: "auto", fora_escopo: "auto",
+  concorrente: "caixa", acesso_teste: "caixa", suporte: "caixa", financeiro: "caixa", parceria: "caixa",
+  eventos: "caixa", reclamacao: "caixa", outro: "caixa",
   spam: "ignorar",
 };
 

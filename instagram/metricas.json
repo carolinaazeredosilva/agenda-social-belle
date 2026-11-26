@@ -1,93 +1,87 @@
 {
- "generated_at": "2026-11-25T18:51:32-03:00",
+ "generated_at": "2026-11-26T05:39:25-03:00",
  "fonte": "API do Instagram (Meta)",
  "conta": {
   "id": "17841405518250126",
   "usuario": "bellesoftware",
   "nome": "Belle Software",
-  "seguidores": 11682,
+  "seguidores": 11696,
   "seguindo": 6900,
   "publicacoes": 549,
-  "foto": "https://scontent-ord5-1.xx.fbcdn.net/v/t51.82787-15/858002831_18439911613183942_1113106820975028003_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=7d201b&_nc_ohc=d68oWfGSgrQQ7kNvwETLXBv&_nc_oc=AdqawAtV5WlfRe9x1RUFWwR_qbUz_ei8oezGH5cXnUJ-zMsoYb3dc4oeZcclgBYvqRI&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&edm=AJ-jyNUEAAAA&_nc_gid=4XtvaMj-ue2EZ5aCfT16ow&oh=00_AQRF5B5DkH08iPdaTtsEyICcE9_36BouqMEUXskaWeY5QA&oe=6B0D116D"
+  "foto": "https://scontent-iad6-1.xx.fbcdn.net/v/t51.82787-15/858002831_18439911613183942_1113106820975028003_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=7d201b&_nc_ohc=d68oWfGSgrQQ7kNvwFOIGgd&_nc_oc=Adq3HTd56RYUJn0AsoLR5hlAXxMAPEbIzhCfL0vxAEzMI4Nmsw_LNS777f8UgoDm-Cc&_nc_zt=23&_nc_ht=scontent-iad6-1.xx&edm=AJ-jyNUEAAAA&_nc_gid=M1JAFHP3U3YaVwqFZwCoIA&oh=00_AQQ_aNp8z96I7kjVVdnJ3C5yCa0KNSUacb_zeNbW7h9zcA&oe=6B0DBA2D"
  },
  "janelas": {
   "7": {
-   "inicio": "2026-11-18",
-   "fim": "2026-11-24",
-   "alcance": 70525,
-   "visualizacoes": 78176,
-   "contas_engajadas": 132,
-   "interacoes": 179,
-   "visitas_perfil": 633,
+   "inicio": "2026-11-19",
+   "fim": "2026-11-25",
+   "alcance": 77238,
+   "visualizacoes": 89945,
+   "contas_engajadas": 135,
+   "interacoes": 185,
+   "visitas_perfil": 650,
    "cliques_link": 22,
-   "curtidas": 122,
-   "comentarios": 0,
-   "compartilhamentos": 12,
-   "salvamentos": 34,
-   "seguiram": 99,
-   "deixaram_de_seguir": 40,
+   "curtidas": 123,
+   "comentarios": 1,
+   "compartilhamentos": 13,
+   "salvamentos": 35,
+   "seguiram": 88,
+   "deixaram_de_seguir": 35,
    "anterior": {
-    "inicio": "2026-11-11",
-    "fim": "2026-11-17",
-    "alcance": 47133,
-    "visualizacoes": 43631,
-    "contas_engajadas": 127,
-    "interacoes": 180,
-    "visitas_perfil": 701,
-    "cliques_link": 27,
-    "curtidas": 119,
+    "inicio": "2026-11-12",
+    "fim": "2026-11-18",
+    "alcance": 52323,
+    "visualizacoes": 46417,
+    "contas_engajadas": 133,
+    "interacoes": 172,
+    "visitas_perfil": 723,
+    "cliques_link": 26,
+    "curtidas": 113,
     "comentarios": 1,
-    "compartilhamentos": 14,
-    "salvamentos": 30,
-    "seguiram": 93,
-    "deixaram_de_seguir": 28
+    "compartilhamentos": 13,
+    "salvamentos": 31,
+    "seguiram": 91,
+    "deixaram_de_seguir": 30
    }
   },
   "30": {
-   "inicio": "2026-10-26",
-   "fim": "2026-11-24",
-   "alcance": 214787,
-   "visualizacoes": 300377,
+   "inicio": "2026-10-27",
+   "fim": "2026-11-25",
+   "alcance": 213888,
+   "visualizacoes": 294609,
    "contas_engajadas": 661,
-   "interacoes": 1034,
-   "visitas_perfil": 3314,
-   "cliques_link": 114,
+   "interacoes": 1029,
+   "visitas_perfil": 3253,
+   "cliques_link": 109,
    "curtidas": 617,
-   "comentarios": 18,
-   "compartilhamentos": 100,
-   "salvamentos": 188,
-   "seguiram": 455,
-   "deixaram_de_seguir": 149,
+   "comentarios": 19,
+   "compartilhamentos": 96,
+   "salvamentos": 190,
+   "seguiram": 449,
+   "deixaram_de_seguir": 139,
    "anterior": {
-    "inicio": "2026-09-26",
-    "fim": "2026-10-25",
-    "alcance": 197134,
-    "visualizacoes": 522593,
-    "contas_engajadas": 490,
-    "interacoes": 652,
-    "visitas_perfil": 4777,
-    "cliques_link": 125,
-    "curtidas": 247,
-    "comentarios": 2,
-    "compartilhamentos": 94,
-    "salvamentos": 208,
-    "seguiram": 211,
-    "deixaram_de_seguir": 106
+    "inicio": "2026-09-27",
+    "fim": "2026-10-26",
+    "alcance": 205248,
+    "visualizacoes": 536244,
+    "contas_engajadas": 508,
+    "interacoes": 678,
+    "visitas_perfil": 4839,
+    "cliques_link": 130,
+    "curtidas": 261,
+    "comentarios": 1,
+    "compartilhamentos": 99,
+    "salvamentos": 211,
+    "seguiram": 212,
+    "deixaram_de_seguir": 112
    }
   }
  },
  "diario": [
   {
-   "data": "2026-10-25",
-   "alcance": 17520,
-   "visualizacoes": null,
-   "novos_seguidores": null
-  },
-  {
    "data": "2026-10-26",
    "alcance": 15263,
    "visualizacoes": null,
-   "novos_seguidores": 16
+   "novos_seguidores": null
   },
   {
    "data": "2026-10-27",
@@ -256,6 +250,12 @@
    "alcance": 18808,
    "visualizacoes": null,
    "novos_seguidores": 8
+  },
+  {
+   "data": "2026-11-24",
+   "alcance": 19224,
+   "visualizacoes": null,
+   "novos_seguidores": 0
   }
  ],
  "stories_no_ar": 6,
@@ -323,8 +323,8 @@
    "hora": "09:00",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038175280257976019",
-   "alcance": 20,
-   "visualizacoes": 24,
+   "alcance": 38,
+   "visualizacoes": 43,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -334,7 +334,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T18:51-03:00"
+   "visto_em": "2026-11-26T05:39-03:00"
   },
   {
    "id": "18121264558983445",
@@ -342,8 +342,8 @@
    "hora": "12:00",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038266117651309635",
-   "alcance": 19,
-   "visualizacoes": 21,
+   "alcance": 36,
+   "visualizacoes": 37,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -353,7 +353,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T18:51-03:00"
+   "visto_em": "2026-11-26T05:39-03:00"
   },
   {
    "id": "18183563581429481",
@@ -361,8 +361,8 @@
    "hora": "12:30",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038281113336487944",
-   "alcance": 17,
-   "visualizacoes": 19,
+   "alcance": 35,
+   "visualizacoes": 37,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -372,7 +372,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T18:51-03:00"
+   "visto_em": "2026-11-26T05:39-03:00"
   },
   {
    "id": "18089106014322421",
@@ -380,8 +380,8 @@
    "hora": "13:00",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038296209642992745",
-   "alcance": 15,
-   "visualizacoes": 17,
+   "alcance": 33,
+   "visualizacoes": 35,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -391,7 +391,7 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T18:51-03:00"
+   "visto_em": "2026-11-26T05:39-03:00"
   },
   {
    "id": "18419531140087397",
@@ -399,8 +399,8 @@
    "hora": "13:30",
    "tipo": "IMAGE",
    "link": "https://www.instagram.com/stories/bellesoftware/4038311303255775108",
-   "alcance": 14,
-   "visualizacoes": 17,
+   "alcance": 32,
+   "visualizacoes": 35,
    "respostas": 0,
    "compartilhamentos": 0,
    "interacoes": 0,
@@ -410,7 +410,26 @@
    "voltou": null,
    "saiu": null,
    "proxima_conta": null,
-   "visto_em": "2026-11-25T18:51-03:00"
+   "visto_em": "2026-11-26T05:39-03:00"
+  },
+  {
+   "id": "18140021869657599",
+   "data": "2026-11-25",
+   "hora": "20:00",
+   "tipo": "IMAGE",
+   "link": "https://www.instagram.com/stories/bellesoftware/4038507442367227780",
+   "alcance": 22,
+   "visualizacoes": 25,
+   "respostas": 0,
+   "compartilhamentos": 0,
+   "interacoes": 0,
+   "seguiram": 0,
+   "visitas_perfil": 0,
+   "avancou": null,
+   "voltou": null,
+   "saiu": null,
+   "proxima_conta": null,
+   "visto_em": "2026-11-26T05:39-03:00"
   }
  ],
  "posts": [
@@ -421,13 +440,13 @@
    "tipo": "carrossel",
    "link": "https://www.instagram.com/p/DgKzUW4Gusu/",
    "legenda": "Que mensagem sua clínica vai mandar na Black Friday?",
-   "curtidas": 2,
+   "curtidas": 3,
    "comentarios": 0,
-   "alcance": 20,
-   "visualizacoes": 60,
+   "alcance": 25,
+   "visualizacoes": 72,
    "salvamentos": 0,
    "compartilhamentos": 0,
-   "interacoes": 2
+   "interacoes": 3
   },
   {
    "id": "17998771074043026",
@@ -438,8 +457,8 @@
    "legenda": "Antes de anunciar, confira se a sua clínica está pronta:",
    "curtidas": 5,
    "comentarios": 0,
-   "alcance": 49,
-   "visualizacoes": 141,
+   "alcance": 52,
+   "visualizacoes": 144,
    "salvamentos": 1,
    "compartilhamentos": 1,
    "interacoes": 7
@@ -453,8 +472,8 @@
    "legenda": "Como vender mais na Black Friday sem depender só de desconto?",
    "curtidas": 6,
    "comentarios": 0,
-   "alcance": 73,
-   "visualizacoes": 183,
+   "alcance": 76,
+   "visualizacoes": 186,
    "salvamentos": 1,
    "compartilhamentos": 0,
    "interacoes": 7
@@ -468,8 +487,8 @@
    "legenda": "Desconto avulso reduz o valor de uma sessão. Pacote organiza várias, com o retorno já combinado.",
    "curtidas": 3,
    "comentarios": 0,
-   "alcance": 71,
-   "visualizacoes": 165,
+   "alcance": 72,
+   "visualizacoes": 166,
    "salvamentos": 0,
    "compartilhamentos": 0,
    "interacoes": 3
@@ -483,8 +502,8 @@
    "legenda": "O que acontece com o paciente depois que ele chama no WhatsApp da sua clínica?",
    "curtidas": 5,
    "comentarios": 0,
-   "alcance": 197,
-   "visualizacoes": 244,
+   "alcance": 198,
+   "visualizacoes": 245,
    "salvamentos": 0,
    "compartilhamentos": 0,
    "interacoes": 5
@@ -498,8 +517,8 @@
    "legenda": "O WhatsApp da sua clínica é só um canal de conversa ou de receita?",
    "curtidas": 6,
    "comentarios": 0,
-   "alcance": 159,
-   "visualizacoes": 290,
+   "alcance": 160,
+   "visualizacoes": 291,
    "salvamentos": 0,
    "compartilhamentos": 0,
    "interacoes": 7
@@ -513,8 +532,8 @@
    "legenda": "Seu WhatsApp responde às 22h?",
    "curtidas": 5,
    "comentarios": 0,
-   "alcance": 115,
-   "visualizacoes": 167,
+   "alcance": 116,
+   "visualizacoes": 168,
    "salvamentos": 1,
    "compartilhamentos": 1,
    "interacoes": 7
@@ -528,8 +547,8 @@
    "legenda": "Qual procedimento da sua clínica você mais vende com desconto?",
    "curtidas": 4,
    "comentarios": 0,
-   "alcance": 114,
-   "visualizacoes": 271,
+   "alcance": 115,
+   "visualizacoes": 272,
    "salvamentos": 1,
    "compartilhamentos": 0,
    "interacoes": 5
@@ -543,8 +562,8 @@
    "legenda": "A integração entre o Belle Software e a Memed chegou para quem prescreve na clínica.",
    "curtidas": 4,
    "comentarios": 0,
-   "alcance": 96,
-   "visualizacoes": 210,
+   "alcance": 98,
+   "visualizacoes": 212,
    "salvamentos": 2,
    "compartilhamentos": 0,
    "interacoes": 6
@@ -558,8 +577,8 @@
    "legenda": "TBT: Você foi no ABEHOF 2026?",
    "curtidas": 11,
    "comentarios": 2,
-   "alcance": 470,
-   "visualizacoes": 677,
+   "alcance": 471,
+   "visualizacoes": 678,
    "salvamentos": 1,
    "compartilhamentos": 2,
    "interacoes": 18
@@ -573,8 +592,8 @@
    "legenda": "Quantos pacientes sumiram depois da primeira aplicação na sua clínica? 👀",
    "curtidas": 4,
    "comentarios": 0,
-   "alcance": 148,
-   "visualizacoes": 345,
+   "alcance": 149,
+   "visualizacoes": 346,
    "salvamentos": 1,
    "compartilhamentos": 0,
    "interacoes": 5
@@ -588,8 +607,8 @@
    "legenda": "TCLE no papel, foto no celular de quem atendeu, evolução anotada em outro lugar.",
    "curtidas": 6,
    "comentarios": 0,
-   "alcance": 287,
-   "visualizacoes": 373,
+   "alcance": 288,
+   "visualizacoes": 374,
    "salvamentos": 2,
    "compartilhamentos": 0,
    "interacoes": 8
@@ -604,7 +623,7 @@
    "curtidas": 5,
    "comentarios": 0,
    "alcance": 264,
-   "visualizacoes": 488,
+   "visualizacoes": 491,
    "salvamentos": 2,
    "compartilhamentos": 1,
    "interacoes": 8
@@ -619,7 +638,7 @@
    "curtidas": 7,
    "comentarios": 0,
    "alcance": 292,
-   "visualizacoes": 558,
+   "visualizacoes": 559,
    "salvamentos": 4,
    "compartilhamentos": 2,
    "interacoes": 13
@@ -633,11 +652,11 @@
    "legenda": "O Belle Software é um sistema de gestão e crescimento para clínicas de estética, harmonização orofacial e odontologia.",
    "curtidas": 9,
    "comentarios": 0,
-   "alcance": 183,
-   "visualizacoes": 357,
-   "salvamentos": 9,
+   "alcance": 185,
+   "visualizacoes": 363,
+   "salvamentos": 10,
    "compartilhamentos": 3,
-   "interacoes": 21
+   "interacoes": 22
   },
   {
    "id": "18044347220831705",
@@ -648,8 +667,8 @@
    "legenda": "Toda clínica de odontologia tem alguém que faz a rotina acontecer, dentro e fora da cadeira.",
    "curtidas": 7,
    "comentarios": 0,
-   "alcance": 182,
-   "visualizacoes": 332,
+   "alcance": 184,
+   "visualizacoes": 334,
    "salvamentos": 1,
    "compartilhamentos": 1,
    "interacoes": 9

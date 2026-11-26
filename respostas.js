@@ -4,8 +4,10 @@
 (function(){
   'use strict';
   var S={lista:null, carregando:false, erro:null, filtro:'pendentes', edit:{}, envio:{}, aviso:{}, canal:null, rerender:null};
-  var CAT={elogio:'Elogio',saudacao:'Saudação',duvida_produto:'Dúvida sobre o Belle',teste_gratis:'Teste grátis',demonstracao:'Demonstração',
-    preco:'Preço',suporte:'Suporte',reclamacao:'Reclamação',concorrente:'Concorrente',parceria:'Parceria',spam:'Spam',outro:'Outro'};
+  var CAT={preco:'Preço',demonstracao:'Quer conhecer',concorrente:'Vem de outro sistema',duvida_produto:'Dúvida sobre o Belle',
+    teste_gratis:'Teste grátis',acesso_teste:'Acesso ao teste',suporte:'Suporte',financeiro:'Financeiro',vagas:'Vagas',
+    parceria:'Parceria',eventos:'Eventos',fora_escopo:'Fora do escopo',reclamacao:'Reclamação',saudacao:'Saudação',
+    elogio:'Elogio',spam:'Spam',outro:'Outro'};
   var PEND={novo:1,sugerido:1,erro:1};
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function sb(){ return window.belleSb&&window.belleSb.client(); }

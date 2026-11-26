@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T07:49:42-03:00",
+  "generated_at": "2026-11-26T08:20:16-03:00",
   "customer_id": "5616239123",
   "currency": "BRL",
   "period": {
@@ -22,7 +22,7 @@
       "budget_daily": 135.0,
       "budget_resource": "customers/5616239123/campaignBudgets/14650649218",
       "budget_shared": false,
-      "impressions": 23284,
+      "impressions": 23283,
       "clicks": 3722,
       "spend": 4180.65,
       "conversions": 265.91,
@@ -61,15 +61,15 @@
       "budget_resource": "customers/5616239123/campaignBudgets/14768243741",
       "budget_shared": false,
       "impressions": 25243,
-      "clicks": 3733,
-      "spend": 3622.59,
+      "clicks": 3732,
+      "spend": 3621.36,
       "conversions": 137.94,
       "conversion_value": 0.0,
       "conversions_todas": 137.94,
       "conversion_value_todas": 0.0,
-      "cpa": 26.26,
+      "cpa": 26.25,
       "decide": "SCALE",
-      "decide_reason": "CPA 26.26 <= scale_at 60"
+      "decide_reason": "CPA 26.25 <= scale_at 60"
     },
     {
       "id": "21603539756",
@@ -865,9 +865,9 @@
     }
   ],
   "totals": {
-    "spend": 19944.05,
-    "impressions": 118391,
-    "clicks": 14979,
+    "spend": 19942.82,
+    "impressions": 118390,
+    "clicks": 14978,
     "conversions": 559.92
   },
   "kpi": {

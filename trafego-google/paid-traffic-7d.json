@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T07:49:34-03:00",
+  "generated_at": "2026-11-26T08:20:11-03:00",
   "customer_id": "5616239123",
   "currency": "BRL",
   "period": {
@@ -22,7 +22,7 @@
       "budget_daily": 135.0,
       "budget_resource": "customers/5616239123/campaignBudgets/14650649218",
       "budget_shared": false,
-      "impressions": 4368,
+      "impressions": 4367,
       "clicks": 709,
       "spend": 976.9,
       "conversions": 50.05,
@@ -42,15 +42,15 @@
       "budget_resource": "customers/5616239123/campaignBudgets/14768243741",
       "budget_shared": false,
       "impressions": 4941,
-      "clicks": 824,
-      "spend": 789.6,
+      "clicks": 823,
+      "spend": 788.37,
       "conversions": 37.95,
       "conversion_value": 0.0,
       "conversions_todas": 37.95,
       "conversion_value_todas": 0.0,
-      "cpa": 20.81,
+      "cpa": 20.77,
       "decide": "SCALE",
-      "decide_reason": "CPA 20.81 <= scale_at 60"
+      "decide_reason": "CPA 20.77 <= scale_at 60"
     },
     {
       "id": "21603539756",
@@ -865,14 +865,14 @@
     }
   ],
   "totals": {
-    "spend": 3825.86,
-    "impressions": 16111,
-    "clicks": 3323,
+    "spend": 3824.63,
+    "impressions": 16110,
+    "clicks": 3322,
     "conversions": 114.5
   },
   "kpi": {
     "nome": "cpa",
-    "valor": 33.41,
+    "valor": 33.4,
     "scale_at": 60,
     "kill_at": 150,
     "gasto_minimo_para_julgar": 150

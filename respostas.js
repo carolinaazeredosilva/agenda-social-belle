@@ -3,7 +3,7 @@
    Só a dona vê as conversas (regra no banco). Usada pelo index.html: belleRespostas.render(), .count(). */
 (function(){
   'use strict';
-  var S={lista:null, carregando:false, erro:null, filtro:'pendentes', edit:{}, envio:{}, aviso:{}, canal:null, rerender:null};
+  var S={auto:null, autoSalvando:false, lista:null, carregando:false, erro:null, filtro:'pendentes', edit:{}, envio:{}, aviso:{}, canal:null, rerender:null};
   var CAT={preco:'Preço',demonstracao:'Quer conhecer',concorrente:'Vem de outro sistema',duvida_produto:'Dúvida sobre o Belle',
     teste_gratis:'Teste grátis',acesso_teste:'Acesso ao teste',suporte:'Suporte',financeiro:'Financeiro',vagas:'Vagas',
     parceria:'Parceria',eventos:'Eventos',fora_escopo:'Fora do escopo',reclamacao:'Reclamação',saudacao:'Saudação',
@@ -33,6 +33,8 @@
       var r=await sb().from('ig_mensagens').select('*').order('recebido_em',{ascending:false}).limit(300);
       if(r.error) throw r.error;
       S.lista=r.data||[]; S.erro=null; ouvir();
+      var c=await sb().from('ig_config').select('auto').eq('id',1).maybeSingle();
+      S.auto=c.error?null:!!(c.data&&c.data.auto);
     }catch(e){
       S.erro=/relation|does not exist|schema cache/i.test(e.message||'')?'A caixa de entrada ainda não foi criada no Supabase. Ela aparece quando o servidor do agente for publicado.':(e.message||String(e));
       if(!S.lista) S.lista=[];
@@ -70,6 +72,14 @@
     if(r.error){ m.status=antes; S.aviso[id]=r.error.message; redraw(); }
   }
 
+  async function mudarAuto(){
+    if(S.auto===null||S.autoSalvando) return;
+    var novo=!S.auto, antes=S.auto; S.auto=novo; S.autoSalvando=true; redraw();
+    var r=await sb().from('ig_config').update({auto:novo,atualizado_em:new Date().toISOString()}).eq('id',1).select('auto');
+    if(r.error||!r.data||!r.data.length){ S.auto=antes; S.erro='Não consegui mudar o "Responder sozinho": '+((r.error&&r.error.message)||'sem permissão'); }
+    S.autoSalvando=false; redraw();
+  }
+
   function cartao(m){
     var pend=!!PEND[m.status], p=prazo(m), venc=p!=null&&p<=0, envio=!!S.envio[m.id];
     var h='<article class="vcard rsp'+(m.urgente&&pend?' urg':'')+'" data-id="'+esc(m.id)+'">';
@@ -101,7 +111,8 @@
     S.rerender=rerender||S.rerender;
     if(S.lista===null) carregar();
     var h='<div class="vcard"><h3>Respostas do Instagram</h3><p class="hint">Comentários e DMs do @bellesoftware chegam aqui na hora, com a resposta que o agente sugere. '
-      +'Por enquanto nada sai sozinho: revise, ajuste se quiser e envie.</p>';
+      +(S.auto?'O agente responde sozinho os assuntos simples (saudação, elogio, teste grátis, dúvidas, preço, demonstração, vagas e fora do escopo). O resto espera você aqui.</p>':'Nada sai sozinho: revise, ajuste se quiser e envie.</p>')
+      +(S.auto===null?'':'<div class="row" style="margin-top:8px"><button class="btn'+(S.auto?' primary':'')+'" data-rsp="auto" aria-pressed="'+S.auto+'"'+(S.autoSalvando?' disabled':'')+'>Responder sozinho: '+(S.auto?'ligado':'desligado')+'</button></div>');
     if(S.lista===null) return h+'<p class="empty">Carregando…</p></div>';
     if(!dona()) return h+'<p class="empty">Só a dona da Agenda vê as conversas do Instagram.</p></div>';
     var L=S.lista, n={pendentes:0,enviadas:0,descartadas:0,todas:L.length};
@@ -125,6 +136,7 @@
     var a=b.getAttribute('data-rsp'), id=b.getAttribute('data-id');
     if(a==='filtro'){ S.filtro=b.getAttribute('data-f'); redraw(); }
     else if(a==='recarregar'){ carregar(); }
+    else if(a==='auto'){ if(S.auto||confirm('Ligar o "Responder sozinho"? O agente vai responder na hora, sem você revisar, os comentários e DMs de assuntos simples.')) mudarAuto(); }
     else if(a==='enviar') enviar(id,'comentario');
     else if(a==='dm') enviar(id,'dm');
     else if(a==='descartar') marcar(id,'descartado');

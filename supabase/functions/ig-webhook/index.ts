@@ -4,7 +4,10 @@
 //
 // Endereço para colar no painel da Meta (Webhooks, objeto Instagram, campos comments e messages):
 //   https://<projeto>.supabase.co/functions/v1/ig-webhook
-import { assinaturaOk, banco, CFG, classificar, infoPost, nomeDe, type Entrada } from "../_shared/agente.ts";
+import {
+  assinaturaOk, banco, CFG, classificar, dmDeComentario, enviarDm, infoPost, MetaErro, nomeDe, responderComentario, type Entrada,
+} from "../_shared/agente.ts";
+import { modelo } from "../_shared/base.ts";
 
 type Linha = Record<string, unknown> & { id: string; canal: "comentario" | "dm"; texto: string };
 
@@ -113,4 +116,46 @@ async function processar(l: Linha) {
     status: c.acao === "ignorar" ? "descartado" : "sugerido",
   }).eq("id", l.id);
   if (up.error) throw up.error;
+
+  if (c.acao === "auto" && c.sugestao) await responderSozinho(db, l, e, c);
+}
+
+// Assuntos em que, num comentário, além da resposta no post o agente chama a pessoa na DM.
+const CHAMA_NA_DM = new Set(["preco", "demonstracao", "duvida_produto", "teste_gratis"]);
+
+/** "Responder sozinho": só quando a Kaká ligou na aba Respostas. */
+async function responderSozinho(db: ReturnType<typeof banco>, l: Linha, e: Entrada, c: Awaited<ReturnType<typeof classificar>>) {
+  const { data: cfg } = await db.from("ig_config").select("auto").eq("id", 1).maybeSingle();
+  if (!cfg?.auto) return;
+  if (l.canal === "dm") {
+    // Sem a IA, o texto é fixo: responde só a primeira mensagem da conversa no dia, para não repetir.
+    if (c.classificado_por === "regras") {
+      const desde = new Date(Date.now() - 24 * 3600e3).toISOString();
+      const { count } = await db.from("ig_mensagens").select("id", { count: "exact", head: true })
+        .eq("conversa", l.conversa).eq("canal", "dm").eq("enviado_por", "agente").gte("enviado_em", desde);
+      if (count) return;
+    }
+  }
+  const texto = c.sugestao.trim();
+  let via: "comentario" | "dm" = l.canal === "dm" ? "dm" : "comentario";
+  try {
+    if (l.canal === "dm") await enviarDm(String(l.conversa), texto);
+    else {
+      await responderComentario(String(l.ig_id), texto);
+      if (CHAMA_NA_DM.has(c.categoria)) {
+        const dm = modelo(c.categoria, "dm", e.nome);
+        if (dm) {
+          await dmDeComentario(String(l.ig_id), dm).catch((err) => console.warn("dm do comentário", err));
+          via = "comentario";
+        }
+      }
+    }
+  } catch (err) {
+    const msg = err instanceof MetaErro ? err.message : String(err);
+    await db.from("ig_mensagens").update({ status: "erro", erro: "Envio automático: " + msg }).eq("id", l.id);
+    return;
+  }
+  await db.from("ig_mensagens").update({
+    status: "enviado", resposta: texto, resposta_via: via, enviado_em: new Date().toISOString(), enviado_por: "agente", erro: null,
+  }).eq("id", l.id);
 }

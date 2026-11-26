@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T08:20:33-03:00",
+  "generated_at": "2026-11-26T13:29:53-03:00",
   "property_id": "322913055",
   "period": {
     "start": "2026-11-19",
@@ -23,13 +23,13 @@
       "medium": "(none)",
       "campaign": "(direct)",
       "grupo": "direto",
-      "sessions": 2358,
-      "engaged_sessions": 790,
+      "sessions": 2365,
+      "engaged_sessions": 797,
       "users": 1266,
       "new_users": 790,
-      "key_events": 116,
+      "key_events": 120,
       "eventos": {
-        "Clique_teste_gratis": 116
+        "Clique_teste_gratis": 120
       }
     },
     {
@@ -37,13 +37,13 @@
       "medium": "cpc",
       "campaign": "[SEARCH][TRAFEGO] Branding Belle",
       "grupo": "google_pago",
-      "sessions": 1952,
-      "engaged_sessions": 638,
+      "sessions": 1956,
+      "engaged_sessions": 648,
       "users": 949,
       "new_users": 460,
-      "key_events": 140,
+      "key_events": 142,
       "eventos": {
-        "Clique_teste_gratis": 140
+        "Clique_teste_gratis": 142
       }
     },
     {
@@ -52,7 +52,7 @@
       "campaign": "(organic)",
       "grupo": "busca_organica",
       "sessions": 1406,
-      "engaged_sessions": 437,
+      "engaged_sessions": 442,
       "users": 515,
       "new_users": 167,
       "key_events": 66,
@@ -66,7 +66,7 @@
       "campaign": "[PMAX][TRAFEGO] Conheça o Belle Software (topo de funil)",
       "grupo": "google_pago",
       "sessions": 749,
-      "engaged_sessions": 334,
+      "engaged_sessions": 337,
       "users": 643,
       "new_users": 563,
       "key_events": 312,
@@ -79,8 +79,8 @@
       "medium": "cpc",
       "campaign": "[PMAX][LEADS] Belle - Cadastro no trial",
       "grupo": "google_pago",
-      "sessions": 646,
-      "engaged_sessions": 423,
+      "sessions": 647,
+      "engaged_sessions": 425,
       "users": 567,
       "new_users": 533,
       "key_events": 14,
@@ -94,7 +94,7 @@
       "campaign": "(organic)",
       "grupo": "busca_organica",
       "sessions": 427,
-      "engaged_sessions": 154,
+      "engaged_sessions": 155,
       "users": 186,
       "new_users": 60,
       "key_events": 20,
@@ -107,8 +107,8 @@
       "medium": "cpc",
       "campaign": "branding",
       "grupo": "google_pago",
-      "sessions": 296,
-      "engaged_sessions": 88,
+      "sessions": 297,
+      "engaged_sessions": 91,
       "users": 82,
       "new_users": 10,
       "key_events": 2,
@@ -122,12 +122,12 @@
       "campaign": "(referral)",
       "grupo": "outros",
       "sessions": 228,
-      "engaged_sessions": 55,
+      "engaged_sessions": 59,
       "users": 50,
       "new_users": 0,
-      "key_events": 4,
+      "key_events": 6,
       "eventos": {
-        "Clique_teste_gratis": 4
+        "Clique_teste_gratis": 6
       }
     },
     {
@@ -135,10 +135,10 @@
       "medium": "cpc",
       "campaign": "(not set)",
       "grupo": "google_pago",
-      "sessions": 144,
-      "engaged_sessions": 47,
-      "users": 41,
-      "new_users": 3,
+      "sessions": 175,
+      "engaged_sessions": 55,
+      "users": 45,
+      "new_users": 4,
       "key_events": 2,
       "eventos": {
         "Clique_teste_gratis": 2
@@ -169,20 +169,6 @@
       "new_users": 69,
       "key_events": 0,
       "eventos": {}
-    },
-    {
-      "source": "(not set)",
-      "medium": "(not set)",
-      "campaign": "(not set)",
-      "grupo": "outros",
-      "sessions": 75,
-      "engaged_sessions": 0,
-      "users": 70,
-      "new_users": 0,
-      "key_events": 8,
-      "eventos": {
-        "Clique_teste_gratis": 8
-      }
     },
     {
       "source": "instagram",
@@ -289,18 +275,6 @@
       }
     },
     {
-      "source": "google",
-      "medium": "cpc",
-      "campaign": "",
-      "grupo": "google_pago",
-      "sessions": 31,
-      "engaged_sessions": 8,
-      "users": 20,
-      "new_users": 1,
-      "key_events": 0,
-      "eventos": {}
-    },
-    {
       "source": "br.search.yahoo.com",
       "medium": "referral",
       "campaign": "(referral)",
@@ -321,6 +295,18 @@
       "engaged_sessions": 4,
       "users": 20,
       "new_users": 16,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "(not set)",
+      "medium": "(not set)",
+      "campaign": "(not set)",
+      "grupo": "outros",
+      "sessions": 20,
+      "engaged_sessions": 0,
+      "users": 19,
+      "new_users": 0,
       "key_events": 0,
       "eventos": {}
     },

@@ -1,6 +1,7 @@
 // Peças comuns do agente de respostas do Instagram: Meta (Graph API), banco e a IA que classifica e sugere.
 import Anthropic from "npm:@anthropic-ai/sdk";
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
+import { BASE, modelo } from "./base.ts";
 
 const env = (k: string, padrao = "") => (Deno.env.get(k) ?? padrao).trim();
 
@@ -72,13 +73,15 @@ export async function infoPost(mediaId: string): Promise<{ link?: string; legend
   }
 }
 
-export async function nomeDe(igsid: string): Promise<string | undefined> {
+/** @usuário e primeiro nome de quem mandou a DM (IGSID), quando a Meta informa. */
+export async function nomeDe(igsid: string): Promise<{ usuario?: string; primeiro?: string }> {
   try {
     const p = await pagina();
     const r = await meta("GET", igsid, { fields: "username,name" }, p.token);
-    return r.username || r.name;
+    const primeiro = String(r.name || "").trim().split(/\s+/)[0] || undefined;
+    return { usuario: r.username || r.name, primeiro };
   } catch {
-    return undefined;
+    return {};
   }
 }
 
@@ -116,15 +119,18 @@ export async function assinaturaOk(corpo: string, cabecalho: string | null): Pro
 /* ---------------- Classificação e resposta sugerida ---------------- */
 
 export const CATEGORIAS = [
-  "elogio", "saudacao", "duvida_produto", "teste_gratis", "demonstracao",
-  "preco", "suporte", "reclamacao", "concorrente", "parceria", "spam", "outro",
+  "preco", "demonstracao", "concorrente", "duvida_produto", "teste_gratis", "acesso_teste",
+  "suporte", "financeiro", "vagas", "parceria", "eventos", "fora_escopo", "reclamacao",
+  "saudacao", "elogio", "spam", "outro",
 ] as const;
 type Categoria = typeof CATEGORIAS[number];
 
 // O que pode sair sozinho (quando o modo automático for ligado) e o que vai para a caixa da Kaká.
+// Hoje nada sai sozinho: tudo espera a aprovação dela na aba Respostas.
 const ACAO: Record<Categoria, "auto" | "caixa" | "ignorar"> = {
-  elogio: "auto", saudacao: "auto", duvida_produto: "auto", teste_gratis: "auto", demonstracao: "auto",
-  preco: "caixa", suporte: "caixa", reclamacao: "caixa", concorrente: "caixa", parceria: "caixa", outro: "caixa",
+  saudacao: "auto", elogio: "auto", teste_gratis: "auto", vagas: "auto", fora_escopo: "auto",
+  preco: "caixa", demonstracao: "caixa", concorrente: "caixa", duvida_produto: "caixa", acesso_teste: "caixa",
+  suporte: "caixa", financeiro: "caixa", parceria: "caixa", eventos: "caixa", reclamacao: "caixa", outro: "caixa",
   spam: "ignorar",
 };
 
@@ -143,40 +149,44 @@ export type Entrada = {
   autor?: string;
   post_legenda?: string;
   historico?: { de: "cliente" | "belle"; texto: string }[];
+  nome?: string; // primeiro nome, quando a Meta informa
 };
 
 function instrucoes(): string {
-  return `Você é o atendimento do Instagram @bellesoftware, do Belle Software.
+  return `Você é a assistente virtual do Instagram @bellesoftware, do Belle Software. Siga a base abaixo à risca.
 
-Sobre o Belle: sistema de gestão para clínicas de estética em crescimento. Reúne agenda inteligente, gestão financeira, CRM, estoque, orçamentos, planos de tratamento, funil de vendas, BI, WhatsApp automático, Belle Chat com IA, Gestor IA, transcrição de áudio e emissão de nota fiscal. Calcula comissão de profissionais. Oferta: teste grátis por 14 dias, sem cartão e sem compromisso. Link do teste: ${CFG.linkTeste}. WhatsApp do comercial: ${CFG.whatsComercial}.${CFG.contatoSuporte ? ` Suporte para clientes: ${CFG.contatoSuporte}.` : ""}
+${BASE}
 
-Sua tarefa: ler um comentário ou uma DM, classificar e escrever a resposta que a Belle mandaria.
+Sua tarefa agora: ler um comentário público ou uma DM, classificar e escrever a próxima resposta da Belle, seguindo os fluxos da seção 5 e as respostas modelo.
 
-Categorias:
+Categorias (campo categoria):
+- preco: preço, valor, mensalidade, quanto custa, valor depois do teste (fluxo 5.1).
+- demonstracao: quer contratar, conhecer, apresentação, mais informações (5.2).
+- concorrente: vem de outro sistema ou compara com um (5.2, variação de troca).
+- duvida_produto: pergunta se o Belle faz algo ou serve para um tipo de clínica (5.3).
+- teste_gratis: quer testar, pede o link do teste (5.4).
+- acesso_teste: já se cadastrou e não consegue acessar, código inválido (5.4).
+- suporte: já é cliente e tem dúvida de uso ou erro no sistema (5.5).
+- financeiro: cliente com assunto de pagamento, boleto, cobrança (5.5).
+- vagas: quer trabalhar na Belle, currículo (5.6).
+- parceria: proposta de parceria, fornecedor, agência, imprensa, influenciador (5.7).
+- eventos: feira, estande, ingresso, cortesia (5.8).
+- fora_escopo: achou que a Belle é uma clínica, quer agendar procedimento (5.9).
+- reclamacao: insatisfação, tom irritado, cancelamento (seção 7).
+- saudacao: só "oi", "bom dia", resposta a story sem pergunta (5.10).
 - elogio: elogio, emoji, "amei".
-- saudacao: oi, tudo bem, bom dia, sem pergunta.
-- duvida_produto: pergunta sobre o que o Belle faz ou se tem uma funcionalidade.
-- teste_gratis: quer testar, pede o link.
-- demonstracao: pede demonstração, apresentação ou contato do comercial.
-- preco: preço, plano, valor, desconto, mensalidade.
-- suporte: já é cliente e tem dúvida de uso ou erro no sistema.
-- reclamacao: crítica, insatisfação, cobrança indevida.
-- concorrente: cita outro sistema ou compara.
-- parceria: parceria, imprensa, vaga, fornecedor, influenciador.
 - spam: golpe, propaganda, ofensa, link suspeito.
-- outro: qualquer coisa fora disso ou quando não tiver certeza.
+- outro: qualquer outra coisa.
 
-Tom de voz: moderno, profissional, direto e leve. Comercial sem ser agressivo. Português do Brasil.
-Regras da resposta:
-- Comentário: no máximo 2 frases curtas. DM: no máximo 4 frases.
-- Nunca use travessão. No máximo um emoji. Sem jargão de IA, sem promessa exagerada.
-- Nunca diga preço nem valores. Para preço, diga que vai chamar na DM (comentário) ou peça o tamanho da clínica, quantos profissionais, e diga que o time comercial vai passar a melhor opção (DM).
-- Nunca invente funcionalidade, prazo ou condição que não esteja na lista acima. Se não souber, diga que vai confirmar com o time.
-- Na DM, quando a pessoa demonstrar interesse, peça o nome da clínica e o WhatsApp, ou ofereça o teste grátis.
-- Reclamação, suporte e concorrente: resposta curta, educada, sem discutir, dizendo que o time vai olhar com atenção.
+Regras da resposta (campo sugestao):
+- DM: siga o fluxo e a resposta modelo da intenção, adaptando à mensagem. Use os links com UTM da base.
+- Comentário público: no máximo 2 frases curtas, sem links longos e sem dados de contato pessoais. Para assunto comercial ou de cliente, diga que vai chamar no Direct.
+- Use o primeiro nome da pessoa só se ele vier no contexto. Se não vier, comece com "Oi!".
+- Nunca use travessão. No máximo um emoji. Nunca cite valores.
+- Nunca afirme o que está marcado como [A CONFIRMAR]. Nesses casos use a mensagem de transferência da seção 7, sem o trecho entre colchetes.
 - Spam: sugestao vazia.
 - resumo: uma frase dizendo o que a pessoa quer, para a gestora ler rápido.
-- urgente: true para reclamação forte, problema de cliente parado ou risco para a marca.`;
+- urgente: true para reclamação forte, cliente com sistema parado ou risco para a marca.`;
 }
 
 const ESQUEMA = {
@@ -199,6 +209,7 @@ export async function classificar(e: Entrada): Promise<Classificacao> {
   const contexto = [
     `Canal: ${e.canal === "dm" ? "DM (mensagem direta)" : "comentário público"}`,
     e.autor ? `Quem escreveu: @${e.autor}` : "",
+    e.nome ? `Primeiro nome: ${e.nome}` : "",
     e.post_legenda ? `Legenda do post comentado: ${e.post_legenda}` : "",
     e.historico?.length ? "Conversa até aqui:\n" + e.historico.map((h) => `${h.de === "belle" ? "Belle" : "Cliente"}: ${h.texto}`).join("\n") : "",
     `Mensagem nova:\n${e.texto || "(sem texto, só mídia ou figurinha)"}`,
@@ -231,20 +242,30 @@ export async function classificar(e: Entrada): Promise<Classificacao> {
   }
 }
 
-/** Plano B sem IA: separa por palavras-chave e não sugere resposta. */
+/** Sem IA: separa por palavras-chave e sugere a resposta modelo da Base conversacional. */
 export function regras(e: Entrada): Classificacao {
-  const t = (e.texto || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const t = " " + (e.texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") + " ";
   const tem = (...p: string[]) => p.some((x) => t.includes(x));
   let c: Categoria = "outro";
-  if (tem("http", "ganhe", "seguidores gratis", "promo")) c = "spam";
-  else if (tem("preco", "valor", "quanto custa", "mensalidade", "plano", "desconto")) c = "preco";
-  else if (tem("erro", "nao funciona", "nao consigo", "suporte", "travou", "bug")) c = "suporte";
-  else if (tem("pessimo", "horrivel", "reclama", "cancelar", "absurdo", "decepc")) c = "reclamacao";
-  else if (tem("teste", "testar", "gratis", "link")) c = "teste_gratis";
-  else if (tem("demonstra", "apresenta", "comercial", "vendedor")) c = "demonstracao";
-  else if (tem("parceria", "imprensa", "vaga", "influenc", "collab")) c = "parceria";
-  else if (tem("tem ", "faz ", "funciona", "integra", "como e")) c = "duvida_produto";
-  else if (tem("amei", "otimo", "top", "parabens", "lindo", "incrivel") || /^[\p{Extended_Pictographic}\s!]+$/u.test(e.texto || "")) c = "elogio";
-  else if (tem("oi", "ola", "bom dia", "boa tarde", "boa noite", "tudo bem")) c = "saudacao";
-  return { categoria: c, acao: ACAO[c], resumo: "", sugestao: "", urgente: c === "reclamacao", classificado_por: "regras" };
+  if (tem("seguidores gratis", "ganhe dinheiro", "renda extra", "clique no link", "promocao imperdivel")) c = "spam";
+  else if (tem("pessimo", "horrivel", "absurdo", "decepc", "reclama", "quero cancelar", "cancelamento", "vergonha")) c = "reclamacao";
+  else if (tem("nao consigo acessar", "nao consigo entrar", "codigo", "cadastro nao", "nao recebi o e-mail", "nao recebi o email", "acesso")) c = "acesso_teste";
+  else if (tem("boleto", "cobranca", "pagamento", "fatura", "nota fiscal da mensalidade", "financeiro da minha")) c = "financeiro";
+  else if (tem("preco", "valor", "quanto custa", "mensalidade", "quanto e", "quanto fica", "desconto", "investimento")) c = "preco";
+  else if (tem("erro", "nao funciona", "travou", "bug", "suporte", "sou cliente", "ja uso o belle")) c = "suporte";
+  else if (tem("vaga", "curriculo", "trabalhar com voces", "trabalhar na", "contratando")) c = "vagas";
+  else if (tem("parceria", "proposta", "fornecedor", "agencia", "imprensa", "influenc", "collab", "storymaker", "fotografia")) c = "parceria";
+  else if (tem("feira", "estande", "stand", "ingresso", "cortesia", "evento")) c = "eventos";
+  else if (tem("endereco de voces", "totalpass", "gympass", "agendar procedimento", "fazer procedimento", "atende convenio")) c = "fora_escopo";
+  else if (tem("trinks", "simples agenda", "clinicorp", "outro sistema", "trocar de sistema", "migrar")) c = "concorrente";
+  else if (tem("teste", "testar", "gratis", "14 dias")) c = "teste_gratis";
+  else if (tem("contratar", "conhecer", "apresentacao", "demonstra", "mais informac", "informacoes", "como faco para ter", "comercial", "vendedor")) c = "demonstracao";
+  else if (tem("serve para", "da para", "tem integra", "integra", "funciona", " tem ", "faz ", "como e", "?")) c = "duvida_produto";
+  else if (tem("amei", "otimo", "top", "parabens", "lindo", "incrivel", "maravilh") || /^[\p{Extended_Pictographic}\s!]+$/u.test(e.texto || "")) c = "elogio";
+  else if (tem(" oi ", "ola", "bom dia", "boa tarde", "boa noite", "tudo bem")) c = "saudacao";
+  return {
+    categoria: c, acao: ACAO[c], resumo: "",
+    sugestao: c === "spam" ? "" : modelo(c, e.canal, e.nome),
+    urgente: c === "reclamacao", classificado_por: "regras",
+  };
 }

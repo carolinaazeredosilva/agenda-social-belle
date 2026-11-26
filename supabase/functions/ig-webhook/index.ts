@@ -93,8 +93,9 @@ async function processar(l: Linha) {
     e.post_legenda = p.legenda;
   }
   if (l.canal === "dm" && l.conversa) {
-    const nome = await nomeDe(String(l.conversa));
-    if (nome) extra.autor = nome;
+    const quem = await nomeDe(String(l.conversa));
+    if (quem.usuario) extra.autor = quem.usuario;
+    e.nome = quem.primeiro;
     const h = await db.from("ig_mensagens").select("texto,resposta,status,recebido_em")
       .eq("conversa", l.conversa).eq("canal", "dm").neq("id", l.id)
       .order("recebido_em", { ascending: false }).limit(6);

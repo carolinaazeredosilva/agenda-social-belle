@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T08:05:08-03:00",
+  "generated_at": "2026-11-26T13:29:20-03:00",
   "window_days": 14,
   "ad_account_id": "act_202455107872931",
   "currency": "BRL",
@@ -9,19 +9,19 @@
   "primary_kpi": "cpl",
   "kpis_summary": {
     "cpl": {
-      "value": 19.7702,
+      "value": 19.5087,
       "target": 30.0,
-      "delta_pct": -34.1,
+      "delta_pct": -35.0,
       "status": "green"
     }
   },
-  "spend_total": 3123.69,
+  "spend_total": 3199.43,
   "raws_total": {
-    "spend": 3123.69,
-    "impressions": 169021,
-    "clicks": 2136,
-    "reach": 129454,
-    "leads": 158.0,
+    "spend": 3199.4300000000003,
+    "impressions": 173723,
+    "clicks": 2179,
+    "reach": 132816,
+    "leads": 164.0,
     "purchases": 0.0,
     "purchase_value": 0.0,
     "messages": 8.0,
@@ -33,11 +33,11 @@
       "name": "[29/04][LEADS - LP TESTE GRÁTIS][ABO]",
       "objective": "OUTCOME_LEADS",
       "raws": {
-        "spend": 1075.0,
-        "impressions": 41562,
-        "clicks": 456,
-        "reach": 29451,
-        "leads": 70.0,
+        "spend": 1095.3300000000002,
+        "impressions": 41995,
+        "clicks": 461,
+        "reach": 29721,
+        "leads": 72.0,
         "purchases": 0.0,
         "purchase_value": 0.0,
         "messages": 0.0,
@@ -48,11 +48,11 @@
           "adset_id": "120246960562250409",
           "name": "[01][IG][ABERTO] UTMS MODIFICADAS 23/11",
           "raws": {
-            "spend": 1075.0,
-            "impressions": 41562,
-            "clicks": 456,
-            "reach": 29451,
-            "leads": 70.0,
+            "spend": 1095.3300000000002,
+            "impressions": 41995,
+            "clicks": 461,
+            "reach": 29721,
+            "leads": 72.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
             "messages": 0.0,
@@ -63,8 +63,8 @@
               "ad_id": "120246960562050409",
               "ad_name": "[09][ESTATICO][+ DE 2800 CLINICAS]",
               "raws": {
-                "spend": 11.05,
-                "impressions": 4313,
+                "spend": 11.07,
+                "impressions": 4314,
                 "clicks": 28,
                 "reach": 4247,
                 "leads": 0.0,
@@ -73,7 +73,7 @@
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 11.05,
+              "spend": 11.07,
               "metrics": {
                 "cpl": null
               },
@@ -84,22 +84,22 @@
               "ad_id": "120246960562060409",
               "ad_name": "[05][ESTATICO][SISTEMA PARA ESTÉTICA]",
               "raws": {
-                "spend": 1027.98,
-                "impressions": 34674,
-                "clicks": 413,
-                "reach": 22781,
-                "leads": 66.0,
+                "spend": 1047.65,
+                "impressions": 34934,
+                "clicks": 418,
+                "reach": 22839,
+                "leads": 68.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 1027.98,
+              "spend": 1047.65,
               "metrics": {
-                "cpl": 15.575454545454546
+                "cpl": 15.406617647058825
               },
               "decide": "SCALE",
-              "decide_reason": "cpl 15.58 ≤ 24.00 (48% abaixo da meta)"
+              "decide_reason": "cpl 15.41 ≤ 24.00 (49% abaixo da meta)"
             },
             {
               "ad_id": "120246960562070409",
@@ -126,17 +126,17 @@
               "ad_id": "120246960562110409",
               "ad_name": "[08][ESTATICO][CONTROLE DE COMISSÕES]",
               "raws": {
-                "spend": 8.95,
-                "impressions": 661,
+                "spend": 9.16,
+                "impressions": 662,
                 "clicks": 2,
-                "reach": 638,
+                "reach": 639,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 8.95,
+              "spend": 9.16,
               "metrics": {
                 "cpl": null
               },
@@ -147,33 +147,33 @@
               "ad_id": "120246960562140409",
               "ad_name": "[10][ESTATICO][GERENCIA SEM IA]",
               "raws": {
-                "spend": 16.27,
-                "impressions": 1679,
+                "spend": 16.7,
+                "impressions": 1850,
                 "clicks": 8,
-                "reach": 1573,
+                "reach": 1784,
                 "leads": 2.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 16.27,
+              "spend": 16.7,
               "metrics": {
-                "cpl": 8.135
+                "cpl": 8.35
               },
               "decide": "KEEP-amostra",
-              "decide_reason": "spend R$16.27 < min R$36.00"
+              "decide_reason": "spend R$16.70 < min R$36.00"
             }
           ],
-          "spend": 1075.0,
+          "spend": 1095.3300000000002,
           "metrics": {
-            "cpl": 15.357142857142858
+            "cpl": 15.212916666666668
           }
         }
       ],
-      "spend": 1075.0,
+      "spend": 1095.3300000000002,
       "metrics": {
-        "cpl": 15.357142857142858
+        "cpl": 15.212916666666668
       },
       "decide": "SCALE",
       "effective_status": "ACTIVE",
@@ -186,11 +186,11 @@
       "name": "[03/02][LEADS - LP AUTOMAÇÃO]",
       "objective": "OUTCOME_LEADS",
       "raws": {
-        "spend": 1048.58,
-        "impressions": 53829,
-        "clicks": 545,
-        "reach": 41559,
-        "leads": 58.0,
+        "spend": 1063.09,
+        "impressions": 56991,
+        "clicks": 558,
+        "reach": 43935,
+        "leads": 60.0,
         "purchases": 0.0,
         "purchase_value": 0.0,
         "messages": 4.0,
@@ -201,11 +201,11 @@
           "adset_id": "120252935551270409",
           "name": "[04][ADV]",
           "raws": {
-            "spend": 1048.58,
-            "impressions": 53829,
-            "clicks": 545,
-            "reach": 41559,
-            "leads": 58.0,
+            "spend": 1063.09,
+            "impressions": 56991,
+            "clicks": 558,
+            "reach": 43935,
+            "leads": 60.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
             "messages": 4.0,
@@ -216,22 +216,22 @@
               "ad_id": "120252935551280409",
               "ad_name": "[01][VIDEO][JORNADA DO CLIENTE NO WPP] — Cópia",
               "raws": {
-                "spend": 1001.41,
-                "impressions": 53167,
-                "clicks": 530,
-                "reach": 41181,
-                "leads": 54.0,
+                "spend": 1015.92,
+                "impressions": 56329,
+                "clicks": 543,
+                "reach": 43557,
+                "leads": 56.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 4.0,
                 "installs": 0.0
               },
-              "spend": 1001.41,
+              "spend": 1015.92,
               "metrics": {
-                "cpl": 18.54462962962963
+                "cpl": 18.14142857142857
               },
               "decide": "SCALE",
-              "decide_reason": "cpl 18.54 ≤ 24.00 (38% abaixo da meta)"
+              "decide_reason": "cpl 18.14 ≤ 24.00 (40% abaixo da meta)"
             },
             {
               "ad_id": "120252935551300409",
@@ -255,15 +255,15 @@
               "decide_reason": "cpl 11.79 ≤ 24.00 (61% abaixo da meta)"
             }
           ],
-          "spend": 1048.58,
+          "spend": 1063.09,
           "metrics": {
-            "cpl": 18.07896551724138
+            "cpl": 17.718166666666665
           }
         }
       ],
-      "spend": 1048.58,
+      "spend": 1063.09,
       "metrics": {
-        "cpl": 18.07896551724138
+        "cpl": 17.718166666666665
       },
       "decide": "SCALE",
       "effective_status": "ACTIVE",
@@ -276,10 +276,10 @@
       "name": "[13/02][TRAFEGO IG]",
       "objective": "LINK_CLICKS",
       "raws": {
-        "spend": 261.79,
-        "impressions": 51473,
-        "clicks": 920,
-        "reach": 40792,
+        "spend": 265.04,
+        "impressions": 51995,
+        "clicks": 933,
+        "reach": 41122,
         "leads": 0.0,
         "purchases": 0.0,
         "purchase_value": 0.0,
@@ -291,10 +291,10 @@
           "adset_id": "120253196844880409",
           "name": "[03][IG][ABERTO]",
           "raws": {
-            "spend": 261.79,
-            "impressions": 51473,
-            "clicks": 920,
-            "reach": 40792,
+            "spend": 265.04,
+            "impressions": 51995,
+            "clicks": 933,
+            "reach": 41122,
             "leads": 0.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
@@ -306,38 +306,38 @@
               "ad_id": "120253196844890409",
               "ad_name": "[01][CARROSSEL 12/05][O QUE A BELLE IA FAZ]",
               "raws": {
-                "spend": 198.54,
-                "impressions": 44623,
-                "clicks": 806,
-                "reach": 34728,
+                "spend": 200.61,
+                "impressions": 45067,
+                "clicks": 817,
+                "reach": 35009,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 198.54,
+              "spend": 200.61,
               "metrics": {
                 "cpl": null
               },
               "decide": "KILL",
-              "decide_reason": "sem conversões após R$198.54 de gasto"
+              "decide_reason": "sem conversões após R$200.61 de gasto"
             },
             {
               "ad_id": "120253200287440409",
               "ad_name": "[02][REEL 11/03][AGENDA CHEIA]",
               "raws": {
-                "spend": 26.64,
-                "impressions": 2795,
+                "spend": 26.77,
+                "impressions": 2805,
                 "clicks": 40,
-                "reach": 2568,
+                "reach": 2570,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 26.64,
+              "spend": 26.77,
               "metrics": {
                 "cpl": null
               },
@@ -348,17 +348,17 @@
               "ad_id": "120253200308030409",
               "ad_name": "[03][REEL 24/03][AGENDA CHEIA]",
               "raws": {
-                "spend": 36.61,
-                "impressions": 4055,
-                "clicks": 74,
-                "reach": 3496,
+                "spend": 37.66,
+                "impressions": 4123,
+                "clicks": 76,
+                "reach": 3543,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 36.61,
+              "spend": 37.66,
               "metrics": {
                 "cpl": null
               },
@@ -366,13 +366,13 @@
               "decide_reason": "amostra insuficiente"
             }
           ],
-          "spend": 261.79,
+          "spend": 265.04,
           "metrics": {
             "cpl": null
           }
         }
       ],
-      "spend": 261.79,
+      "spend": 265.04,
       "metrics": {
         "cpl": null
       },
@@ -387,10 +387,10 @@
       "name": "[09/11][LEADS - LP BELLE CHAT][CBO]",
       "objective": "OUTCOME_LEADS",
       "raws": {
-        "spend": 321.8399999999999,
-        "impressions": 15993,
+        "spend": 326.44,
+        "impressions": 16085,
         "clicks": 103,
-        "reach": 13497,
+        "reach": 13550,
         "leads": 16.0,
         "purchases": 0.0,
         "purchase_value": 0.0,
@@ -402,10 +402,10 @@
           "adset_id": "120253420638980409",
           "name": "[01][IG][ABERTO]",
           "raws": {
-            "spend": 321.8399999999999,
-            "impressions": 15993,
+            "spend": 326.44,
+            "impressions": 16085,
             "clicks": 103,
-            "reach": 13497,
+            "reach": 13550,
             "leads": 16.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
@@ -459,29 +459,29 @@
               "ad_id": "120253421527960409",
               "ad_name": "[03][ESTATICO][A CLINICA FECHA O ATENDIMENTO CONTINUA]",
               "raws": {
-                "spend": 256.4,
-                "impressions": 6836,
+                "spend": 258.33,
+                "impressions": 6874,
                 "clicks": 76,
-                "reach": 4566,
+                "reach": 4585,
                 "leads": 12.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 1.0,
                 "installs": 0.0
               },
-              "spend": 256.4,
+              "spend": 258.33,
               "metrics": {
-                "cpl": 21.366666666666664
+                "cpl": 21.5275
               },
               "decide": "SCALE",
-              "decide_reason": "cpl 21.37 ≤ 24.00 (29% abaixo da meta)"
+              "decide_reason": "cpl 21.53 ≤ 24.00 (28% abaixo da meta)"
             },
             {
               "ad_id": "120253421598330409",
               "ad_name": "[04][ESTATICO][MENOS CONVERSA PERDIDA]",
               "raws": {
-                "spend": 9.59,
-                "impressions": 313,
+                "spend": 9.66,
+                "impressions": 315,
                 "clicks": 4,
                 "reach": 294,
                 "leads": 0.0,
@@ -490,7 +490,7 @@
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 9.59,
+              "spend": 9.66,
               "metrics": {
                 "cpl": null
               },
@@ -522,8 +522,8 @@
               "ad_id": "120253421784180409",
               "ad_name": "[06][VIDEO][MENOS CONVERSA PERDIDA]",
               "raws": {
-                "spend": 16.31,
-                "impressions": 6267,
+                "spend": 16.36,
+                "impressions": 6272,
                 "clicks": 13,
                 "reach": 6182,
                 "leads": 4.0,
@@ -532,12 +532,12 @@
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 16.31,
+              "spend": 16.36,
               "metrics": {
-                "cpl": 4.0775
+                "cpl": 4.09
               },
               "decide": "KEEP-amostra",
-              "decide_reason": "spend R$16.31 < min R$36.00"
+              "decide_reason": "spend R$16.36 < min R$36.00"
             },
             {
               "ad_id": "120253422034190409",
@@ -559,17 +559,38 @@
               },
               "decide": "KEEP-amostra",
               "decide_reason": "amostra insuficiente"
+            },
+            {
+              "ad_id": "120253669894450409",
+              "ad_name": "[08][ESTATICO][22H A CLINICA FECHOU]",
+              "raws": {
+                "spend": 2.55,
+                "impressions": 47,
+                "clicks": 0,
+                "reach": 34,
+                "leads": 0.0,
+                "purchases": 0.0,
+                "purchase_value": 0.0,
+                "messages": 0.0,
+                "installs": 0.0
+              },
+              "spend": 2.55,
+              "metrics": {
+                "cpl": null
+              },
+              "decide": "KEEP-amostra",
+              "decide_reason": "amostra insuficiente"
             }
           ],
-          "spend": 321.8399999999999,
+          "spend": 326.44,
           "metrics": {
-            "cpl": 20.114999999999995
+            "cpl": 20.4025
           }
         }
       ],
-      "spend": 321.8399999999999,
+      "spend": 326.44,
       "metrics": {
-        "cpl": 20.114999999999995
+        "cpl": 20.4025
       },
       "decide": "SCALE",
       "effective_status": "ACTIVE",
@@ -582,10 +603,10 @@
       "name": "[18/11][LEADS - LP BLACK FRIDAY][ABO]",
       "objective": "OUTCOME_LEADS",
       "raws": {
-        "spend": 230.72,
-        "impressions": 3338,
-        "clicks": 44,
-        "reach": 1726,
+        "spend": 238.39000000000001,
+        "impressions": 3456,
+        "clicks": 48,
+        "reach": 1786,
         "leads": 4.0,
         "purchases": 0.0,
         "purchase_value": 0.0,
@@ -597,10 +618,10 @@
           "adset_id": "120253541458790409",
           "name": "[01][IG][QUENTES - EXCLUI CLIENTES]",
           "raws": {
-            "spend": 230.72,
-            "impressions": 3338,
-            "clicks": 44,
-            "reach": 1726,
+            "spend": 238.39000000000001,
+            "impressions": 3456,
+            "clicks": 48,
+            "reach": 1786,
             "leads": 4.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
@@ -654,38 +675,38 @@
               "ad_id": "120253541461200409",
               "ad_name": "[03][ESTATICO][BF MELHOR HORA GESTAO]",
               "raws": {
-                "spend": 10.7,
-                "impressions": 151,
-                "clicks": 2,
-                "reach": 129,
+                "spend": 12.64,
+                "impressions": 205,
+                "clicks": 3,
+                "reach": 167,
                 "leads": 2.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 10.7,
+              "spend": 12.64,
               "metrics": {
-                "cpl": 5.35
+                "cpl": 6.32
               },
               "decide": "KEEP-amostra",
-              "decide_reason": "spend R$10.70 < min R$36.00"
+              "decide_reason": "spend R$12.64 < min R$36.00"
             },
             {
               "ad_id": "120253541462220409",
               "ad_name": "[04][ESTATICO][BF ORGANIZACAO LUCRO GESTAO]",
               "raws": {
-                "spend": 72.97,
-                "impressions": 980,
-                "clicks": 14,
-                "reach": 569,
+                "spend": 78.7,
+                "impressions": 1044,
+                "clicks": 17,
+                "reach": 591,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 72.97,
+              "spend": 78.7,
               "metrics": {
                 "cpl": null
               },
@@ -714,15 +735,15 @@
               "decide_reason": "amostra insuficiente"
             }
           ],
-          "spend": 230.72,
+          "spend": 238.39000000000001,
           "metrics": {
-            "cpl": 57.68
+            "cpl": 59.597500000000004
           }
         }
       ],
-      "spend": 230.72,
+      "spend": 238.39000000000001,
       "metrics": {
-        "cpl": 57.68
+        "cpl": 59.597500000000004
       },
       "decide": "KILL",
       "effective_status": "ACTIVE",
@@ -735,11 +756,11 @@
       "name": "[23/11][LEADS - LP HOF][CBO]",
       "objective": "OUTCOME_LEADS",
       "raws": {
-        "spend": 99.05000000000003,
-        "impressions": 1342,
-        "clicks": 40,
-        "reach": 1160,
-        "leads": 6.0,
+        "spend": 120.01,
+        "impressions": 1628,
+        "clicks": 45,
+        "reach": 1380,
+        "leads": 8.0,
         "purchases": 0.0,
         "purchase_value": 0.0,
         "messages": 0.0,
@@ -855,11 +876,11 @@
           "adset_id": "120253627235100409",
           "name": "[02][IG][QUENTES - EXCLUI CLIENTES]",
           "raws": {
-            "spend": 82.64,
-            "impressions": 1054,
-            "clicks": 30,
-            "reach": 889,
-            "leads": 2.0,
+            "spend": 103.6,
+            "impressions": 1340,
+            "clicks": 35,
+            "reach": 1109,
+            "leads": 4.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
             "messages": 0.0,
@@ -870,22 +891,22 @@
               "ad_id": "120253627237680409",
               "ad_name": "[01][ESTATICO][ORCAMENTO NA HORA]",
               "raws": {
-                "spend": 63.72,
-                "impressions": 789,
-                "clicks": 25,
-                "reach": 654,
-                "leads": 2.0,
+                "spend": 78.32,
+                "impressions": 1039,
+                "clicks": 30,
+                "reach": 828,
+                "leads": 4.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 63.72,
+              "spend": 78.32,
               "metrics": {
-                "cpl": 31.86
+                "cpl": 19.58
               },
-              "decide": "KEEP",
-              "decide_reason": "cpl 31.86 dentro da banda"
+              "decide": "SCALE",
+              "decide_reason": "cpl 19.58 ≤ 24.00 (35% abaixo da meta)"
             },
             {
               "ad_id": "120253627239110409",
@@ -912,17 +933,17 @@
               "ad_id": "120253627240770409",
               "ad_name": "[03][CARROSSEL][QUAL LOTE FOI USADO]",
               "raws": {
-                "spend": 11.65,
-                "impressions": 171,
+                "spend": 18.01,
+                "impressions": 207,
                 "clicks": 5,
-                "reach": 145,
+                "reach": 191,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 11.65,
+              "spend": 18.01,
               "metrics": {
                 "cpl": null
               },
@@ -972,9 +993,9 @@
               "decide_reason": "amostra insuficiente"
             }
           ],
-          "spend": 82.64,
+          "spend": 103.6,
           "metrics": {
-            "cpl": 41.32
+            "cpl": 25.9
           }
         },
         {
@@ -1062,11 +1083,11 @@
           }
         }
       ],
-      "spend": 99.05000000000003,
+      "spend": 120.01,
       "metrics": {
-        "cpl": 16.508333333333336
+        "cpl": 15.00125
       },
-      "decide": "KEEP",
+      "decide": "SCALE",
       "effective_status": "ACTIVE",
       "daily_budget": 40.0,
       "lifetime_budget": null,
@@ -1077,10 +1098,10 @@
       "name": "[23/11][LEADS - LP ODONTOGRAMA][CBO]",
       "objective": "OUTCOME_LEADS",
       "raws": {
-        "spend": 86.71000000000002,
-        "impressions": 1484,
-        "clicks": 28,
-        "reach": 1269,
+        "spend": 91.13000000000002,
+        "impressions": 1573,
+        "clicks": 31,
+        "reach": 1322,
         "leads": 4.0,
         "purchases": 0.0,
         "purchase_value": 0.0,
@@ -1092,10 +1113,10 @@
           "adset_id": "120253627452480409",
           "name": "[01][IG][FRIOS - ABERTO - EXCLUI QUENTES E CLIENTES]",
           "raws": {
-            "spend": 10.55,
-            "impressions": 211,
+            "spend": 10.98,
+            "impressions": 220,
             "clicks": 3,
-            "reach": 188,
+            "reach": 196,
             "leads": 0.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
@@ -1107,17 +1128,17 @@
               "ad_id": "120253627454290409",
               "ad_name": "[01][ESTATICO][ODONTOGRAMA AINDA NO PAPEL]",
               "raws": {
-                "spend": 7.56,
-                "impressions": 168,
+                "spend": 7.99,
+                "impressions": 177,
                 "clicks": 3,
-                "reach": 146,
+                "reach": 154,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 7.56,
+              "spend": 7.99,
               "metrics": {
                 "cpl": null
               },
@@ -1209,7 +1230,7 @@
               "decide_reason": "amostra insuficiente"
             }
           ],
-          "spend": 10.55,
+          "spend": 10.98,
           "metrics": {
             "cpl": null
           }
@@ -1218,10 +1239,10 @@
           "adset_id": "120253627452920409",
           "name": "[02][IG][QUENTES - EXCLUI CLIENTES]",
           "raws": {
-            "spend": 67.56,
-            "impressions": 1139,
-            "clicks": 21,
-            "reach": 954,
+            "spend": 71.12,
+            "impressions": 1208,
+            "clicks": 24,
+            "reach": 990,
             "leads": 4.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
@@ -1233,22 +1254,22 @@
               "ad_id": "120253627454700409",
               "ad_name": "[01][ESTATICO][ODONTOGRAMA AINDA NO PAPEL]",
               "raws": {
-                "spend": 60.24,
-                "impressions": 986,
-                "clicks": 17,
-                "reach": 807,
+                "spend": 63.79,
+                "impressions": 1053,
+                "clicks": 20,
+                "reach": 841,
                 "leads": 4.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 60.24,
+              "spend": 63.79,
               "metrics": {
-                "cpl": 15.06
+                "cpl": 15.9475
               },
               "decide": "SCALE",
-              "decide_reason": "cpl 15.06 ≤ 24.00 (50% abaixo da meta)"
+              "decide_reason": "cpl 15.95 ≤ 24.00 (47% abaixo da meta)"
             },
             {
               "ad_id": "120253627455140409",
@@ -1275,17 +1296,17 @@
               "ad_id": "120253627456700409",
               "ad_name": "[03][ESTATICO][ODONTOGRAMA DIGITAL E IA]",
               "raws": {
-                "spend": 3.53,
-                "impressions": 72,
+                "spend": 3.54,
+                "impressions": 74,
                 "clicks": 3,
-                "reach": 70,
+                "reach": 72,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 3.53,
+              "spend": 3.54,
               "metrics": {
                 "cpl": null
               },
@@ -1335,19 +1356,19 @@
               "decide_reason": "amostra insuficiente"
             }
           ],
-          "spend": 67.56,
+          "spend": 71.12,
           "metrics": {
-            "cpl": 16.89
+            "cpl": 17.78
           }
         },
         {
           "adset_id": "120253627453470409",
           "name": "[03][IG][LOOKALIKE 1% - EXCLUI QUENTES E CLIENTES]",
           "raws": {
-            "spend": 8.6,
-            "impressions": 134,
+            "spend": 9.03,
+            "impressions": 145,
             "clicks": 4,
-            "reach": 127,
+            "reach": 136,
             "leads": 0.0,
             "purchases": 0.0,
             "purchase_value": 0.0,
@@ -1359,17 +1380,17 @@
               "ad_id": "120253627454860409",
               "ad_name": "[01][ESTATICO][ODONTOGRAMA AINDA NO PAPEL]",
               "raws": {
-                "spend": 7.92,
-                "impressions": 102,
+                "spend": 8.35,
+                "impressions": 113,
                 "clicks": 3,
-                "reach": 95,
+                "reach": 104,
                 "leads": 0.0,
                 "purchases": 0.0,
                 "purchase_value": 0.0,
                 "messages": 0.0,
                 "installs": 0.0
               },
-              "spend": 7.92,
+              "spend": 8.35,
               "metrics": {
                 "cpl": null
               },
@@ -1440,15 +1461,15 @@
               "decide_reason": "amostra insuficiente"
             }
           ],
-          "spend": 8.6,
+          "spend": 9.03,
           "metrics": {
             "cpl": null
           }
         }
       ],
-      "spend": 86.71000000000002,
+      "spend": 91.13000000000002,
       "metrics": {
-        "cpl": 21.677500000000006
+        "cpl": 22.782500000000006
       },
       "decide": "SCALE",
       "effective_status": "ACTIVE",

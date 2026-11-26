@@ -65,6 +65,25 @@ def main():
         sys.exit('A Meta não confirmou a ligação da página: %s' % r)
     print('Página "%s" ligada. Instagram @%s (id %s).' % (pag['name'], pag['instagram_business_account'].get('username'),
                                                           pag['instagram_business_account']['id']))
+    diagnostico(pag)
+
+
+def diagnostico(pag):
+    """Testa se a Meta deixa o app ler as DMs. Só mostra resultados no log, nunca a chave."""
+    ig = pag['instagram_business_account']['id']
+    testes = [
+        ('apps ligados à página', pag['id'] + '/subscribed_apps', pag['access_token'], {}),
+        ('DMs pela chave da página', pag['id'] + '/conversations', pag['access_token'],
+         {'platform': 'instagram', 'fields': 'updated_time,message_count', 'limit': 3}),
+        ('DMs pela chave do usuário do sistema', ig + '/conversations', TOKEN,
+         {'platform': 'instagram', 'fields': 'updated_time,message_count', 'limit': 3}),
+    ]
+    for nome, caminho, tok, params in testes:
+        try:
+            r = chamar('GET', caminho, tok, **params)
+            print('::notice::Diagnóstico (%s): OK %s' % (nome, json.dumps(r.get('data', r), ensure_ascii=False)[:600]))
+        except SystemExit as e:
+            print('::warning::Diagnóstico (%s): %s' % (nome, e))
 
 
 if __name__ == '__main__':

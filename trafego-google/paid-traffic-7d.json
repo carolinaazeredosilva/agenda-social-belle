@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T08:20:09-03:00",
+  "generated_at": "2026-11-27T13:20:15-03:00",
   "customer_id": "5616239123",
   "currency": "BRL",
   "period": {
@@ -19,45 +19,45 @@
       "name": "[PMAX][LEADS] Belle - Cadastro no trial",
       "status": "ENABLED",
       "channel": "PERFORMANCE_MAX",
-      "budget_daily": 135.0,
+      "budget_daily": 162.0,
       "budget_resource": "customers/5616239123/campaignBudgets/14650649218",
       "budget_shared": false,
       "impressions": 4292,
-      "clicks": 689,
-      "spend": 971.33,
+      "clicks": 688,
+      "spend": 970.14,
       "conversions": 49.05,
       "conversion_value": 0.0,
       "conversions_todas": 49.05,
       "conversion_value_todas": 0.0,
-      "cpa": 19.8,
+      "cpa": 19.78,
       "decide": "SCALE",
-      "decide_reason": "CPA 19.80 <= scale_at 60"
+      "decide_reason": "CPA 19.78 <= scale_at 60"
     },
     {
       "id": "22808230053",
       "name": "[PMAX][TRAFEGO] Conheça o Belle Software (topo de funil)",
       "status": "ENABLED",
       "channel": "PERFORMANCE_MAX",
-      "budget_daily": 108.0,
+      "budget_daily": 129.6,
       "budget_resource": "customers/5616239123/campaignBudgets/14768243741",
       "budget_shared": false,
       "impressions": 5114,
-      "clicks": 845,
-      "spend": 786.47,
+      "clicks": 844,
+      "spend": 786.15,
       "conversions": 38.95,
       "conversion_value": 0.0,
       "conversions_todas": 38.95,
       "conversion_value_todas": 0.0,
-      "cpa": 20.19,
+      "cpa": 20.18,
       "decide": "SCALE",
-      "decide_reason": "CPA 20.19 <= scale_at 60"
+      "decide_reason": "CPA 20.18 <= scale_at 60"
     },
     {
       "id": "21708075117",
       "name": "[SEARCH][TRAFEGO] Branding Belle",
       "status": "ENABLED",
       "channel": "SEARCH",
-      "budget_daily": 107.0,
+      "budget_daily": 128.4,
       "budget_resource": "customers/5616239123/campaignBudgets/13936392922",
       "budget_shared": false,
       "impressions": 4773,
@@ -865,14 +865,14 @@
     }
   ],
   "totals": {
-    "spend": 3950.55,
+    "spend": 3949.04,
     "impressions": 16302,
-    "clicks": 3260,
+    "clicks": 3258,
     "conversions": 114.0
   },
   "kpi": {
     "nome": "cpa",
-    "valor": 34.65,
+    "valor": 34.64,
     "scale_at": 60,
     "kill_at": 150,
     "gasto_minimo_para_julgar": 150

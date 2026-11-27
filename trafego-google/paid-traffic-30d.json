@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T08:20:15-03:00",
+  "generated_at": "2026-11-27T13:20:22-03:00",
   "customer_id": "5616239123",
   "currency": "BRL",
   "period": {
@@ -19,31 +19,31 @@
       "name": "[PMAX][LEADS] Belle - Cadastro no trial",
       "status": "ENABLED",
       "channel": "PERFORMANCE_MAX",
-      "budget_daily": 135.0,
+      "budget_daily": 162.0,
       "budget_resource": "customers/5616239123/campaignBudgets/14650649218",
       "budget_shared": false,
       "impressions": 22858,
-      "clicks": 3668,
-      "spend": 4183.39,
+      "clicks": 3667,
+      "spend": 4182.2,
       "conversions": 258.91,
       "conversion_value": 0.0,
       "conversions_todas": 258.91,
       "conversion_value_todas": 0.0,
-      "cpa": 16.16,
+      "cpa": 16.15,
       "decide": "SCALE",
-      "decide_reason": "CPA 16.16 <= scale_at 60"
+      "decide_reason": "CPA 16.15 <= scale_at 60"
     },
     {
       "id": "22808230053",
       "name": "[PMAX][TRAFEGO] Conheça o Belle Software (topo de funil)",
       "status": "ENABLED",
       "channel": "PERFORMANCE_MAX",
-      "budget_daily": 108.0,
+      "budget_daily": 129.6,
       "budget_resource": "customers/5616239123/campaignBudgets/14768243741",
       "budget_shared": false,
       "impressions": 23073,
-      "clicks": 3602,
-      "spend": 3603.95,
+      "clicks": 3601,
+      "spend": 3603.63,
       "conversions": 139.94,
       "conversion_value": 0.0,
       "conversions_todas": 139.94,
@@ -95,7 +95,7 @@
       "name": "[SEARCH][TRAFEGO] Branding Belle",
       "status": "ENABLED",
       "channel": "SEARCH",
-      "budget_daily": 107.0,
+      "budget_daily": 128.4,
       "budget_resource": "customers/5616239123/campaignBudgets/13936392922",
       "budget_shared": false,
       "impressions": 19406,
@@ -865,9 +865,9 @@
     }
   ],
   "totals": {
-    "spend": 19607.99,
+    "spend": 19606.48,
     "impressions": 110660,
-    "clicks": 14657,
+    "clicks": 14655,
     "conversions": 548.75
   },
   "kpi": {

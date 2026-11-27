@@ -6,7 +6,7 @@
   var S={auto:null, autoSalvando:false, lista:null, carregando:false, erro:null, filtro:'pendentes', edit:{}, envio:{}, aviso:{}, canal:null, rerender:null};
   var CAT={preco:'Preço',demonstracao:'Quer conhecer',concorrente:'Vem de outro sistema',duvida_produto:'Dúvida sobre o Belle',
     teste_gratis:'Teste grátis',acesso_teste:'Acesso ao teste',suporte:'Suporte',financeiro:'Financeiro',vagas:'Vagas',
-    parceria:'Parceria',eventos:'Eventos',fora_escopo:'Fora do escopo',reclamacao:'Reclamação',saudacao:'Saudação',
+    parceria:'Parceria',eventos:'Eventos',fora_escopo:'Fora do escopo',salao:'Salão (não atende)',reclamacao:'Reclamação',saudacao:'Saudação',
     elogio:'Elogio',spam:'Spam',outro:'Outro'};
   var PEND={novo:1,sugerido:1,erro:1};
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
@@ -111,7 +111,7 @@
     S.rerender=rerender||S.rerender;
     if(S.lista===null) carregar();
     var h='<div class="vcard"><h3>Respostas do Instagram</h3><p class="hint">Comentários e DMs do @bellesoftware chegam aqui na hora, com a resposta que o agente sugere. '
-      +(S.auto?'O agente responde sozinho os assuntos simples (saudação, elogio, teste grátis, dúvidas, preço, demonstração, vagas e fora do escopo). O resto espera você aqui.</p>':'Nada sai sozinho: revise, ajuste se quiser e envie.</p>')
+      +(S.auto?'O agente responde sozinho as DMs de assuntos simples (saudação, elogio, teste grátis, dúvidas, preço, demonstração, vagas, salão e fora do escopo). Comentários e o resto esperam você aqui.</p>':'Nada sai sozinho: revise, ajuste se quiser e envie.</p>')
       +(S.auto===null?'':'<div class="row" style="margin-top:8px"><button class="btn'+(S.auto?' primary':'')+'" data-rsp="auto" aria-pressed="'+S.auto+'"'+(S.autoSalvando?' disabled':'')+'>Responder sozinho: '+(S.auto?'ligado':'desligado')+'</button></div>');
     if(S.lista===null) return h+'<p class="empty">Carregando…</p></div>';
     if(!dona()) return h+'<p class="empty">Só a dona da Agenda vê as conversas do Instagram.</p></div>';
@@ -136,7 +136,7 @@
     var a=b.getAttribute('data-rsp'), id=b.getAttribute('data-id');
     if(a==='filtro'){ S.filtro=b.getAttribute('data-f'); redraw(); }
     else if(a==='recarregar'){ carregar(); }
-    else if(a==='auto'){ if(S.auto||confirm('Ligar o "Responder sozinho"? O agente vai responder na hora, sem você revisar, os comentários e DMs de assuntos simples.')) mudarAuto(); }
+    else if(a==='auto'){ if(S.auto||confirm('Ligar o "Responder sozinho"? O agente vai responder na hora, sem você revisar, as DMs de assuntos simples. Comentários continuam esperando você.')) mudarAuto(); }
     else if(a==='enviar') enviar(id,'comentario');
     else if(a==='dm') enviar(id,'dm');
     else if(a==='descartar') marcar(id,'descartado');

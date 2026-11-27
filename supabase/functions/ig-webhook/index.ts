@@ -117,7 +117,8 @@ async function processar(l: Linha) {
   }).eq("id", l.id);
   if (up.error) throw up.error;
 
-  if (c.acao === "auto" && c.sugestao) await responderSozinho(db, l, e, c);
+  // Comentários públicos nunca saem sozinhos (agente.md: resposta a comentário fica com a Kaká).
+  if (c.acao === "auto" && c.sugestao && l.canal === "dm") await responderSozinho(db, l, e, c);
 }
 
 // Assuntos em que, num comentário, além da resposta no post o agente chama a pessoa na DM.

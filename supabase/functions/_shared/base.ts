@@ -2,7 +2,31 @@
 // do Instagram Belle", 19/11/2026). BASE vira a instrução da IA; MODELOS são as respostas fixas por assunto,
 // usadas quando não há chave da IA. Para mudar o texto, edite aqui (e o Doc, para os dois ficarem iguais).
 
-export const BASE = `## 1. Objetivo da IA
+export const BASE = `## 0. REGRAS QUE VALEM MAIS (agente.md da Kaká, 27/11/2026)
+Se algo abaixo, nas seções 1 a 7, contradisser esta seção, vale esta seção.
+Tom e marca:
+- Fale como o Belle. Nunca diga que é IA ou assistente virtual. Não cite nomes de pessoas da equipe.
+- Trate o produto como "o Belle" ou "o Belle Software", nunca "a Belle".
+- DM: coloquial, objetiva, frases curtas, uma pergunta por vez, sem emoji. Chame pelo primeiro nome quando souber; se não souber, comece com "Oi!".
+- Comentário público: tom sóbrio e institucional, muito curto, sem emoji, sem preço e sem link. Palmas, "lindo", "amei" e reações sem pergunta não pedem resposta. Pergunta comercial em comentário: "Oi, [nome]. Te respondemos na DM."
+Proibido no texto que sai:
+- Qualquer preço, faixa de preço, desconto, condição comercial, duração do teste grátis ("14 dias") ou link na DM. Encaminhe ao comercial.
+- Superlativos ("o melhor", "nº 1", "mais completo", "único", "revolucionário", "garantido"), "revolucione", "transforme", e "simples", "fácil" ou "rápido" para o sistema.
+- Dizer que um módulo adicional está "incluso", "no plano" ou "grátis". Prazo de implantação.
+- Nomes internos de IA (Gestor IA, IA Básica, IA Avançada, Agenda Inteligente). Use só: IA no Prontuário, IA no Atendimento, IA no CRM, IA para Relatórios, IA no Financeiro, Assistente de Gestão com IA.
+- A palavra "botox" (use "toxina botulínica"). Citar ou comparar com concorrente. Casos de cliente, depoimentos ou número de clientes. O único dado institucional é que o Belle existe desde 2009, e só se perguntarem.
+- Pedir ou repetir dado sensível (senha, código, CPF, cartão, dados de saúde). Se a pessoa mandar, oriente a não usar o Instagram para isso.
+Qualificação e encaminhamento:
+- Conversa que toca receita (preço, plano, demonstração, contratar, testar, app, cadastro para conhecer): pergunte "Me conta quantos profissionais têm agenda aí?" se ainda não souber, e diga que encaminha para o time comercial. Não feche venda na DM.
+- Salão de beleza, manicure, nail designer ou barbearia: o Belle não atende. Responda com gentileza e não venda.
+- Autônomo com 1 profissional e sem CNPJ: gentil, sem empurrar venda.
+- HOF, odontologia e dermatologia: não recuse; qualifique e encaminhe.
+- Já é cliente (acesso, mensalidade, erro): não venda, encaminhe ao suporte, sem inventar solução ou prazo.
+- "Tem app?": não detalhe plano nem prometa que inclui; ofereça encaminhar ao comercial.
+- "Não consegui fazer o cadastro": pergunte antes se era para conhecer o Belle ou para acessar uma conta que já usa.
+Sempre escale para a Kaká, sem resposta automática: reclamação, imprensa, jurídico, cliente irritado, cancelamento, cobrança, denúncia, qualquer dúvida.
+
+## 1. Objetivo da IA
 - Responder rápido e com clareza quem chama no Direct.
 - Levar quem tem interesse comercial para o time de vendas no WhatsApp, já com o contexto da clínica.
 - Resolver ou encaminhar dúvidas de teste grátis, cadastro e clientes atuais.
@@ -227,76 +251,78 @@ Clínicas menores ou profissionais autônomas são atendidas com a mesma educaç
 Mensagem de transferência:
 Vou passar sua mensagem para uma pessoa do nosso time, que te responde por aqui em breve. [A CONFIRMAR: prazo de resposta da equipe]`;
 
-const UTM = "utm_source=instagram&utm_medium=direct&utm_campaign=ia_atendimento&utm_content=";
-const TESTE = (c: string) => "https://app.bellesoftware.com.br/testemedtp.html?" + UTM + c;
-const PLANOS = "https://www.bellesoftware.com.br/precos/?" + UTM + "preco";
-const COMERCIAL = "wa.me/551132305180";
 const SUPORTE = "WhatsApp wa.me/5549999010359 ou e-mail suporte@geinfo.com.br";
 
-/** Resposta fixa por assunto. dm: texto para o Direct. comentario: resposta pública curta embaixo do comentário. */
+/** Resposta fixa por assunto, no tom do agente.md (27/11): sem emoji, sem preço, sem duração de teste, sem link na DM.
+ * dm: texto para o Direct. comentario: resposta pública curta; vazio quando o comentário não pede resposta. */
+const DM_COMENTARIO = "Oi, [nome]. Te respondemos na DM.";
 export const MODELOS: Record<string, { dm: string; comentario: string }> = {
   preco: {
-    dm: `Oi, [nome]! Tudo bem? Os planos do Belle variam conforme o número de agendas e os módulos que a sua clínica precisa. Você pode ver os planos aqui: ${PLANOS}\nE pra montar a proposta certinha: quantos profissionais atendem na sua clínica hoje?`,
-    comentario: "Oi, [nome]! Os planos variam conforme o tamanho da clínica. Te chamamos no Direct para passar tudo certinho 💜",
+    dm: "Oi, [nome]! O valor depende do porte da clínica e do que vocês precisam no dia a dia. Me conta quantos profissionais têm agenda aí que eu te encaminho pro time comercial te passar os detalhes?",
+    comentario: DM_COMENTARIO,
   },
   demonstracao: {
-    dm: "Oi, [nome]! Que bom que você quer conhecer o Belle. Ele reúne agenda, financeiro, CRM e WhatsApp da clínica em um só lugar.\nVocê já usa algum sistema hoje ou controla tudo por planilha e WhatsApp?",
-    comentario: "Oi, [nome]! Que bom que você quer conhecer o Belle. Te chamamos no Direct para marcar uma demonstração 💜",
+    dm: "Oi, [nome]! Que bom que você quer conhecer o Belle. Me conta quantos profissionais têm agenda aí que eu te encaminho pro time comercial te mostrar o sistema na rotina da sua clínica?",
+    comentario: DM_COMENTARIO,
   },
   concorrente: {
-    dm: `Oi, [nome]! Que bom que você está pensando no Belle. O que não está funcionando hoje no seu sistema? Assim nosso time já te mostra como fica no Belle: ${COMERCIAL}`,
-    comentario: "Oi, [nome]! Te chamamos no Direct para entender o que você precisa e mostrar o Belle 💜",
+    dm: "Oi, [nome]! Me conta o que você está buscando para a gestão da clínica e quantos profissionais têm agenda aí? Te encaminho pro time comercial.",
+    comentario: DM_COMENTARIO,
   },
   duvida_produto: {
-    dm: `Oi, [nome]! Ótima pergunta. O Belle é moldado de acordo com a especialidade da clínica e reúne agenda, prontuário, financeiro, CRM e WhatsApp em um só lugar. O jeito mais rápido de ver isso na sua rotina é uma demonstração com nosso time: ${COMERCIAL}`,
-    comentario: "Oi, [nome]! Ótima pergunta. Te respondemos no Direct com os detalhes 💜",
+    dm: "Oi, [nome]! Boa pergunta. O Belle reúne agenda, prontuário, financeiro, CRM, marketing e indicadores da clínica num mesmo ambiente. Me conta quantos profissionais têm agenda aí que eu te encaminho pro time comercial te mostrar como fica na sua rotina?",
+    comentario: DM_COMENTARIO,
   },
   teste_gratis: {
-    dm: `Oi, [nome]! Você pode testar o Belle grátis por 14 dias, sem cartão de crédito: ${TESTE("geral")}`,
-    comentario: "Oi, [nome]! Dá para testar grátis por 14 dias, sem cartão. Te mandamos o link no Direct 💜",
+    dm: "Oi, [nome]! Dá para conhecer o Belle por dentro, sim. Me conta quantos profissionais têm agenda aí que eu te encaminho pro time comercial te passar o caminho?",
+    comentario: DM_COMENTARIO,
   },
   acesso_teste: {
-    dm: `Poxa, [nome], vamos resolver isso! Você recebeu o e-mail com o acesso? Confere também a caixa de spam. Se continuar sem funcionar, fala com nosso suporte pelo ${SUPORTE} que eles te ajudam.`,
-    comentario: "Poxa, [nome], vamos resolver isso! Te chamamos no Direct 💜",
+    dm: "Oi, [nome]! Vi que você não conseguiu fazer o cadastro. Era pra conhecer o Belle ou pra acessar uma conta que você já usa?",
+    comentario: DM_COMENTARIO,
   },
   suporte: {
-    dm: `Oi, [nome]! Nosso suporte te ajuda rapidinho pelo chat dentro do sistema (Ajuda > Central do Suporte), pelo ${SUPORTE}. Perguntas frequentes: https://ajuda.bellesoftware.com.br/article-categories/duvidas-sobre-o-sistema/`,
-    comentario: "Oi, [nome]! Nosso suporte te ajuda rapidinho. Te chamamos no Direct com o contato 💜",
+    dm: `Oi, [nome]! Para assunto de conta e acesso, o caminho é o nosso suporte: ${SUPORTE}. Eles te atendem por aí.`,
+    comentario: DM_COMENTARIO,
   },
   financeiro: {
-    dm: "Oi, [nome]! Para assuntos de pagamento, o time financeiro te atende pelo WhatsApp wa.me/554984228400 ou pelo e-mail cobranca@geinfo.com.br.",
-    comentario: "Oi, [nome]! Te chamamos no Direct com o contato do nosso financeiro 💜",
+    dm: "Oi, [nome]! Para assuntos de pagamento, o time financeiro te atende pelo WhatsApp (49) 8422-8400 ou pelo e-mail cobranca@geinfo.com.br.",
+    comentario: DM_COMENTARIO,
   },
   vagas: {
-    dm: "Oi, [nome]! Obrigada pelo interesse em fazer parte do time. Nossas vagas abertas ficam todas aqui: https://atracaodetalentos.totvs.app/vagasgeinffo",
-    comentario: "Oi, [nome]! Obrigada pelo interesse. Nossas vagas ficam em atracaodetalentos.totvs.app/vagasgeinffo 💜",
+    dm: "Oi, [nome]! Obrigada pelo interesse em fazer parte do time. As vagas abertas ficam em atracaodetalentos.totvs.app/vagasgeinffo",
+    comentario: "",
   },
   parceria: {
     dm: "Oi, [nome]! Obrigada pelo contato e pela proposta. Vou passar para o time responsável, que avalia e retorna se fizer sentido.",
-    comentario: "Oi, [nome]! Obrigada pelo contato. Te chamamos no Direct 💜",
+    comentario: DM_COMENTARIO,
   },
   eventos: {
-    dm: "Oi, [nome]! Obrigada pelo interesse. Vou passar sua mensagem para uma pessoa do nosso time, que te responde por aqui em breve.",
-    comentario: "Oi, [nome]! Te chamamos no Direct 💜",
+    dm: "Oi, [nome]! Obrigada pelo interesse. Vou passar sua mensagem para o nosso time, que te responde por aqui.",
+    comentario: DM_COMENTARIO,
   },
   fora_escopo: {
-    dm: "Oi, [nome]! Acho que houve uma confusão: a Belle Software é um sistema de gestão para clínicas de estética, não fazemos atendimentos. Se você tem uma clínica e quer conhecer o sistema, posso te ajudar!",
-    comentario: "Oi, [nome]! A Belle Software é um sistema de gestão para clínicas, não fazemos atendimentos. Se você tem uma clínica, chama a gente no Direct 💜",
+    dm: "Oi, [nome]! Acho que houve uma confusão: o Belle é um sistema de gestão para clínicas, a gente não faz atendimentos. Se você tem uma clínica e quer conhecer o sistema, é só me contar.",
+    comentario: "",
+  },
+  salao: {
+    dm: "Oi! Obrigada pelo interesse. O Belle é um sistema feito para clínicas, então a gente não atende salão de beleza. Se no futuro vocês tiverem uma operação de clínica, é só chamar de novo.",
+    comentario: "",
   },
   reclamacao: {
-    dm: "Oi, [nome]! Sentimos muito por isso. Vou passar sua mensagem para uma pessoa do nosso time, que te responde por aqui em breve.",
-    comentario: "Oi, [nome]! Sentimos muito por isso. Te chamamos no Direct para resolver 💜",
+    dm: "Oi, [nome]! Sentimos muito por isso. Vou passar sua mensagem para o nosso time, que te responde por aqui.",
+    comentario: DM_COMENTARIO,
   },
   saudacao: {
-    dm: "Oi, [nome]! Tudo bem? Aqui é a assistente da Belle Software. Como posso te ajudar hoje?",
-    comentario: "Oi, [nome]! Tudo bem? Como podemos te ajudar? 💜",
+    dm: "Oi, [nome]! Me conta o que você está buscando: conhecer o Belle, ver uma demonstração ou tirar alguma dúvida? Te encaminho pra quem pode te atender.",
+    comentario: "",
   },
   elogio: {
-    dm: "Oi, [nome]! Que bom ler isso, obrigada! Posso te ajudar com alguma coisa sobre o Belle?",
-    comentario: "Que bom que você gostou, [nome]! 💜",
+    dm: "Oi, [nome]! Obrigada pelo carinho. Posso te ajudar com alguma coisa sobre o Belle?",
+    comentario: "",
   },
   outro: {
-    dm: "Oi, [nome]! Tudo bem? Aqui é a assistente da Belle Software. Como posso te ajudar hoje?",
+    dm: "Oi, [nome]! Me conta o que você está buscando: conhecer o Belle, ver uma demonstração ou tirar alguma dúvida? Te encaminho pra quem pode te atender.",
     comentario: "",
   },
 };

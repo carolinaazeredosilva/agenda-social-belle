@@ -28,6 +28,7 @@ env:
   AGENTE_LINK_TESTE: ${{ vars.AGENTE_LINK_TESTE }}
   AGENTE_WHATSAPP: ${{ vars.AGENTE_WHATSAPP }}
   AGENTE_SUPORTE: ${{ vars.AGENTE_SUPORTE }}
+  AGENTE_IGNORAR: ${{ vars.AGENTE_IGNORAR }}
 
 jobs:
   publicar:
@@ -63,7 +64,7 @@ jobs:
       - name: Guardar as chaves no Supabase
         run: |
           f=$(mktemp)
-          for s in IG_RESPOSTAS_TOKEN META_APP_SECRET IG_VERIFY_TOKEN ANTHROPIC_API_KEY IG_USER_ID AGENTE_LINK_TESTE AGENTE_WHATSAPP AGENTE_SUPORTE; do
+          for s in IG_RESPOSTAS_TOKEN META_APP_SECRET IG_VERIFY_TOKEN ANTHROPIC_API_KEY IG_USER_ID AGENTE_LINK_TESTE AGENTE_WHATSAPP AGENTE_SUPORTE AGENTE_IGNORAR; do
             if [ -n "${!s}" ]; then printf '%s=%s\n' "$s" "${!s}" >> "$f"; fi
           done
           supabase secrets set --project-ref "$PROJECT_REF" --env-file "$f" --yes >/dev/null

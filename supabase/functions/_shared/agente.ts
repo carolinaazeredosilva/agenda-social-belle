@@ -120,15 +120,15 @@ export async function assinaturaOk(corpo: string, cabecalho: string | null): Pro
 
 export const CATEGORIAS = [
   "preco", "demonstracao", "concorrente", "duvida_produto", "teste_gratis", "acesso_teste",
-  "suporte", "financeiro", "vagas", "parceria", "eventos", "fora_escopo", "reclamacao",
+  "suporte", "financeiro", "vagas", "parceria", "eventos", "fora_escopo", "salao", "reclamacao",
   "saudacao", "elogio", "spam", "outro",
 ] as const;
 type Categoria = typeof CATEGORIAS[number];
 
-// O que sai sozinho quando o "Responder sozinho" está ligado na aba Respostas, e o que espera a Kaká.
+// O que sai sozinho (só DMs) quando o "Responder sozinho" está ligado na aba Respostas, e o que espera a Kaká.
 const ACAO: Record<Categoria, "auto" | "caixa" | "ignorar"> = {
   saudacao: "auto", elogio: "auto", teste_gratis: "auto", duvida_produto: "auto", preco: "auto",
-  demonstracao: "auto", vagas: "auto", fora_escopo: "auto",
+  demonstracao: "auto", vagas: "auto", fora_escopo: "auto", salao: "auto",
   concorrente: "caixa", acesso_teste: "caixa", suporte: "caixa", financeiro: "caixa", parceria: "caixa",
   eventos: "caixa", reclamacao: "caixa", outro: "caixa",
   spam: "ignorar",
@@ -171,7 +171,8 @@ Categorias (campo categoria):
 - vagas: quer trabalhar na Belle, currículo (5.6).
 - parceria: proposta de parceria, fornecedor, agência, imprensa, influenciador (5.7).
 - eventos: feira, estande, ingresso, cortesia (5.8).
-- fora_escopo: achou que a Belle é uma clínica, quer agendar procedimento (5.9).
+- fora_escopo: achou que o Belle é uma clínica, quer agendar procedimento (5.9).
+- salao: é salão de beleza, manicure, nail designer ou barbearia (o Belle não atende).
 - reclamacao: insatisfação, tom irritado, cancelamento (seção 7).
 - saudacao: só "oi", "bom dia", resposta a story sem pergunta (5.10).
 - elogio: elogio, emoji, "amei".
@@ -179,10 +180,11 @@ Categorias (campo categoria):
 - outro: qualquer outra coisa.
 
 Regras da resposta (campo sugestao):
-- DM: siga o fluxo e a resposta modelo da intenção, adaptando à mensagem. Use os links com UTM da base.
-- Comentário público: no máximo 2 frases curtas, sem links longos e sem dados de contato pessoais. Para assunto comercial ou de cliente, diga que vai chamar no Direct.
+- Siga primeiro a seção 0 da base (agente.md da Kaká). Ela vale mais que o resto.
+- DM: siga o fluxo da intenção, adaptando à mensagem, sem link, sem preço e sem duração de teste.
+- Comentário público: no máximo 1 frase, sóbria, sem emoji e sem link. Para assunto comercial ou de cliente: "Oi, [nome]. Te respondemos na DM." Palmas, elogio e reação sem pergunta: sugestao vazia.
 - Use o primeiro nome da pessoa só se ele vier no contexto. Se não vier, comece com "Oi!".
-- Nunca use travessão. No máximo um emoji. Nunca cite valores.
+- Nunca use travessão nem emoji. Nunca cite valores.
 - Nunca afirme o que está marcado como [A CONFIRMAR]. Nesses casos use a mensagem de transferência da seção 7, sem o trecho entre colchetes.
 - Spam: sugestao vazia.
 - resumo: uma frase dizendo o que a pessoa quer, para a gestora ler rápido.
@@ -203,7 +205,14 @@ const ESQUEMA = {
 
 let ia: Anthropic | null = null;
 
+// Testes internos: nunca respondidos. Os @ ficam na variável AGENTE_IGNORAR (separados por vírgula), fora do repositório.
+const IGNORAR = env("AGENTE_IGNORAR").toLowerCase().split(/[,\s]+/).map((x) => x.replace(/^@/, "")).filter(Boolean);
+function testeInterno(e: Entrada): boolean {
+  return (e.texto || "").toLowerCase().includes("*sistema:*") || (!!e.autor && IGNORAR.includes(e.autor.toLowerCase().replace(/^@/, "")));
+}
+
 export async function classificar(e: Entrada): Promise<Classificacao> {
+  if (testeInterno(e)) return { categoria: "spam", acao: "ignorar", resumo: "Teste interno, ignorado.", sugestao: "", urgente: false, classificado_por: "regras" };
   if (!CFG.anthropicKey) return regras(e);
   ia ??= new Anthropic({ apiKey: CFG.anthropicKey });
   const contexto = [
@@ -232,7 +241,7 @@ export async function classificar(e: Entrada): Promise<Classificacao> {
       categoria,
       acao: ACAO[categoria],
       resumo: String(j.resumo || "").slice(0, 300),
-      sugestao: categoria === "spam" ? "" : String(j.sugestao || "").replace(/\s*[—–]\s*/g, ", ").slice(0, 1000),
+      sugestao: categoria === "spam" ? "" : String(j.sugestao || "").replace(/\s*[—–]\s*/g, ", ").replace(/\p{Extended_Pictographic}\uFE0F?/gu, "").trim().slice(0, 1000),
       urgente: !!j.urgente,
       classificado_por: "ia",
     };
@@ -256,6 +265,7 @@ export function regras(e: Entrada): Classificacao {
   else if (tem("vaga", "curriculo", "trabalhar com voces", "trabalhar na", "contratando")) c = "vagas";
   else if (tem("parceria", "proposta", "fornecedor", "agencia", "imprensa", "influenc", "collab", "storymaker", "fotografia")) c = "parceria";
   else if (tem("feira", "estande", "stand", "ingresso", "cortesia", "evento")) c = "eventos";
+  else if (tem("salao", "manicure", "nail", "barbearia", "cabeleireir")) c = "salao";
   else if (tem("endereco de voces", "totalpass", "gympass", "agendar procedimento", "fazer procedimento", "atende convenio")) c = "fora_escopo";
   else if (tem("trinks", "simples agenda", "clinicorp", "outro sistema", "trocar de sistema", "migrar")) c = "concorrente";
   else if (tem("teste", "testar", "gratis", "14 dias")) c = "teste_gratis";

@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-26T13:30:10-03:00",
+  "generated_at": "2026-11-27T07:48:31-03:00",
   "property_id": "322913055",
   "period": {
-    "start": "2026-10-27",
-    "end": "2026-11-25",
+    "start": "2026-10-28",
+    "end": "2026-11-26",
     "days": 30
   },
   "key_events": [
@@ -23,13 +23,13 @@
       "medium": "(none)",
       "campaign": "(direct)",
       "grupo": "direto",
-      "sessions": 10572,
-      "engaged_sessions": 3354,
-      "users": 4161,
-      "new_users": 3312,
-      "key_events": 580,
+      "sessions": 10636,
+      "engaged_sessions": 3320,
+      "users": 4209,
+      "new_users": 3360,
+      "key_events": 572,
       "eventos": {
-        "Clique_teste_gratis": 580
+        "Clique_teste_gratis": 572
       }
     },
     {
@@ -37,13 +37,13 @@
       "medium": "cpc",
       "campaign": "[SEARCH][TRAFEGO] Branding Belle",
       "grupo": "google_pago",
-      "sessions": 8011,
-      "engaged_sessions": 2404,
-      "users": 2913,
-      "new_users": 1878,
-      "key_events": 569,
+      "sessions": 8000,
+      "engaged_sessions": 2362,
+      "users": 2907,
+      "new_users": 1868,
+      "key_events": 567,
       "eventos": {
-        "Clique_teste_gratis": 569
+        "Clique_teste_gratis": 567
       }
     },
     {
@@ -51,13 +51,13 @@
       "medium": "organic",
       "campaign": "(organic)",
       "grupo": "busca_organica",
-      "sessions": 6483,
-      "engaged_sessions": 1981,
-      "users": 1610,
-      "new_users": 832,
-      "key_events": 412,
+      "sessions": 6528,
+      "engaged_sessions": 1999,
+      "users": 1609,
+      "new_users": 828,
+      "key_events": 426,
       "eventos": {
-        "Clique_teste_gratis": 412
+        "Clique_teste_gratis": 426
       }
     },
     {
@@ -65,13 +65,13 @@
       "medium": "cpc",
       "campaign": "[PMAX][LEADS] Belle - Cadastro no trial",
       "grupo": "google_pago",
-      "sessions": 3733,
-      "engaged_sessions": 2081,
-      "users": 2987,
-      "new_users": 2784,
-      "key_events": 96,
+      "sessions": 3640,
+      "engaged_sessions": 2051,
+      "users": 2939,
+      "new_users": 2742,
+      "key_events": 94,
       "eventos": {
-        "Clique_teste_gratis": 96
+        "Clique_teste_gratis": 94
       }
     },
     {
@@ -79,13 +79,13 @@
       "medium": "cpc",
       "campaign": "[PMAX][TRAFEGO] Conheça o Belle Software (topo de funil)",
       "grupo": "google_pago",
-      "sessions": 3379,
-      "engaged_sessions": 1499,
-      "users": 2713,
-      "new_users": 2497,
-      "key_events": 1510,
+      "sessions": 3332,
+      "engaged_sessions": 1463,
+      "users": 2655,
+      "new_users": 2438,
+      "key_events": 1423,
       "eventos": {
-        "Clique_teste_gratis": 1510
+        "Clique_teste_gratis": 1423
       }
     },
     {
@@ -93,10 +93,10 @@
       "medium": "organic",
       "campaign": "(organic)",
       "grupo": "busca_organica",
-      "sessions": 1914,
+      "sessions": 1909,
       "engaged_sessions": 653,
-      "users": 542,
-      "new_users": 279,
+      "users": 535,
+      "new_users": 281,
       "key_events": 90,
       "eventos": {
         "Clique_teste_gratis": 90
@@ -107,13 +107,13 @@
       "medium": "cpc",
       "campaign": "branding",
       "grupo": "google_pago",
-      "sessions": 1387,
-      "engaged_sessions": 396,
-      "users": 187,
-      "new_users": 51,
-      "key_events": 12,
+      "sessions": 1378,
+      "engaged_sessions": 385,
+      "users": 183,
+      "new_users": 50,
+      "key_events": 14,
       "eventos": {
-        "Clique_teste_gratis": 12
+        "Clique_teste_gratis": 14
       }
     },
     {
@@ -121,8 +121,8 @@
       "medium": "referral",
       "campaign": "(referral)",
       "grupo": "outros",
-      "sessions": 1092,
-      "engaged_sessions": 306,
+      "sessions": 1098,
+      "engaged_sessions": 316,
       "users": 95,
       "new_users": 0,
       "key_events": 22,
@@ -135,13 +135,13 @@
       "medium": "[01][IG][ABERTO]",
       "campaign": "[29/04][LEADS - LP TESTE GRÁTIS][ABO]",
       "grupo": "outros",
-      "sessions": 952,
-      "engaged_sessions": 401,
-      "users": 895,
-      "new_users": 848,
-      "key_events": 36,
+      "sessions": 875,
+      "engaged_sessions": 367,
+      "users": 821,
+      "new_users": 778,
+      "key_events": 34,
       "eventos": {
-        "Clique_teste_gratis": 36
+        "Clique_teste_gratis": 34
       }
     },
     {
@@ -149,10 +149,10 @@
       "medium": "cpc",
       "campaign": "(not set)",
       "grupo": "google_pago",
-      "sessions": 760,
-      "engaged_sessions": 214,
-      "users": 91,
-      "new_users": 23,
+      "sessions": 725,
+      "engaged_sessions": 207,
+      "users": 87,
+      "new_users": 21,
       "key_events": 8,
       "eventos": {
         "Clique_teste_gratis": 8
@@ -163,10 +163,10 @@
       "medium": "[04][ADV]",
       "campaign": "[03/02][LEADS - LP AUTOMAÇÃO]",
       "grupo": "outros",
-      "sessions": 571,
-      "engaged_sessions": 270,
-      "users": 536,
-      "new_users": 503,
+      "sessions": 526,
+      "engaged_sessions": 254,
+      "users": 493,
+      "new_users": 466,
       "key_events": 22,
       "eventos": {
         "Clique_teste_gratis": 22
@@ -175,26 +175,12 @@
     {
       "source": "google",
       "medium": "cpc",
-      "campaign": "[01/07][GERAÇÃO DE DEMANDA][BELLE SOFTWARE]ALTERADO 03/09",
-      "grupo": "google_pago",
-      "sessions": 366,
-      "engaged_sessions": 125,
-      "users": 332,
-      "new_users": 305,
-      "key_events": 50,
-      "eventos": {
-        "Clique_teste_gratis": 50
-      }
-    },
-    {
-      "source": "google",
-      "medium": "cpc",
       "campaign": "[SEARCH][LEADS] Belle - Cadastro no trial",
       "grupo": "google_pago",
-      "sessions": 358,
-      "engaged_sessions": 217,
-      "users": 316,
-      "new_users": 311,
+      "sessions": 336,
+      "engaged_sessions": 207,
+      "users": 300,
+      "new_users": 293,
       "key_events": 8,
       "eventos": {
         "Clique_teste_gratis": 8
@@ -203,12 +189,26 @@
     {
       "source": "google",
       "medium": "cpc",
+      "campaign": "[01/07][GERAÇÃO DE DEMANDA][BELLE SOFTWARE]ALTERADO 03/09",
+      "grupo": "google_pago",
+      "sessions": 333,
+      "engaged_sessions": 115,
+      "users": 306,
+      "new_users": 282,
+      "key_events": 44,
+      "eventos": {
+        "Clique_teste_gratis": 44
+      }
+    },
+    {
+      "source": "google",
+      "medium": "cpc",
       "campaign": "[SEARCH][LEADS] Belle - Cadastro no trial #2",
       "grupo": "google_pago",
-      "sessions": 339,
-      "engaged_sessions": 209,
-      "users": 312,
-      "new_users": 307,
+      "sessions": 320,
+      "engaged_sessions": 199,
+      "users": 294,
+      "new_users": 286,
       "key_events": 8,
       "eventos": {
         "Clique_teste_gratis": 8
@@ -219,8 +219,8 @@
       "medium": "cpc",
       "campaign": "pmax_belle",
       "grupo": "google_pago",
-      "sessions": 249,
-      "engaged_sessions": 59,
+      "sessions": 246,
+      "engaged_sessions": 58,
       "users": 54,
       "new_users": 12,
       "key_events": 2,
@@ -233,9 +233,9 @@
       "medium": "referral",
       "campaign": "(referral)",
       "grupo": "outros",
-      "sessions": 193,
+      "sessions": 194,
       "engaged_sessions": 71,
-      "users": 50,
+      "users": 49,
       "new_users": 26,
       "key_events": 6,
       "eventos": {
@@ -243,17 +243,31 @@
       }
     },
     {
+      "source": "(not set)",
+      "medium": "(not set)",
+      "campaign": "(not set)",
+      "grupo": "outros",
+      "sessions": 166,
+      "engaged_sessions": 0,
+      "users": 145,
+      "new_users": 1,
+      "key_events": 14,
+      "eventos": {
+        "Clique_teste_gratis": 14
+      }
+    },
+    {
       "source": "(data not available)",
       "medium": "(data not available)",
       "campaign": "(cross-network)",
       "grupo": "outros",
-      "sessions": 158,
-      "engaged_sessions": 97,
-      "users": 107,
-      "new_users": 91,
-      "key_events": 46,
+      "sessions": 154,
+      "engaged_sessions": 91,
+      "users": 101,
+      "new_users": 87,
+      "key_events": 34,
       "eventos": {
-        "Clique_teste_gratis": 46
+        "Clique_teste_gratis": 34
       }
     },
     {
@@ -271,17 +285,17 @@
       }
     },
     {
-      "source": "(not set)",
-      "medium": "(not set)",
-      "campaign": "(not set)",
-      "grupo": "outros",
-      "sessions": 107,
-      "engaged_sessions": 0,
-      "users": 96,
-      "new_users": 1,
-      "key_events": 10,
+      "source": "instagram",
+      "medium": "paid_social",
+      "campaign": "leads_lp_automacao",
+      "grupo": "meta_pago",
+      "sessions": 116,
+      "engaged_sessions": 30,
+      "users": 116,
+      "new_users": 112,
+      "key_events": 2,
       "eventos": {
-        "Clique_teste_gratis": 10
+        "Clique_teste_gratis": 2
       }
     },
     {
@@ -303,10 +317,10 @@
       "medium": "ai-assistant",
       "campaign": "(ai-assistant)",
       "grupo": "outros",
-      "sessions": 95,
-      "engaged_sessions": 61,
-      "users": 73,
-      "new_users": 68,
+      "sessions": 97,
+      "engaged_sessions": 62,
+      "users": 74,
+      "new_users": 69,
       "key_events": 52,
       "eventos": {
         "Clique_teste_gratis": 52
@@ -317,10 +331,10 @@
       "medium": "cpc",
       "campaign": "[SEARCH][LEADS][BELLE CHAT]",
       "grupo": "google_pago",
-      "sessions": 86,
-      "engaged_sessions": 47,
-      "users": 75,
-      "new_users": 59,
+      "sessions": 93,
+      "engaged_sessions": 50,
+      "users": 81,
+      "new_users": 65,
       "key_events": 0,
       "eventos": {}
     },
@@ -329,9 +343,9 @@
       "medium": "referral",
       "campaign": "(referral)",
       "grupo": "outros",
-      "sessions": 74,
-      "engaged_sessions": 26,
-      "users": 38,
+      "sessions": 72,
+      "engaged_sessions": 25,
+      "users": 35,
       "new_users": 26,
       "key_events": 0,
       "eventos": {}
@@ -341,24 +355,10 @@
       "medium": "referral",
       "campaign": "(referral)",
       "grupo": "outros",
-      "sessions": 70,
+      "sessions": 66,
       "engaged_sessions": 22,
       "users": 30,
       "new_users": 6,
-      "key_events": 2,
-      "eventos": {
-        "Clique_teste_gratis": 2
-      }
-    },
-    {
-      "source": "instagram",
-      "medium": "paid_social",
-      "campaign": "leads_lp_automacao",
-      "grupo": "meta_pago",
-      "sessions": 70,
-      "engaged_sessions": 18,
-      "users": 70,
-      "new_users": 70,
       "key_events": 2,
       "eventos": {
         "Clique_teste_gratis": 2
@@ -369,26 +369,66 @@
       "medium": "social",
       "campaign": "(referral)",
       "grupo": "meta_organico",
-      "sessions": 60,
-      "engaged_sessions": 45,
-      "users": 54,
-      "new_users": 51,
-      "key_events": 28,
+      "sessions": 59,
+      "engaged_sessions": 44,
+      "users": 53,
+      "new_users": 50,
+      "key_events": 26,
       "eventos": {
-        "Clique_teste_gratis": 28
+        "Clique_teste_gratis": 26
       }
+    },
+    {
+      "source": "instagram",
+      "medium": "paid_social",
+      "campaign": "leads_lp_teste_gratis_abo",
+      "grupo": "meta_pago",
+      "sessions": 50,
+      "engaged_sessions": 20,
+      "users": 47,
+      "new_users": 42,
+      "key_events": 2,
+      "eventos": {
+        "Clique_teste_gratis": 2
+      }
+    },
+    {
+      "source": "instagram",
+      "medium": "paid_social",
+      "campaign": "leads_lp_hof_cbo",
+      "grupo": "meta_pago",
+      "sessions": 48,
+      "engaged_sessions": 22,
+      "users": 44,
+      "new_users": 40,
+      "key_events": 0,
+      "eventos": {}
     },
     {
       "source": "app.bellesoftware.com.br",
       "medium": "referral",
       "campaign": "(referral)",
       "grupo": "outros",
-      "sessions": 46,
-      "engaged_sessions": 20,
-      "users": 23,
-      "new_users": 17,
+      "sessions": 41,
+      "engaged_sessions": 18,
+      "users": 21,
+      "new_users": 15,
       "key_events": 0,
       "eventos": {}
+    },
+    {
+      "source": "facebook.com",
+      "medium": "referral",
+      "campaign": "(referral)",
+      "grupo": "meta_organico",
+      "sessions": 38,
+      "engaged_sessions": 29,
+      "users": 38,
+      "new_users": 38,
+      "key_events": 2,
+      "eventos": {
+        "Clique_teste_gratis": 2
+      }
     },
     {
       "source": "instagram",
@@ -401,46 +441,6 @@
       "new_users": 32,
       "key_events": 0,
       "eventos": {}
-    },
-    {
-      "source": "instagram",
-      "medium": "paid_social",
-      "campaign": "leads_lp_hof_cbo",
-      "grupo": "meta_pago",
-      "sessions": 36,
-      "engaged_sessions": 16,
-      "users": 32,
-      "new_users": 29,
-      "key_events": 0,
-      "eventos": {}
-    },
-    {
-      "source": "instagram",
-      "medium": "paid_social",
-      "campaign": "leads_lp_teste_gratis_abo",
-      "grupo": "meta_pago",
-      "sessions": 36,
-      "engaged_sessions": 15,
-      "users": 33,
-      "new_users": 30,
-      "key_events": 2,
-      "eventos": {
-        "Clique_teste_gratis": 2
-      }
-    },
-    {
-      "source": "facebook.com",
-      "medium": "referral",
-      "campaign": "(referral)",
-      "grupo": "meta_organico",
-      "sessions": 35,
-      "engaged_sessions": 27,
-      "users": 35,
-      "new_users": 35,
-      "key_events": 2,
-      "eventos": {
-        "Clique_teste_gratis": 2
-      }
     },
     {
       "source": "META_ADS",
@@ -471,9 +471,9 @@
       "medium": "referral",
       "campaign": "(referral)",
       "grupo": "outros",
-      "sessions": 26,
+      "sessions": 25,
       "engaged_sessions": 15,
-      "users": 19,
+      "users": 18,
       "new_users": 15,
       "key_events": 10,
       "eventos": {
@@ -486,9 +486,59 @@
       "campaign": "ia_estetica",
       "grupo": "google_pago",
       "sessions": 23,
-      "engaged_sessions": 8,
+      "engaged_sessions": 7,
       "users": 6,
       "new_users": 0,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "google",
+      "medium": "cpc",
+      "campaign": "",
+      "grupo": "google_pago",
+      "sessions": 22,
+      "engaged_sessions": 8,
+      "users": 17,
+      "new_users": 1,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "google",
+      "medium": "cpc",
+      "campaign": "[SEARCH][LEADS][ODONTOGRAMA]",
+      "grupo": "google_pago",
+      "sessions": 22,
+      "engaged_sessions": 8,
+      "users": 19,
+      "new_users": 19,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "instagram",
+      "medium": "paid_social",
+      "campaign": "leads_lp_black_friday_abo",
+      "grupo": "meta_pago",
+      "sessions": 20,
+      "engaged_sessions": 11,
+      "users": 16,
+      "new_users": 10,
+      "key_events": 2,
+      "eventos": {
+        "Clique_teste_gratis": 2
+      }
+    },
+    {
+      "source": "instagram",
+      "medium": "paid_social",
+      "campaign": "leads_lp_odontograma_cbo",
+      "grupo": "meta_pago",
+      "sessions": 20,
+      "engaged_sessions": 6,
+      "users": 19,
+      "new_users": 18,
       "key_events": 0,
       "eventos": {}
     },
@@ -505,44 +555,6 @@
       "eventos": {}
     },
     {
-      "source": "instagram",
-      "medium": "paid_social",
-      "campaign": "leads_lp_odontograma_cbo",
-      "grupo": "meta_pago",
-      "sessions": 17,
-      "engaged_sessions": 5,
-      "users": 17,
-      "new_users": 16,
-      "key_events": 0,
-      "eventos": {}
-    },
-    {
-      "source": "instagram",
-      "medium": "paid_social",
-      "campaign": "leads_lp_black_friday_abo",
-      "grupo": "meta_pago",
-      "sessions": 16,
-      "engaged_sessions": 10,
-      "users": 12,
-      "new_users": 8,
-      "key_events": 2,
-      "eventos": {
-        "Clique_teste_gratis": 2
-      }
-    },
-    {
-      "source": "google",
-      "medium": "cpc",
-      "campaign": "[SEARCH][LEADS][ODONTOGRAMA]",
-      "grupo": "google_pago",
-      "sessions": 14,
-      "engaged_sessions": 6,
-      "users": 12,
-      "new_users": 12,
-      "key_events": 0,
-      "eventos": {}
-    },
-    {
       "source": "m.facebook.com",
       "medium": "referral",
       "campaign": "(referral)",
@@ -551,6 +563,18 @@
       "engaged_sessions": 1,
       "users": 13,
       "new_users": 13,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "instagram",
+      "medium": "paid_social",
+      "campaign": "leads_lp_belle_chat_cbo",
+      "grupo": "meta_pago",
+      "sessions": 12,
+      "engaged_sessions": 4,
+      "users": 12,
+      "new_users": 11,
       "key_events": 0,
       "eventos": {}
     },
@@ -572,35 +596,9 @@
       "campaign": "(referral)",
       "grupo": "google_pago",
       "sessions": 9,
-      "engaged_sessions": 5,
+      "engaged_sessions": 4,
       "users": 2,
       "new_users": 0,
-      "key_events": 0,
-      "eventos": {}
-    },
-    {
-      "source": "l.facebook.com",
-      "medium": "referral",
-      "campaign": "(referral)",
-      "grupo": "meta_organico",
-      "sessions": 8,
-      "engaged_sessions": 6,
-      "users": 7,
-      "new_users": 6,
-      "key_events": 2,
-      "eventos": {
-        "Clique_teste_gratis": 2
-      }
-    },
-    {
-      "source": "instagram",
-      "medium": "paid_social",
-      "campaign": "leads_lp_belle_chat_cbo",
-      "grupo": "meta_pago",
-      "sessions": 7,
-      "engaged_sessions": 2,
-      "users": 7,
-      "new_users": 6,
       "key_events": 0,
       "eventos": {}
     },
@@ -609,12 +607,26 @@
       "medium": "cpc",
       "campaign": "[SEARCH][LEADS][HOF]",
       "grupo": "google_pago",
-      "sessions": 5,
-      "engaged_sessions": 3,
-      "users": 4,
-      "new_users": 4,
+      "sessions": 9,
+      "engaged_sessions": 4,
+      "users": 8,
+      "new_users": 6,
       "key_events": 0,
       "eventos": {}
+    },
+    {
+      "source": "l.facebook.com",
+      "medium": "referral",
+      "campaign": "(referral)",
+      "grupo": "meta_organico",
+      "sessions": 7,
+      "engaged_sessions": 6,
+      "users": 7,
+      "new_users": 5,
+      "key_events": 2,
+      "eventos": {
+        "Clique_teste_gratis": 2
+      }
     },
     {
       "source": "google",
@@ -709,18 +721,6 @@
       }
     },
     {
-      "source": "ig",
-      "medium": "social",
-      "campaign": "(not set)",
-      "grupo": "meta_organico",
-      "sessions": 3,
-      "engaged_sessions": 1,
-      "users": 2,
-      "new_users": 1,
-      "key_events": 0,
-      "eventos": {}
-    },
-    {
       "source": "meta",
       "medium": "paid_social",
       "campaign": "META_HOF_PROSPECCAO_ESTOQUE",
@@ -731,20 +731,6 @@
       "new_users": 0,
       "key_events": 0,
       "eventos": {}
-    },
-    {
-      "source": "openai",
-      "medium": "(not set)",
-      "campaign": "(not set)",
-      "grupo": "outros",
-      "sessions": 3,
-      "engaged_sessions": 3,
-      "users": 1,
-      "new_users": 0,
-      "key_events": 2,
-      "eventos": {
-        "Clique_teste_gratis": 2
-      }
     },
     {
       "source": "trello.com",
@@ -827,6 +813,18 @@
       "grupo": "meta_organico",
       "sessions": 2,
       "engaged_sessions": 2,
+      "users": 2,
+      "new_users": 2,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "outlook.live.com",
+      "medium": "referral",
+      "campaign": "(referral)",
+      "grupo": "outros",
+      "sessions": 2,
+      "engaged_sessions": 0,
       "users": 2,
       "new_users": 2,
       "key_events": 0,
@@ -955,6 +953,30 @@
       "eventos": {}
     },
     {
+      "source": "ig",
+      "medium": "social",
+      "campaign": "(not set)",
+      "grupo": "meta_organico",
+      "sessions": 1,
+      "engaged_sessions": 0,
+      "users": 1,
+      "new_users": 1,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "instagram",
+      "medium": "paid_social",
+      "campaign": "teste",
+      "grupo": "meta_pago",
+      "sessions": 1,
+      "engaged_sessions": 1,
+      "users": 1,
+      "new_users": 1,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
       "source": "keep.google.com",
       "medium": "referral",
       "campaign": "(referral)",
@@ -1003,18 +1025,6 @@
       "eventos": {}
     },
     {
-      "source": "outlook.live.com",
-      "medium": "referral",
-      "campaign": "(referral)",
-      "grupo": "outros",
-      "sessions": 1,
-      "engaged_sessions": 0,
-      "users": 1,
-      "new_users": 1,
-      "key_events": 0,
-      "eventos": {}
-    },
-    {
       "source": "outlook.office365.com",
       "medium": "referral",
       "campaign": "(referral)",
@@ -1033,6 +1043,30 @@
       "grupo": "outros",
       "sessions": 1,
       "engaged_sessions": 0,
+      "users": 1,
+      "new_users": 0,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "teste_claude",
+      "medium": "qa",
+      "campaign": "utm_forwarder",
+      "grupo": "outros",
+      "sessions": 1,
+      "engaged_sessions": 1,
+      "users": 1,
+      "new_users": 1,
+      "key_events": 0,
+      "eventos": {}
+    },
+    {
+      "source": "teste_midia",
+      "medium": "teste",
+      "campaign": "teste_forwarder_2611",
+      "grupo": "outros",
+      "sessions": 1,
+      "engaged_sessions": 1,
       "users": 1,
       "new_users": 0,
       "key_events": 0,
